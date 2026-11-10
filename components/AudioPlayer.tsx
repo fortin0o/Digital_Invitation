@@ -114,13 +114,13 @@ export default function AudioPlayer({ autoPlayTrigger = false }: AudioPlayerProp
   }, [autoPlayTrigger]);
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
+    <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40">
       <button
         onClick={toggleMusic}
         type="button"
         title={isPlaying ? "Jeda Musik" : "Putar Musik"}
         aria-label={isPlaying ? "Jeda Musik" : "Putar Musik"}
-        className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#FFE600] text-[#18181B] border-2 border-[#18181B] shadow-[3.5px_3.5px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all text-xs font-bold tracking-wider cursor-pointer"
+        className="flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-full bg-[#FFE600] text-[#18181B] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[3.5px_3.5px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all text-xs font-bold tracking-wider cursor-pointer"
       >
         <span className="relative flex h-5 w-5 items-center justify-center">
           {isPlaying ? (

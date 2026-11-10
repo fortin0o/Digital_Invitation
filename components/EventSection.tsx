@@ -66,7 +66,7 @@ export default function EventSection() {
             <span>⚡</span>
           </p>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
             {[
               { label: "Hari", value: timeLeft.days, color: "bg-[#FFE600]" },
               { label: "Jam", value: timeLeft.hours, color: "bg-[#FF5D8F]" },
@@ -75,12 +75,12 @@ export default function EventSection() {
             ].map((item, idx) => (
               <div
                 key={idx}
-                className={`flex flex-col items-center justify-center p-2.5 rounded-2xl ${item.color} border-2 border-[#18181B] shadow-[2.5px_2.5px_0px_#18181B]`}
+                className={`flex flex-col items-center justify-center p-2 sm:p-2.5 rounded-2xl ${item.color} border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] sm:shadow-[2.5px_2.5px_0px_#18181B]`}
               >
-                <span className="font-display text-2xl sm:text-3xl font-extrabold text-[#18181B] leading-none">
+                <span className="font-display text-xl sm:text-2xl md:text-3xl font-extrabold text-[#18181B] leading-none">
                   {item.value}
                 </span>
-                <span className="font-sans text-[10px] font-bold uppercase tracking-wider text-[#18181B] mt-1">
+                <span className="font-sans text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#18181B] mt-1">
                   {item.label}
                 </span>
               </div>

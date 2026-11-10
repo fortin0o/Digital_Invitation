@@ -62,7 +62,7 @@ export default function DigitalGiftSection() {
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF9233] hover:bg-[#FF8015] text-[#18181B] text-xs font-display font-extrabold uppercase tracking-wider border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-full bg-[#FF9233] hover:bg-[#FF8015] text-[#18181B] text-xs font-display font-extrabold uppercase tracking-wider border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
           >
             <span>💳</span>
             <span>{isOpen ? "Tutup Amplop Digital" : "Buka Amplop Digital & Kirim Kado"}</span>
@@ -101,7 +101,7 @@ export default function DigitalGiftSection() {
                 <button
                   type="button"
                   onClick={() => handleCopy(account.accountNumber, account.id)}
-                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border-2 border-[#18181B] transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] ${
+                  className={`w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border-2 border-[#18181B] transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] ${
                     copiedBank === account.id
                       ? "bg-[#2EE59D] text-[#18181B]"
                       : "bg-[#FFFDF5] text-[#18181B] hover:bg-[#FFE600]"
@@ -140,7 +140,7 @@ export default function DigitalGiftSection() {
                   setCopiedBank("alamat");
                   setTimeout(() => setCopiedBank(null), 2500);
                 }}
-                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border-2 border-[#18181B] transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] ${
+                className={`w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border-2 border-[#18181B] transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] ${
                   copiedBank === "alamat"
                     ? "bg-[#2EE59D] text-[#18181B]"
                     : "bg-[#FFFDF5] text-[#18181B] hover:bg-[#FFE600]"

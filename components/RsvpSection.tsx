@@ -363,19 +363,19 @@ export default function RsvpSection({
                 <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-2 font-bold">
                   Status Kehadiran
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                   {[
                     { id: "hadir", label: "🎉 Hadir", activeBg: "bg-[#2EE59D]" },
                     { id: "ragu", label: "🤔 Ragu", activeBg: "bg-[#FFE600]" },
-                    { id: "tidak_hadir", label: "😢 Berhalangan", activeBg: "bg-[#FF5D8F]" },
+                    { id: "tidak_hadir", label: "😢 Absen", activeBg: "bg-[#FF5D8F]" },
                   ].map((opt) => (
                     <button
                       key={opt.id}
                       type="button"
                       onClick={() => setStatus(opt.id as "hadir" | "tidak_hadir" | "ragu")}
-                      className={`py-2.5 px-2 rounded-2xl text-xs font-bold tracking-tight transition-all border-2 border-[#18181B] cursor-pointer ${
+                      className={`py-2 sm:py-2.5 px-1.5 sm:px-2 rounded-2xl text-[11px] sm:text-xs font-bold tracking-tight transition-all border-2 border-[#18181B] cursor-pointer text-center ${
                         status === opt.id
-                          ? `${opt.activeBg} text-[#18181B] shadow-[3px_3px_0px_#18181B] -translate-x-0.5 -translate-y-0.5`
+                          ? `${opt.activeBg} text-[#18181B] shadow-[2.5px_2.5px_0px_#18181B] sm:shadow-[3px_3px_0px_#18181B] -translate-x-0.5 -translate-y-0.5`
                           : "bg-[#FFFDF5] text-[#52525B] hover:bg-white"
                       }`}
                     >

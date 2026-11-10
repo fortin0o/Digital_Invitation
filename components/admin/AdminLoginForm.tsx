@@ -113,7 +113,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
     <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center p-4 relative overflow-hidden font-sans">
       <div className="absolute inset-0 neo-bg-pattern opacity-15 pointer-events-none" />
 
-      <div className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-6 sm:p-8 relative z-10">
+      <div className="w-full max-w-md bg-white rounded-[28px] sm:rounded-[32px] border-[3px] border-[#18181B] shadow-[6px_6px_0px_#FFE600] sm:shadow-[8px_8px_0px_#FFE600] p-5 sm:p-8 relative z-10">
         <div className="text-center mb-6">
           <div className="mb-2">
             <NeoSticker

@@ -50,9 +50,9 @@ export default function CoverSection({
       </div>
 
       {/* Main Semi-Neobrutalist Card */}
-      <div className="relative z-30 w-full max-w-sm sm:max-w-md mx-4 text-center px-6 sm:px-8 py-8 sm:py-10 bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#18181B] flex flex-col items-center">
+      <div className="relative z-30 w-[calc(100%-2rem)] max-w-sm sm:max-w-md mx-auto text-center px-5 sm:px-8 py-7 sm:py-10 bg-white rounded-[28px] sm:rounded-[32px] border-[3px] border-[#18181B] shadow-[6px_6px_0px_#18181B] sm:shadow-[8px_8px_0px_#18181B] flex flex-col items-center">
         {/* Top Tag */}
-        <div className="mb-4">
+        <div className="mb-3 sm:mb-4">
           <NeoSticker
             icon="💌"
             label="SPECIAL WEDDING INVITATION"
@@ -62,12 +62,12 @@ export default function CoverSection({
           />
         </div>
 
-        <p className="font-display uppercase tracking-[0.2em] text-xs font-bold text-[#FF5D8F] mb-1">
+        <p className="font-display uppercase tracking-[0.2em] text-[10px] sm:text-xs font-bold text-[#FF5D8F] mb-1">
           WE&apos;RE GETTING MARRIED!
         </p>
 
         {/* Big Bold Headline */}
-        <h1 className="font-display font-extrabold text-4xl sm:text-5xl text-[#18181B] tracking-tight my-2 leading-none">
+        <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-[#18181B] tracking-tight my-1.5 sm:my-2 leading-none">
           Arya <span className="text-[#FF5D8F]">&amp;</span> Sekar
         </h1>
 
@@ -75,22 +75,22 @@ export default function CoverSection({
           Arya Suryo Wicaksono &amp; Sekar Arum Kinanti
         </p>
 
-        <NeoDivider className="!my-3" />
+        <NeoDivider className="!my-2.5 sm:!my-3" />
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold mb-5">
+        <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-[10px] sm:text-xs font-bold mb-4 sm:mb-5 max-w-full">
           <span>📅</span>
-          <span>Sabtu, 14 November 2026 • Surakarta</span>
+          <span className="truncate">Sabtu, 14 Nov 2026 • Surakarta</span>
         </div>
 
         {/* Guest Greeting Box */}
-        <div className="w-full p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] mb-6 text-center">
-          <p className="text-[11px] uppercase tracking-wider text-[#71717A] font-bold mb-1">
+        <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] mb-5 sm:mb-6 text-center">
+          <p className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#71717A] font-bold mb-1">
             Kepada Yth. Tamu Spesial Kami:
           </p>
-          <p className="font-display text-xl sm:text-2xl text-[#18181B] font-extrabold">
+          <p className="font-display text-lg sm:text-2xl text-[#18181B] font-extrabold break-words">
             {guestName}
           </p>
-          <p className="text-[11px] text-[#71717A] mt-1 font-medium">
+          <p className="text-[10px] sm:text-[11px] text-[#71717A] mt-1 font-medium">
             Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran Anda.
           </p>
         </div>

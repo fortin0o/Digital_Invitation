@@ -202,10 +202,10 @@ export default function GuestManagement({
       )}
 
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-4 rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B]">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B]">
         <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
           {/* Search Box */}
-          <div className="relative flex-1 max-w-sm">
+          <div className="relative flex-1">
             <input
               type="text"
               value={search}
@@ -229,7 +229,7 @@ export default function GuestManagement({
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
           {/* Export Excel Button */}
           <button
             onClick={handleExportCSV}
@@ -264,9 +264,9 @@ export default function GuestManagement({
           </div>
         ) : (
           <>
-            {/* Desktop Table */}
+            {/* Desktop & Tablet Table */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[620px]">
                 <thead className="bg-[#FFFDF5] text-[#18181B] uppercase tracking-wider text-[11px] border-b-2 border-[#18181B] font-extrabold">
                   <tr>
                     <th className="py-3 px-4">Nama Tamu</th>
@@ -359,15 +359,15 @@ export default function GuestManagement({
               </table>
             </div>
 
-            {/* Mobile Cards View */}
+            {/* Mobile Cards View: Touch-friendly 2x2 action buttons */}
             <div className="block md:hidden divide-y divide-[#18181B]/15">
               {filteredGuests.map((tamu) => {
                 const status = tamu.rsvp?.status;
                 return (
-                  <div key={tamu.id_tamu} className="p-4 space-y-2.5">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h4 className="text-sm font-extrabold text-[#18181B]">
+                  <div key={tamu.id_tamu} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h4 className="text-sm font-extrabold text-[#18181B] truncate">
                           {tamu.nama_tamu}
                         </h4>
                         <p className="font-mono text-xs text-[#71717A] mt-0.5 font-bold">
@@ -375,7 +375,7 @@ export default function GuestManagement({
                         </p>
                       </div>
 
-                      <div>
+                      <div className="shrink-0">
                         {status === "hadir" && (
                           <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#2EE59D] text-[#18181B] border border-[#18181B]">
                             Hadir ({tamu.rsvp?.jumlah_hadir || 1})
@@ -399,36 +399,39 @@ export default function GuestManagement({
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 pt-1">
-                      <button
-                        onClick={() => setQrModalGuest(tamu)}
-                        type="button"
-                        className="py-1.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B]"
-                      >
-                        QR
-                      </button>
+                    {/* Touch-optimized 2x2 action buttons */}
+                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-[#18181B]/10">
                       <button
                         onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
                         type="button"
-                        className="flex-1 py-1.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center"
+                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        Salin Link
+                        <span>📋</span>
+                        <span>Salin Link</span>
                       </button>
                       <button
                         onClick={() => openWhatsApp(tamu)}
                         type="button"
-                        className="flex-1 py-1.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center"
+                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        WhatsApp
+                        <span>💬</span>
+                        <span>WhatsApp</span>
+                      </button>
+                      <button
+                        onClick={() => setQrModalGuest(tamu)}
+                        type="button"
+                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <span>🎟️</span>
+                        <span>Tiket QR</span>
                       </button>
                       <button
                         onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
                         type="button"
-                        className="p-1.5 rounded-xl border-2 border-[#18181B] bg-rose-100 text-rose-900 shadow-[2px_2px_0px_#18181B]"
+                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
+                        <span>🗑️</span>
+                        <span>Hapus</span>
                       </button>
                     </div>
                   </div>
@@ -441,8 +444,8 @@ export default function GuestManagement({
 
       {/* Add Guest Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
-          <div className="w-full max-w-sm rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative">
+        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
+          <div className="w-full max-w-sm rounded-[28px] bg-white border-[3px] border-[#18181B] p-5 sm:p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[90vh] overflow-y-auto">
             <h3 className="font-display text-xl font-extrabold text-[#18181B] mb-1">
               Tambah Tamu Undangan
             </h3>
@@ -503,8 +506,8 @@ export default function GuestManagement({
 
       {/* Guest QR Code Pass Modal */}
       {qrModalGuest && (
-        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
-          <div className="w-full max-w-xs rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center">
+        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
+          <div className="w-full max-w-xs rounded-[28px] bg-white border-[3px] border-[#18181B] p-5 sm:p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setQrModalGuest(null)}
               type="button"

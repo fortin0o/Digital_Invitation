@@ -197,7 +197,7 @@ export default function AdminPage() {
                       setTimeout(() => setReportCopied(false), 2500);
                     }}
                     type="button"
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#18181B] text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-[2.5px_2.5px_0px_#18181B] ${
+                    className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#18181B] text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-[2.5px_2.5px_0px_#18181B] ${
                       reportCopied
                         ? "bg-[#2EE59D] text-[#18181B]"
                         : "bg-[#FFE600] text-[#18181B] hover:bg-[#FFD700]"

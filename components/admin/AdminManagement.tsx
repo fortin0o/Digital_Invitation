@@ -290,94 +290,162 @@ export default function AdminManagement({
             <p className="font-bold">Memuat daftar admin...</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-[#FFFDF5] text-[#18181B] uppercase text-[10px] tracking-wider font-extrabold border-b-2 border-[#18181B]">
-                <tr>
-                  <th className="px-4 py-3.5">Nama &amp; Identitas</th>
-                  <th className="px-4 py-3.5">Email</th>
-                  <th className="px-4 py-3.5">Peran (Role)</th>
-                  <th className="px-4 py-3.5 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#18181B]/15">
-                {admins.map((adm) => {
-                  const isCurrent = adm.email === currentUserEmail;
-                  const isSuper = adm.role === "super_admin";
+          <>
+            {/* Desktop & Tablet Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[560px]">
+                <thead className="bg-[#FFFDF5] text-[#18181B] uppercase text-[10px] tracking-wider font-extrabold border-b-2 border-[#18181B]">
+                  <tr>
+                    <th className="px-4 py-3.5">Nama &amp; Identitas</th>
+                    <th className="px-4 py-3.5">Email</th>
+                    <th className="px-4 py-3.5">Peran (Role)</th>
+                    <th className="px-4 py-3.5 text-right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#18181B]/15">
+                  {admins.map((adm) => {
+                    const isCurrent = adm.email === currentUserEmail;
+                    const isSuper = adm.role === "super_admin";
 
-                  return (
-                    <tr key={adm.id} className="hover:bg-[#FFFDF5] transition-colors">
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center gap-2.5">
+                    return (
+                      <tr key={adm.id} className="hover:bg-[#FFFDF5] transition-colors">
+                        <td className="px-4 py-3.5">
+                          <div className="flex items-center gap-2.5">
+                            <span
+                              className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-bold border-2 border-[#18181B] ${
+                                isSuper ? "bg-[#FFE600]" : "bg-[#38BDF8]"
+                              }`}
+                            >
+                              {isSuper ? "👑" : "👤"}
+                            </span>
+                            <div>
+                              <div className="font-extrabold text-[#18181B] flex items-center gap-1.5">
+                                <span>{adm.nama}</span>
+                                {isCurrent && (
+                                  <span className="px-1.5 py-0.5 rounded bg-[#18181B] text-white text-[9px] font-bold">
+                                    Anda
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-[10px] text-[#71717A] font-medium">
+                                {adm.created_at ? new Date(adm.created_at).toLocaleDateString("id-ID") : "Aktif"}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="px-4 py-3.5 font-mono text-[11px] font-bold text-[#18181B]">
+                          {adm.email}
+                        </td>
+
+                        <td className="px-4 py-3.5">
                           <span
-                            className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-bold border-2 border-[#18181B] ${
-                              isSuper ? "bg-[#FFE600]" : "bg-[#38BDF8]"
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold border-2 border-[#18181B] ${
+                              isSuper ? "bg-[#FFE600] text-[#18181B]" : "bg-[#38BDF8] text-[#18181B]"
                             }`}
                           >
-                            {isSuper ? "👑" : "👤"}
+                            {isSuper ? "👑 Super Admin" : "👤 Admin Acara"}
                           </span>
-                          <div>
-                            <div className="font-extrabold text-[#18181B] flex items-center gap-1.5">
-                              <span>{adm.nama}</span>
-                              {isCurrent && (
-                                <span className="px-1.5 py-0.5 rounded bg-[#18181B] text-white text-[9px] font-bold">
-                                  Anda
-                                </span>
-                              )}
-                            </div>
-                            <span className="text-[10px] text-[#71717A] font-medium">
-                              {adm.created_at ? new Date(adm.created_at).toLocaleDateString("id-ID") : "Aktif"}
-                            </span>
-                          </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className="px-4 py-3.5 font-mono text-[11px] font-bold text-[#18181B]">
-                        {adm.email}
-                      </td>
+                        <td className="px-4 py-3.5 text-right space-x-1.5 whitespace-nowrap">
+                          <button
+                            onClick={() => handleCopyCredentials(adm)}
+                            type="button"
+                            className="px-2.5 py-1 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
+                          >
+                            {copiedId === adm.id ? "Tersalin! ✓" : "Salin Info"}
+                          </button>
 
-                      <td className="px-4 py-3.5">
+                          {!isCurrent && (
+                            <button
+                              onClick={() => handleDeleteAdmin(adm)}
+                              type="button"
+                              className="px-2.5 py-1 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
+                            >
+                              Hapus
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards View */}
+            <div className="block md:hidden divide-y divide-[#18181B]/15">
+              {admins.map((adm) => {
+                const isCurrent = adm.email === currentUserEmail;
+                const isSuper = adm.role === "super_admin";
+
+                return (
+                  <div key={adm.id} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
                         <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold border-2 border-[#18181B] ${
-                            isSuper ? "bg-[#FFE600] text-[#18181B]" : "bg-[#38BDF8] text-[#18181B]"
+                          className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-sm font-bold border-2 border-[#18181B] ${
+                            isSuper ? "bg-[#FFE600]" : "bg-[#38BDF8]"
                           }`}
                         >
-                          {isSuper ? "👑 Super Admin" : "👤 Admin Acara"}
+                          {isSuper ? "👑" : "👤"}
                         </span>
-                      </td>
+                        <div className="truncate">
+                          <div className="font-extrabold text-sm text-[#18181B] flex items-center gap-1.5 truncate">
+                            <span className="truncate">{adm.nama}</span>
+                            {isCurrent && (
+                              <span className="px-1.5 py-0.5 rounded bg-[#18181B] text-white text-[9px] font-bold shrink-0">
+                                Anda
+                              </span>
+                            )}
+                          </div>
+                          <p className="font-mono text-xs text-[#52525B] font-bold truncate mt-0.5">
+                            {adm.email}
+                          </p>
+                        </div>
+                      </div>
 
-                      <td className="px-4 py-3.5 text-right space-x-1.5 whitespace-nowrap">
+                      <span
+                        className={`inline-flex shrink-0 px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-[#18181B] ${
+                          isSuper ? "bg-[#FFE600] text-[#18181B]" : "bg-[#38BDF8] text-[#18181B]"
+                        }`}
+                      >
+                        {isSuper ? "Super Admin" : "Admin Acara"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1 border-t border-[#18181B]/10">
+                      <button
+                        onClick={() => handleCopyCredentials(adm)}
+                        type="button"
+                        className="flex-1 py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center cursor-pointer"
+                      >
+                        {copiedId === adm.id ? "Info Tersalin! ✓" : "📋 Salin Sandi Akses"}
+                      </button>
+
+                      {!isCurrent && (
                         <button
-                          onClick={() => handleCopyCredentials(adm)}
+                          onClick={() => handleDeleteAdmin(adm)}
                           type="button"
-                          className="px-2.5 py-1 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
+                          className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer"
                         >
-                          {copiedId === adm.id ? "Tersalin! ✓" : "Salin Info"}
+                          Hapus
                         </button>
-
-                        {!isCurrent && (
-                          <button
-                            onClick={() => handleDeleteAdmin(adm)}
-                            type="button"
-                            className="px-2.5 py-1 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
-                          >
-                            Hapus
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
 
       {/* Add Admin Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
-          <div className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-6 relative">
+        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
+          <div className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-5 sm:p-6 relative max-h-[90vh] overflow-y-auto">
             <div className="text-center mb-5">
               <h3 className="font-display text-xl font-extrabold text-[#18181B]">
                 Tambah Administrator Baru
