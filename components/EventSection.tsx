@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import BotanicalCorner from "./BotanicalCorner";
-import BotanicalDivider from "./BotanicalDivider";
-import GununganOrnament from "./GununganOrnament";
+import NeoSticker from "./NeoSticker";
+import NeoDivider from "./NeoDivider";
 
 export default function EventSection() {
   const [timeLeft, setTimeLeft] = useState({
@@ -35,47 +34,53 @@ export default function EventSection() {
     return () => clearInterval(interval);
   }, []);
 
-  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pawiwahan+Ageng+Arya+%26+Sekar&dates=20261114T010000Z/20261114T070000Z&details=Pahargyan+Pawiwahan+Arya+Suryo+Wicaksono+%26+Sekar+Arum+Kinanti.+Sasana+Kridha+Pendopo+Ageng,+Surakarta.&location=Sasana+Kridha+Pendopo+Ageng,+Surakarta`;
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+Celebration+Arya+%26+Sekar&dates=20261114T010000Z/20261114T070000Z&details=The+Wedding+Celebration+of+Arya+Suryo+Wicaksono+%26+Sekar+Arum+Kinanti.+Sasana+Pendopo+Ageng,+Surakarta.&location=Sasana+Pendopo+Ageng,+Surakarta`;
 
   return (
-    <section className="relative w-full py-14 sm:py-16 px-4 overflow-hidden">
-      <BotanicalCorner position="top-right" size={110} opacity={0.5} />
-      <BotanicalCorner position="bottom-left" size={110} opacity={0.5} />
-
+    <section className="relative w-full py-12 px-4 overflow-hidden">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section title */}
-        <div className="fade-up-element mb-8 sm:mb-10">
-          <p className="font-serif italic text-xs sm:text-sm tracking-widest text-[#8A6B53] uppercase mb-1">
-            Wekdal &amp; Papan Pahargyan
-          </p>
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#3D261C] font-normal tracking-wide">
-            Reroncening Acara
+        <div className="fade-up-element mb-8">
+          <div className="mb-2">
+            <NeoSticker
+              icon="📅"
+              label="SAVE THE DATE"
+              color="yellow"
+              rotate="-rotate-2"
+            />
+          </div>
+          <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-[#18181B] tracking-tight">
+            Jadwal &amp; Lokasi Acara
           </h2>
-          <BotanicalDivider width={130} className="!my-3" />
+          <NeoDivider className="!my-2" />
+          <p className="font-sans text-xs text-[#52525B] max-w-xs mx-auto leading-relaxed font-medium">
+            Hari bahagia yang sangat kami nantikan untuk dirayakan bersama keluarga dan teman tercinta.
+          </p>
         </div>
 
-        {/* Countdown Timer with Gold & Sogan Styling */}
-        <div className="fade-up-element mb-8 sm:mb-10 p-4 sm:p-5 rounded-3xl bg-[#FFFDF9] border border-[#C5A059]/35 shadow-[0_6px_25px_rgba(61,38,28,0.06)]">
-          <p className="font-serif italic text-xs tracking-wider text-[#8A6B53] uppercase mb-3 flex items-center justify-center gap-1.5">
-            <span className="text-[#C5A059]">❖</span>
-            <span>Ngetang Dinten Menuju Pahargyan</span>
-            <span className="text-[#C5A059]">❖</span>
+        {/* Colorful Neobrutalist Countdown Timer */}
+        <div className="fade-up-element mb-8 p-5 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
+          <p className="font-display font-bold text-xs uppercase tracking-wider text-[#18181B] mb-3 flex items-center justify-center gap-1.5">
+            <span>⚡</span>
+            <span>COUNTING DOWN TO THE BIG DAY!</span>
+            <span>⚡</span>
           </p>
-          <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+
+          <div className="grid grid-cols-4 gap-2">
             {[
-              { label: "Dinten", value: timeLeft.days },
-              { label: "Tabuh", value: timeLeft.hours },
-              { label: "Menit", value: timeLeft.minutes },
-              { label: "Detik", value: timeLeft.seconds },
+              { label: "Hari", value: timeLeft.days, color: "bg-[#FFE600]" },
+              { label: "Jam", value: timeLeft.hours, color: "bg-[#FF5D8F]" },
+              { label: "Menit", value: timeLeft.minutes, color: "bg-[#38BDF8]" },
+              { label: "Detik", value: timeLeft.seconds, color: "bg-[#2EE59D]" },
             ].map((item, idx) => (
               <div
                 key={idx}
-                className="flex flex-col items-center justify-center p-2 sm:p-2.5 rounded-2xl bg-[#FAF6F0] border border-[#C5A059]/25 shadow-sm"
+                className={`flex flex-col items-center justify-center p-2.5 rounded-2xl ${item.color} border-2 border-[#18181B] shadow-[2.5px_2.5px_0px_#18181B]`}
               >
-                <span className="font-serif text-xl sm:text-3xl font-medium text-[#3D261C]">
+                <span className="font-display text-2xl sm:text-3xl font-extrabold text-[#18181B] leading-none">
                   {item.value}
                 </span>
-                <span className="font-sans text-[9px] sm:text-[10px] uppercase tracking-wider text-[#8A6B53] mt-0.5">
+                <span className="font-sans text-[10px] font-bold uppercase tracking-wider text-[#18181B] mt-1">
                   {item.label}
                 </span>
               </div>
@@ -83,87 +88,80 @@ export default function EventSection() {
           </div>
         </div>
 
-        {/* Ijab Qabul / Akad Nikah Card */}
-        <div className="fade-up-element mb-6 p-5 sm:p-6 rounded-3xl bg-[#FFFDF9] border border-[#C5A059]/35 shadow-[0_6px_25px_rgba(61,38,28,0.06)] relative overflow-hidden">
-          <BotanicalCorner position="top-right" size={80} opacity={0.3} />
-
-          <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-[#FAF6F0] flex items-center justify-center text-[#C5A059] border border-[#C5A059]/40">
-            <GununganOrnament size={24} variant="gold" />
+        {/* Akad Nikah Card */}
+        <div className="fade-up-element mb-6 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
+          <div className="mb-3">
+            <span className="px-3 py-1 rounded-full bg-[#FFE600] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
+              💍 AKAD NIKAH
+            </span>
           </div>
 
-          <h3 className="font-serif text-2xl text-[#3D261C] font-medium tracking-wide mb-0.5">
-            Akad Nikah / Ijab Qabul
+          <h3 className="font-display text-2xl text-[#18181B] font-extrabold mb-1">
+            Akad Nikah
           </h3>
-          <p className="font-serif italic text-xs text-[#C5A059] mb-4 font-medium">
+          <p className="font-sans text-xs text-[#71717A] mb-4 font-semibold">
             Upacara Sakral &amp; Khidmat
           </p>
 
-          <div className="space-y-2 text-xs text-[#8A6B53] font-sans font-light">
-            <div className="flex items-center justify-center gap-2">
-              <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>Setu Legi, 14 November 2026</span>
+          <div className="space-y-2 text-xs text-[#52525B] font-sans font-medium">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
+              <span>📅</span>
+              <span>Sabtu, 14 November 2026</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>Tabuh 08.00 - 10.00 WIB</span>
+            <br />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
+              <span>⏰</span>
+              <span>Pukul 08.00 - 10.00 WIB</span>
             </div>
-            <div className="pt-2 text-[#3D261C] font-medium font-serif text-sm">
+            <div className="pt-3 text-[#18181B] font-bold font-display text-base">
               Pendopo Sasana Ageng Kridha
             </div>
           </div>
         </div>
 
-        {/* Resepsi / Panggih Card */}
-        <div className="fade-up-element mb-6 sm:mb-8 p-5 sm:p-6 rounded-3xl bg-[#FFFDF9] border border-[#C5A059]/35 shadow-[0_6px_25px_rgba(61,38,28,0.06)] relative overflow-hidden">
-          <BotanicalCorner position="top-right" size={80} opacity={0.3} />
-
-          <div className="w-10 h-10 mx-auto mb-2 rounded-full bg-[#FAF6F0] flex items-center justify-center text-[#C5A059] border border-[#C5A059]/40">
-            <span className="font-serif italic text-lg text-[#C5A059] font-bold">ꦥ</span>
+        {/* Resepsi Card */}
+        <div className="fade-up-element mb-6 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
+          <div className="mb-3">
+            <span className="px-3 py-1 rounded-full bg-[#FF5D8F] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
+              🎉 RESEPSI PERNIKAHAN
+            </span>
           </div>
 
-          <h3 className="font-serif text-2xl text-[#3D261C] font-medium tracking-wide mb-0.5">
-            Upacara Panggih &amp; Resepsi
+          <h3 className="font-display text-2xl text-[#18181B] font-extrabold mb-1">
+            Resepsi &amp; Ramah Tamah
           </h3>
-          <p className="font-serif italic text-xs text-[#C5A059] mb-4 font-medium">
-            Pahargyan Adat Jawa &amp; Ramah Tamah
+          <p className="font-sans text-xs text-[#71717A] mb-4 font-semibold">
+            Perayaan Bersama Sahabat &amp; Kerabat
           </p>
 
-          <div className="space-y-2 text-xs text-[#8A6B53] font-sans font-light">
-            <div className="flex items-center justify-center gap-2">
-              <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>Setu Legi, 14 November 2026</span>
+          <div className="space-y-2 text-xs text-[#52525B] font-sans font-medium">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
+              <span>📅</span>
+              <span>Sabtu, 14 November 2026</span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>Tabuh 11.00 - 14.00 WIB</span>
+            <br />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
+              <span>⏰</span>
+              <span>Pukul 11.00 - 14.00 WIB</span>
             </div>
-            <div className="pt-2 text-[#3D261C] font-medium font-serif text-sm">
-              Sasana Pahargyan Utama
+            <div className="pt-3 text-[#18181B] font-bold font-display text-base">
+              Grand Ballroom Sasana Utama
             </div>
           </div>
         </div>
 
         {/* Location & Map Card */}
-        <div className="fade-up-element p-5 sm:p-6 rounded-3xl bg-[#FFFDF9] border border-[#C5A059]/35 shadow-[0_6px_25px_rgba(61,38,28,0.06)]">
-          <div className="w-9 h-9 mx-auto mb-3 rounded-full bg-[#FAF6F0] flex items-center justify-center text-[#C5A059] border border-[#C5A059]/30">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
+        <div className="fade-up-element p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center">
+          <div className="mb-3">
+            <span className="px-3 py-1 rounded-full bg-[#38BDF8] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
+              📍 LOKASI VENUE
+            </span>
           </div>
 
-          <h4 className="font-serif text-xl text-[#3D261C] font-medium mb-1">
+          <h4 className="font-display text-xl text-[#18181B] font-extrabold mb-1">
             Sasana Pendopo Ageng
           </h4>
-          <p className="font-sans text-xs text-[#8A6B53] leading-relaxed mb-6 font-light max-w-xs mx-auto">
+          <p className="font-sans text-xs text-[#71717A] leading-relaxed mb-6 font-medium max-w-xs mx-auto">
             Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta, Jawa Tengah
           </p>
 
@@ -172,24 +170,20 @@ export default function EventSection() {
               href="https://maps.google.com/?q=Surakarta"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border border-[#C5A059] text-[#3D261C] bg-[#FFFDF9] hover:bg-[#C5A059] hover:text-[#FFFDF9] shadow-sm active:scale-95 transition-all text-xs font-sans tracking-wider"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 text-xs font-bold transition-all"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-              <span>Pitedah Margi (Maps)</span>
+              <span>🗺️</span>
+              <span>Buka Google Maps</span>
             </a>
 
             <a
               href={googleCalendarUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#FAF6F0] border border-[#C5A059]/40 text-[#3D261C] hover:bg-[#C5A059]/15 active:scale-95 transition-all text-xs font-sans tracking-wider"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 text-xs font-bold transition-all"
             >
-              <svg className="w-3.5 h-3.5 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>Simpen Tanggal</span>
+              <span>📅</span>
+              <span>Simpan ke Kalender</span>
             </a>
           </div>
         </div>

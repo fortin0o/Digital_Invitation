@@ -34,7 +34,7 @@ export default function GuestManagement({
   const [statusFilter, setStatusFilter] = useState("all");
   const [showAddModal, setShowAddModal] = useState(false);
   const [newNama, setNewNama] = useState("");
-  const [newKuota, setNewKuota] = useState(1); // Default kuota 1 orang untuk angkatan sekolah
+  const [newKuota, setNewKuota] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [qrModalGuest, setQrModalGuest] = useState<GuestItem | null>(null);
@@ -44,7 +44,6 @@ export default function GuestManagement({
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Generate unique numeric or alphanumeric 8-digit code
   const generateUniqueCode = () => {
     return Math.floor(10000000 + Math.random() * 90000000).toString();
   };
@@ -84,7 +83,6 @@ export default function GuestManagement({
     if (!confirm(`Hapus tamu "${nama}" dari daftar undangan?`)) return;
 
     try {
-      // First remove RSVP if exists
       await supabase.from("rsvp").delete().eq("id_tamu", idTamu);
       const { error } = await supabase.from("tamu").delete().eq("id_tamu", idTamu);
 
@@ -114,7 +112,7 @@ export default function GuestManagement({
 
   const openWhatsApp = (tamu: GuestItem) => {
     const url = getInvitationUrl(tamu.kode);
-    const message = `Katur dhumateng Panjenenganipun ${tamu.nama_tamu},\n\nTanpa ngirangi raos kurmat, keparenga kula ngaturi serat sedhahan pawiwahan: Arya & Sekar.\n\nMenika tautan serat sedhahan panjenengan:\n${url}\n\nMatur nuwun sanget.\n- Arya & Sekar`;
+    const message = `Halo ${tamu.nama_tamu}! 🎉\n\nTanpa mengurangi rasa hormat, kami bermaksud mengundangmu untuk hadir dan merayakan hari bahagia kami: The Wedding of Arya & Sekar.\n\nBerikut tautan undangan spesial untukmu:\n${url}\n\nMerupakan suatu kebahagiaan bagi kami apabila kamu dapat hadir. Terima kasih banyak!\n- Arya & Sekar 💕`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
   };
 
@@ -169,7 +167,7 @@ export default function GuestManagement({
     const link = document.createElement("a");
     const dateStr = new Date().toISOString().split("T")[0];
     link.setAttribute("href", url);
-    link.setAttribute("download", `Laporan_Tamu_RSVP_Pawiwahan_${dateStr}.csv`);
+    link.setAttribute("download", `Laporan_Tamu_RSVP_${dateStr}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -177,7 +175,6 @@ export default function GuestManagement({
     showToast("Data tamu & RSVP berhasil diekspor ke Excel!");
   };
 
-  // Filter guests
   const filteredGuests = guests.filter((g) => {
     const matchSearch =
       g.nama_tamu.toLowerCase().includes(search.toLowerCase()) ||
@@ -195,36 +192,26 @@ export default function GuestManagement({
   });
 
   return (
-    <div className="space-y-6 font-inter">
+    <div className="space-y-6 font-sans">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed top-20 right-6 z-50 px-4 py-2.5 rounded-2xl bg-[#3D261C] text-[#FFFDF9] text-xs shadow-lg animate-in fade-in slide-in-from-top-4 flex items-center gap-2 border border-[#C5A059]">
-          <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-          </svg>
+        <div className="fixed top-20 right-6 z-50 px-4 py-2.5 rounded-2xl bg-[#18181B] text-white text-xs font-bold shadow-[4px_4px_0px_#FFE600] animate-in fade-in flex items-center gap-2 border-2 border-white">
+          <span>✓</span>
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Header Bar: Search, Filters, Add Guest */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#FFFDF9] p-4 rounded-2xl border border-[#C5A059]/30 shadow-xs">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-4 rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B]">
         <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
           {/* Search Box */}
           <div className="relative flex-1 max-w-sm">
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8A6B53]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari nama tamu atau kode..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/30 text-xs text-[#3D261C] outline-none focus:border-[#5C3A21] transition-colors"
+              placeholder="🔍 Cari nama tamu atau kode..."
+              className="w-full px-3 py-2 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
             />
           </div>
 
@@ -232,7 +219,7 @@ export default function GuestManagement({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2 px-3 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/30 text-xs text-[#3D261C] font-medium outline-none focus:border-[#5C3A21] cursor-pointer"
+            className="py-2 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs text-[#18181B] font-bold outline-none cursor-pointer"
           >
             <option value="all">Semua Tamu ({guests.length})</option>
             <option value="hadir">Konfirmasi Hadir ({guests.filter((g) => g.rsvp?.status === "hadir").length})</option>
@@ -243,16 +230,14 @@ export default function GuestManagement({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Export Excel / CSV Button */}
+          {/* Export Excel Button */}
           <button
             onClick={handleExportCSV}
             type="button"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-full border border-[#C5A059] text-[#3D261C] hover:bg-[#FAF6F0] text-xs font-medium tracking-wide shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap"
-            title="Unduh Laporan Format Excel (CSV)"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
+            title="Unduh Laporan Excel (CSV)"
           >
-            <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+            <span>📊</span>
             <span>Ekspor Excel</span>
           </button>
 
@@ -260,22 +245,20 @@ export default function GuestManagement({
           <button
             onClick={() => setShowAddModal(true)}
             type="button"
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-[#5C3A21] hover:bg-[#3D261C] border border-[#C5A059] text-[#FFFDF9] text-xs font-medium tracking-wide shadow-xs active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
           >
-            <svg className="w-4 h-4 text-[#EAD7A8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-            </svg>
-            <span>Tambah Tamu Siswa</span>
+            <span>+</span>
+            <span>Tambah Tamu</span>
           </button>
         </div>
       </div>
 
       {/* Guest List Table */}
-      <div className="bg-[#FFFDF9] rounded-2xl border border-[#C5A059]/30 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] overflow-hidden">
         {filteredGuests.length === 0 ? (
           <div className="text-center py-12 px-4">
-            <p className="text-base font-semibold text-[#3D261C]">Tidak ada tamu ditemukan</p>
-            <p className="text-xs text-[#8A6B53] mt-1">
+            <p className="font-display font-extrabold text-base text-[#18181B]">Tidak ada tamu ditemukan</p>
+            <p className="text-xs text-[#71717A] mt-1 font-medium">
               Coba sesuaikan kata kunci pencarian atau tambah tamu baru.
             </p>
           </div>
@@ -284,9 +267,9 @@ export default function GuestManagement({
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#FAF6F0] text-[#8A6B53] uppercase tracking-wider text-[10px] border-b border-[#C5A059]/20 font-semibold">
+                <thead className="bg-[#FFFDF5] text-[#18181B] uppercase tracking-wider text-[11px] border-b-2 border-[#18181B] font-extrabold">
                   <tr>
-                    <th className="py-3 px-4">Nama Tamu Siswa</th>
+                    <th className="py-3 px-4">Nama Tamu</th>
                     <th className="py-3 px-4">Kode Unik</th>
                     <th className="py-3 px-4 text-center">Kuota</th>
                     <th className="py-3 px-4">Status RSVP</th>
@@ -294,43 +277,43 @@ export default function GuestManagement({
                     <th className="py-3 px-4 text-right">Aksi</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#C5A059]/15 text-[#3D261C]">
+                <tbody className="divide-y border-[#18181B]/15 text-[#18181B]">
                   {filteredGuests.map((tamu) => {
                     const status = tamu.rsvp?.status;
                     return (
-                      <tr key={tamu.id_tamu} className="hover:bg-[#FAF6F0]/60 transition-colors">
-                        <td className="py-3 px-4 font-medium text-sm">
+                      <tr key={tamu.id_tamu} className="hover:bg-[#FFFDF5] transition-colors">
+                        <td className="py-3 px-4 font-bold text-sm">
                           {tamu.nama_tamu}
                         </td>
-                        <td className="py-3 px-4 font-mono text-xs text-[#8A6B53]">
+                        <td className="py-3 px-4 font-mono text-xs font-bold text-[#71717A]">
                           {tamu.kode}
                         </td>
-                        <td className="py-3 px-4 text-center text-xs">
-                          {tamu.kuota} orang
+                        <td className="py-3 px-4 text-center font-bold">
+                          {tamu.kuota} org
                         </td>
                         <td className="py-3 px-4">
                           {status === "hadir" && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#5C3A21]/15 text-[#5C3A21] border border-[#5C3A21]/30">
-                              Rawuh (Hadir)
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#2EE59D] text-[#18181B] border border-[#18181B]">
+                              Hadir
                             </span>
                           )}
                           {status === "ragu" && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-100 text-amber-800">
-                              Taksih Rangu
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FFE600] text-[#18181B] border border-[#18181B]">
+                              Masih Ragu
                             </span>
                           )}
                           {status === "tidak_hadir" && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-rose-100 text-rose-800">
-                              Berhalangan
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FF5D8F] text-[#18181B] border border-[#18181B]">
+                              Tidak Hadir
                             </span>
                           )}
                           {!status && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#FAF6F0] text-[#8A6B53] border border-[#C5A059]/30">
-                              Dereng Konfirmasi
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#F4F4F5] text-[#71717A] border border-[#18181B]">
+                              Belum Konfirmasi
                             </span>
                           )}
                         </td>
-                        <td className="py-3 px-4 text-center">
+                        <td className="py-3 px-4 text-center font-bold">
                           {status === "hadir" ? `${tamu.rsvp?.jumlah_hadir || 1} orang` : "-"}
                         </td>
                         <td className="py-3 px-4 text-right">
@@ -338,33 +321,29 @@ export default function GuestManagement({
                             <button
                               onClick={() => setQrModalGuest(tamu)}
                               type="button"
-                              className="p-1 rounded-full border border-[#C5A059]/40 text-[#5C3A21] hover:bg-[#5C3A21] hover:text-white transition-all cursor-pointer"
+                              className="px-2 py-1 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-[11px] font-bold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
                               title="Lihat QR Code Tiket"
                             >
-                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                              </svg>
+                              QR
                             </button>
                             <button
                               onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
                               type="button"
-                              className="px-2.5 py-1 rounded-full border border-[#C5A059]/50 text-[#3D261C] hover:bg-[#5C3A21] hover:text-[#FFFDF9] transition-all text-[11px] cursor-pointer"
-                              title="Salin Link Personal"
+                              className="px-2.5 py-1 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
                             >
                               Salin Link
                             </button>
                             <button
                               onClick={() => openWhatsApp(tamu)}
                               type="button"
-                              className="px-2.5 py-1 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white transition-all text-[11px] cursor-pointer"
-                              title="Kirim ke WhatsApp"
+                              className="px-2.5 py-1 rounded-lg border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-[11px] font-extrabold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
                             >
                               WhatsApp
                             </button>
                             <button
                               onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
                               type="button"
-                              className="p-1 rounded-full text-rose-600 hover:bg-rose-50 transition-all cursor-pointer"
+                              className="p-1 rounded-lg border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
                               title="Hapus Tamu"
                             >
                               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -381,74 +360,71 @@ export default function GuestManagement({
             </div>
 
             {/* Mobile Cards View */}
-            <div className="block md:hidden divide-y divide-[#C5A059]/15">
+            <div className="block md:hidden divide-y divide-[#18181B]/15">
               {filteredGuests.map((tamu) => {
                 const status = tamu.rsvp?.status;
                 return (
                   <div key={tamu.id_tamu} className="p-4 space-y-2.5">
                     <div className="flex items-start justify-between">
                       <div>
-                        <h4 className="text-sm font-semibold text-[#3D261C]">
+                        <h4 className="text-sm font-extrabold text-[#18181B]">
                           {tamu.nama_tamu}
                         </h4>
-                        <p className="font-mono text-xs text-[#8A6B53] mt-0.5">
+                        <p className="font-mono text-xs text-[#71717A] mt-0.5 font-bold">
                           Kode: {tamu.kode} • Kuota: {tamu.kuota} org
                         </p>
                       </div>
 
                       <div>
                         {status === "hadir" && (
-                          <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#5C3A21]/15 text-[#5C3A21] border border-[#5C3A21]/30">
+                          <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#2EE59D] text-[#18181B] border border-[#18181B]">
                             Hadir ({tamu.rsvp?.jumlah_hadir || 1})
                           </span>
                         )}
                         {status === "ragu" && (
-                          <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-100 text-amber-800">
+                          <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FFE600] text-[#18181B] border border-[#18181B]">
                             Ragu
                           </span>
                         )}
                         {status === "tidak_hadir" && (
-                          <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-100 text-rose-800">
+                          <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FF5D8F] text-[#18181B] border border-[#18181B]">
                             Absen
                           </span>
                         )}
                         {!status && (
-                          <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#FAF6F0] text-[#8A6B53] border border-[#C5A059]/30">
+                          <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#F4F4F5] text-[#71717A] border border-[#18181B]">
                             Belum respon
                           </span>
                         )}
                       </div>
                     </div>
 
-                    {/* Actions for Mobile */}
                     <div className="flex items-center gap-2 pt-1">
                       <button
                         onClick={() => setQrModalGuest(tamu)}
                         type="button"
-                        className="py-1.5 px-2.5 rounded-full border border-[#C5A059]/40 text-[#5C3A21] text-xs hover:bg-[#FAF6F0] transition-all cursor-pointer"
-                        title="QR Tiket"
+                        className="py-1.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B]"
                       >
                         QR
                       </button>
                       <button
                         onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
                         type="button"
-                        className="flex-1 py-1.5 px-3 rounded-full border border-[#C5A059]/40 text-[#3D261C] text-xs text-center hover:bg-[#5C3A21] hover:text-[#FFFDF9] transition-all cursor-pointer"
+                        className="flex-1 py-1.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center"
                       >
                         Salin Link
                       </button>
                       <button
                         onClick={() => openWhatsApp(tamu)}
                         type="button"
-                        className="flex-1 py-1.5 px-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs text-center transition-all cursor-pointer"
+                        className="flex-1 py-1.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center"
                       >
                         WhatsApp
                       </button>
                       <button
                         onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
                         type="button"
-                        className="p-1.5 rounded-full border border-rose-200 text-rose-600 hover:bg-rose-50 cursor-pointer"
-                        title="Hapus"
+                        className="p-1.5 rounded-xl border-2 border-[#18181B] bg-rose-100 text-rose-900 shadow-[2px_2px_0px_#18181B]"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -465,17 +441,19 @@ export default function GuestManagement({
 
       {/* Add Guest Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-[#3D261C]/70 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
-          <div className="w-full max-w-sm rounded-3xl bg-[#FFFDF9] border border-[#C5A059]/40 p-6 shadow-xl relative">
-            <h3 className="text-xl font-bold text-[#3D261C] mb-1">Tambah Tamu Siswa</h3>
-            <p className="text-xs text-[#8A6B53] mb-5 font-normal">
-              Kode personal unik akan digenerate otomatis untuk link undangan.
+        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
+          <div className="w-full max-w-sm rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative">
+            <h3 className="font-display text-xl font-extrabold text-[#18181B] mb-1">
+              Tambah Tamu Undangan
+            </h3>
+            <p className="text-xs text-[#71717A] mb-5 font-semibold">
+              Kode personal unik otomatis digenerate untuk link undangan personal.
             </p>
 
             <form onSubmit={handleAddGuest} className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-[#8A6B53] mb-1 font-semibold">
-                  Nama Tamu Siswa
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-bold">
+                  Nama Tamu
                 </label>
                 <input
                   type="text"
@@ -483,13 +461,13 @@ export default function GuestManagement({
                   value={newNama}
                   onChange={(e) => setNewNama(e.target.value)}
                   placeholder="Contoh: Muhammad Rizki"
-                  className="w-full py-2.5 px-3 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/30 focus:border-[#5C3A21] text-xs text-[#3D261C] outline-none"
+                  className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-[#8A6B53] mb-1 font-semibold">
-                  Maksimal Kuota Kehadiran (Orang)
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-bold">
+                  Maksimal Kuota (Orang)
                 </label>
                 <input
                   type="number"
@@ -498,25 +476,22 @@ export default function GuestManagement({
                   required
                   value={newKuota}
                   onChange={(e) => setNewKuota(Number(e.target.value))}
-                  className="w-full py-2.5 px-3 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/30 focus:border-[#5C3A21] text-xs text-[#3D261C] outline-none"
+                  className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
-                <p className="text-[11px] text-[#8A6B53] mt-1">
-                  Default: 1 orang (sesuai ketentuan 1 siswa 1 kuota).
-                </p>
               </div>
 
               <div className="flex items-center gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 py-2.5 rounded-full border border-[#C5A059]/40 text-[#3D261C] text-xs hover:bg-[#FAF6F0] transition-colors cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] text-[#18181B] text-xs font-bold cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 py-2.5 rounded-full bg-[#5C3A21] hover:bg-[#3D261C] border border-[#C5A059] text-white text-xs font-semibold transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
+                  className="flex-1 py-2.5 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? "Menyimpan..." : "Simpan Tamu"}
                 </button>
@@ -528,54 +503,52 @@ export default function GuestManagement({
 
       {/* Guest QR Code Pass Modal */}
       {qrModalGuest && (
-        <div className="fixed inset-0 z-50 bg-[#3D261C]/70 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
-          <div className="w-full max-w-xs rounded-3xl bg-[#FFFDF9] border border-[#C5A059]/40 p-6 shadow-xl relative text-center">
+        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in">
+          <div className="w-full max-w-xs rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center">
             <button
               onClick={() => setQrModalGuest(null)}
               type="button"
-              className="absolute top-4 right-4 text-[#8A6B53] hover:text-[#3D261C] p-1 rounded-full cursor-pointer"
+              className="absolute top-4 right-4 text-[#18181B] hover:scale-110 p-1 font-black cursor-pointer"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              ✕
             </button>
 
-            <span className="text-[10px] font-sans uppercase tracking-widest text-[#8A6B53] font-semibold">
-              Tiket Resepsi Digital
+            <span className="text-[10px] uppercase tracking-wider text-[#18181B] font-extrabold bg-[#FFE600] px-2.5 py-0.5 rounded-full border border-[#18181B]">
+              TIKET MASUK DIGITAL
             </span>
-            <h3 className="font-serif text-lg font-bold text-[#3D261C] mt-1 mb-3">
+            <h3 className="font-display text-lg font-extrabold text-[#18181B] mt-2 mb-3">
               {qrModalGuest.nama_tamu}
             </h3>
 
-            <div className="bg-[#FAF6F0] p-3 rounded-2xl border border-[#C5A059]/30 inline-block shadow-inner mb-3">
+            <div className="bg-[#FFFDF5] p-3 rounded-2xl border-2 border-[#18181B] inline-block shadow-[3px_3px_0px_#18181B] mb-3">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
-                  `PAWIWAHAN-ARYA-SEKAR:${qrModalGuest.kode}:${qrModalGuest.nama_tamu}:${qrModalGuest.rsvp?.jumlah_hadir || qrModalGuest.kuota || 1}`
-                )}&color=5C3A21&bgcolor=FAF6F0`}
+                  `WEDDING-ARYA-SEKAR:${qrModalGuest.kode}:${qrModalGuest.nama_tamu}:${qrModalGuest.rsvp?.jumlah_hadir || qrModalGuest.kuota || 1}`
+                )}&color=18181B&bgcolor=FFFDF5`}
                 alt="QR Code Tamu"
                 className="w-40 h-40 mx-auto rounded-lg"
               />
             </div>
 
-            <p className="font-mono text-xs font-bold text-[#5C3A21] tracking-widest">
+            <p className="font-mono text-xs font-black text-[#18181B] tracking-widest">
               KODE: {qrModalGuest.kode}
             </p>
-            <p className="text-xs text-[#8A6B53] mt-1">
-              Kuota: {qrModalGuest.rsvp?.jumlah_hadir || qrModalGuest.kuota || 1} Orang • Status: {qrModalGuest.rsvp?.status === "hadir" ? "Hadir" : "Belum / Ragu"}
+            <p className="text-xs text-[#52525B] mt-1 font-bold">
+              Kuota: {qrModalGuest.rsvp?.jumlah_hadir || qrModalGuest.kuota || 1} Orang
             </p>
 
-            <div className="mt-4 pt-3 border-t border-[#C5A059]/20 flex items-center gap-2">
+            <div className="mt-4 pt-3 border-t-2 border-[#18181B] flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => copyInvitationLink(qrModalGuest.kode, qrModalGuest.nama_tamu)}
-                className="flex-1 py-2 rounded-full border border-[#C5A059]/40 text-xs text-[#3D261C] hover:bg-[#FAF6F0] transition-colors cursor-pointer"
+                className="flex-1 py-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold cursor-pointer"
               >
                 Salin Link
               </button>
               <button
                 type="button"
                 onClick={() => setQrModalGuest(null)}
-                className="flex-1 py-2 rounded-full bg-[#5C3A21] text-white text-xs font-medium hover:bg-[#3D261C] transition-colors cursor-pointer"
+                className="flex-1 py-2 rounded-xl bg-[#18181B] text-white text-xs font-bold cursor-pointer"
               >
                 Tutup
               </button>

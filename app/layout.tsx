@@ -1,36 +1,28 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Poppins, Inter } from "next/font/google";
+import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Pawiwahan Ageng Arya & Sekar — Undangan Pernikahan Adat Jawa",
+  title: "The Wedding of Arya & Sekar — We're Getting Married! 🎉",
   description:
-    "Serat Sedhahan Pawiwahan: Katur dhumateng panjenenganipun Bapak/Ibu/Saudara/i ing pahargyan pawiwahan Raden Mas Arya Suryo Wicaksono & Raden Ajeng Sekar Arum Kinanti.",
+    "You are cordially invited to celebrate the wedding of Arya Suryo Wicaksono & Sekar Arum Kinanti. Join our celebration of love and happiness!",
   openGraph: {
-    title: "Pawiwahan Ageng Arya & Sekar",
-    description: "Undangan Pernikahan Adat Jawa Klasik Keraton",
+    title: "The Wedding of Arya & Sekar 🎉",
+    description: "Rayakan Momen Bahagia Arya & Sekar bersama kami!",
     type: "website",
   },
 };
@@ -43,11 +35,12 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${cormorant.variable} ${poppins.variable} ${inter.variable} h-full antialiased`}
+      className={`${plusJakarta.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#FAF6F0] text-[#3D261C] font-sans">
+      <body className="min-h-full flex flex-col bg-[#FFFDF5] text-[#18181B] font-sans selection:bg-[#FFE600] selection:text-[#18181B]">
         {children}
       </body>
     </html>
   );
 }
+

@@ -5,6 +5,7 @@ import Link from "next/link";
 
 interface AdminHeaderProps {
   userLabel: string;
+  userRole?: "super_admin" | "admin";
   onLogout: () => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
@@ -12,31 +13,35 @@ interface AdminHeaderProps {
 
 export default function AdminHeader({
   userLabel,
+  userRole = "admin",
   onLogout,
   activeTab,
   setActiveTab,
 }: AdminHeaderProps) {
   const tabs = [
-    { id: "overview", label: "Ringkasan RSVP" },
-    { id: "tamu", label: "Kelola Tamu Angkatan" },
-    { id: "ucapan", label: "Buku Tamu / Serat" },
+    { id: "overview", label: "📊 Ringkasan RSVP" },
+    { id: "tamu", label: "👥 Kelola Tamu Undangan" },
+    { id: "ucapan", label: "💬 Buku Tamu & Doa" },
+    ...(userRole === "super_admin"
+      ? [{ id: "admin-users", label: "👑 Kelola Admin" }]
+      : []),
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FFFDF9]/95 backdrop-blur-md border-b border-[#C5A059]/25 shadow-xs font-inter">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-[2.5px] border-[#18181B] shadow-[0_2px_0px_#18181B] font-sans">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         {/* Brand / Title */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="w-8 h-8 rounded-full bg-[#FAF6F0] border border-[#C5A059]/50 flex items-center justify-center text-[#5C3A21] text-xs font-bold">
+          <div className="flex items-center gap-2.5">
+            <span className="w-9 h-9 rounded-xl bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-center text-[#18181B] text-xs font-black">
               A&amp;S
             </span>
             <div>
-              <h1 className="text-base sm:text-lg text-[#3D261C] font-semibold leading-none">
-                Admin Pawiwahan
+              <h1 className="font-display text-base sm:text-lg text-[#18181B] font-extrabold leading-none">
+                Admin Dashboard
               </h1>
-              <p className="text-[11px] text-[#8A6B53] mt-0.5 font-normal">
-                Arya &amp; Sekar • Praktik Pawiwahan
+              <p className="text-[11px] text-[#71717A] mt-0.5 font-bold">
+                The Wedding of Arya &amp; Sekar
               </p>
             </div>
           </div>
@@ -46,17 +51,17 @@ export default function AdminHeader({
             <Link
               href="/"
               target="_blank"
-              className="p-2 rounded-full border border-[#C5A059]/30 text-[#3D261C] text-xs hover:bg-[#FAF6F0]"
+              className="p-1.5 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-[#18181B] text-xs shadow-[2px_2px_0px_#18181B]"
               title="Buka Undangan"
             >
-              <svg className="w-4 h-4 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
             </Link>
             <button
               onClick={onLogout}
               type="button"
-              className="p-2 rounded-full border border-rose-200 text-rose-600 text-xs hover:bg-rose-50 cursor-pointer"
+              className="p-1.5 rounded-xl bg-rose-100 border-2 border-[#18181B] text-rose-700 text-xs shadow-[2px_2px_0px_#18181B] cursor-pointer"
               title="Keluar"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,10 +78,10 @@ export default function AdminHeader({
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               type="button"
-              className={`px-3.5 py-1.5 rounded-full text-xs tracking-wide whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold tracking-tight whitespace-nowrap transition-all border-2 border-[#18181B] cursor-pointer ${
                 activeTab === tab.id
-                  ? "bg-[#5C3A21] text-[#FFFDF9] font-medium shadow-xs border border-[#C5A059]"
-                  : "bg-[#FAF6F0] text-[#3D261C] hover:bg-[#C5A059]/15 border border-[#C5A059]/25"
+                  ? "bg-[#FFE600] text-[#18181B] shadow-[2.5px_2.5px_0px_#18181B] -translate-x-0.5 -translate-y-0.5"
+                  : "bg-[#FFFDF5] text-[#52525B] hover:bg-white"
               }`}
             >
               {tab.label}
@@ -85,24 +90,37 @@ export default function AdminHeader({
         </nav>
 
         {/* Right Info & Actions (Desktop) */}
-        <div className="hidden md:flex items-center gap-3">
-          <span className="text-xs text-[#8A6B53] truncate max-w-[180px]">
-            {userLabel}
-          </span>
+        <div className="hidden md:flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
+            <span
+              className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border-2 border-[#18181B] shadow-[1.5px_1.5px_0px_#18181B] ${
+                userRole === "super_admin"
+                  ? "bg-[#FFE600] text-[#18181B]"
+                  : "bg-[#38BDF8] text-[#18181B]"
+              }`}
+            >
+              {userRole === "super_admin" ? "👑 Super Admin" : "👤 Admin Acara"}
+            </span>
+            <span className="text-xs font-semibold text-[#52525B] truncate max-w-[140px]">
+              {userLabel}
+            </span>
+          </div>
+
           <Link
             href="/"
             target="_blank"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#C5A059]/50 text-[#3D261C] hover:bg-[#5C3A21] hover:text-[#FFFDF9] text-xs transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all"
           >
-            <svg className="w-3.5 h-3.5 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
             <span>Buka Undangan</span>
           </Link>
+
           <button
             onClick={onLogout}
             type="button"
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 border-2 border-[#18181B] text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
           >
             <span>Keluar</span>
           </button>

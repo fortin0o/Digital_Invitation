@@ -11,8 +11,7 @@ export default function AudioPlayer({ autoPlayTrigger = false }: AudioPlayerProp
   const audioContextRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
 
-  // Soft romantic music-box / acoustic tone synthesizer via Web Audio API
-  // Guarantees zero broken external asset links, ultra-lightweight, and purely soothing
+  // Soft romantic music-box tone synthesizer via Web Audio API
   const startRomanticChimes = () => {
     try {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -22,8 +21,6 @@ export default function AudioPlayer({ autoPlayTrigger = false }: AudioPlayerProp
       }
       audioContextRef.current = ctx;
 
-      // Romantic chord progression: Fmaj7 - C - Dm7 - G / Am (Pentatonic soothing scale)
-      // Notes frequencies in Hz
       const notes = [
         261.63, // C4
         293.66, // D4
@@ -37,7 +34,6 @@ export default function AudioPlayer({ autoPlayTrigger = false }: AudioPlayerProp
         880.00, // A5
       ];
 
-      // Arpeggio sequence
       const melodySequence = [
         0, 2, 3, 5, 4, 2,
         1, 3, 4, 6, 5, 3,
@@ -60,11 +56,9 @@ export default function AudioPlayer({ autoPlayTrigger = false }: AudioPlayerProp
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
 
-        // Warm sine + triangle blend
         osc.type = "sine";
         osc.frequency.setValueAtTime(freq, now);
 
-        // Gentle envelope (soft attack, slow decay like a delicate chime/harp)
         gain.gain.setValueAtTime(0.0001, now);
         gain.gain.exponentialRampToValueAtTime(0.045, now + 0.08);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
@@ -75,7 +69,6 @@ export default function AudioPlayer({ autoPlayTrigger = false }: AudioPlayerProp
         osc.start(now);
         osc.stop(now + 2.3);
 
-        // Next note timing (every 680ms with slight humanization)
         const nextDelay = 680 + (Math.sin(step) * 40);
         timerRef.current = window.setTimeout(playTone, nextDelay);
       };
@@ -125,27 +118,26 @@ export default function AudioPlayer({ autoPlayTrigger = false }: AudioPlayerProp
       <button
         onClick={toggleMusic}
         type="button"
-        title={isPlaying ? "Jeda Gendhing" : "Muter Gendhing"}
-        aria-label={isPlaying ? "Jeda Gendhing" : "Muter Gendhing"}
-        className="flex items-center gap-2 px-3 py-2 rounded-full bg-[#FFFDF9]/95 backdrop-blur-md border border-[#C5A059]/50 text-[#3D261C] shadow-[0_6px_20px_rgba(61,38,28,0.12)] hover:bg-[#FAF6F0] hover:border-[#C5A059] active:scale-95 transition-all text-xs tracking-wider cursor-pointer"
+        title={isPlaying ? "Jeda Musik" : "Putar Musik"}
+        aria-label={isPlaying ? "Jeda Musik" : "Putar Musik"}
+        className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#FFE600] text-[#18181B] border-2 border-[#18181B] shadow-[3.5px_3.5px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all text-xs font-bold tracking-wider cursor-pointer"
       >
         <span className="relative flex h-5 w-5 items-center justify-center">
           {isPlaying ? (
             <>
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C5A059] opacity-35"></span>
-              {/* Music notes / Pause icon */}
-              <svg className="w-3.5 h-3.5 text-[#5C3A21]" fill="currentColor" viewBox="0 0 24 24">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF5D8F] opacity-50" />
+              <svg className="w-4 h-4 text-[#18181B]" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
               </svg>
             </>
           ) : (
-            <svg className="w-3.5 h-3.5 text-[#C5A059]" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-[#18181B]" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
           )}
         </span>
-        <span className="hidden sm:inline font-sans text-[11px] font-medium text-[#3D261C]">
-          {isPlaying ? "Gendhing Dipunputer" : "Muter Gendhing"}
+        <span className="hidden sm:inline font-display text-[11px] font-extrabold text-[#18181B]">
+          {isPlaying ? "Musik: On 🎵" : "Musik: Off 🔇"}
         </span>
       </button>
     </div>

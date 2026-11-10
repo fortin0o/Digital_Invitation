@@ -7,10 +7,12 @@ import AdminLoginForm from "@/components/admin/AdminLoginForm";
 import RsvpSummaryCards from "@/components/admin/RsvpSummaryCards";
 import GuestManagement, { GuestItem } from "@/components/admin/GuestManagement";
 import GreetingsManagement, { UcapanItem } from "@/components/admin/GreetingsManagement";
+import AdminManagement from "@/components/admin/AdminManagement";
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userEmail, setUserEmail] = useState<string>("Admin");
+  const [userRole, setUserRole] = useState<"super_admin" | "admin">("admin");
   const [activeTab, setActiveTab] = useState<string>("overview");
 
   const [loading, setLoading] = useState(true);
@@ -25,9 +27,11 @@ export default function AdminPage() {
     const checkAuth = async () => {
       // 1. Check local passcode session
       const passcodeUser = localStorage.getItem("admin_auth_user");
+      const passcodeRole = (localStorage.getItem("admin_auth_role") as "super_admin" | "admin") || "admin";
       if (passcodeUser) {
         setIsAuthenticated(true);
         setUserEmail(passcodeUser);
+        setUserRole(passcodeRole);
         return;
       }
 
@@ -37,7 +41,28 @@ export default function AdminPage() {
       } = await supabase.auth.getSession();
       if (session) {
         setIsAuthenticated(true);
-        setUserEmail(session.user.email || "Admin");
+        const email = session.user.email || "Admin";
+        setUserEmail(email);
+
+        let role: "super_admin" | "admin" = "admin";
+        try {
+          const { data: adminRecord } = await supabase
+            .from("admin_users")
+            .select("role")
+            .eq("email", email.toLowerCase())
+            .maybeSingle();
+
+          if (adminRecord?.role === "super_admin") {
+            role = "super_admin";
+          } else if (!adminRecord && (email.toLowerCase().includes("dev") || email.toLowerCase().includes("superadmin"))) {
+            role = "super_admin";
+          }
+        } catch {
+          if (email.toLowerCase().includes("dev") || email.toLowerCase().includes("superadmin")) {
+            role = "super_admin";
+          }
+        }
+        setUserRole(role);
       }
     };
     checkAuth();
@@ -45,8 +70,10 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     localStorage.removeItem("admin_auth_user");
+    localStorage.removeItem("admin_auth_role");
     await supabase.auth.signOut();
     setIsAuthenticated(false);
+    setUserRole("admin");
   };
 
   const fetchData = useCallback(async () => {
@@ -99,6 +126,13 @@ export default function AdminPage() {
     }
   }, [isAuthenticated, fetchData]);
 
+  // Restrict admin-users tab to Super Admin only
+  useEffect(() => {
+    if (userRole !== "super_admin" && activeTab === "admin-users") {
+      setActiveTab("overview");
+    }
+  }, [userRole, activeTab]);
+
   // Compute RSVP statistics
   const stats = {
     totalTamu: guests.length,
@@ -114,18 +148,20 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <AdminLoginForm
-        onLoginSuccess={(email) => {
+        onLoginSuccess={(email, role) => {
           setIsAuthenticated(true);
           if (email) setUserEmail(email);
+          if (role) setUserRole(role);
         }}
       />
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF6F0] text-[#3D261C] flex flex-col font-inter">
+    <div className="min-h-screen bg-[#FFFDF5] text-[#18181B] flex flex-col font-sans">
       <AdminHeader
         userLabel={userEmail}
+        userRole={userRole}
         onLogout={handleLogout}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -134,8 +170,8 @@ export default function AdminPage() {
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {loading ? (
           <div className="py-20 text-center">
-            <div className="inline-block w-6 h-6 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin mb-2" />
-            <p className="text-xs text-[#8A6B53]">Memuat data admin...</p>
+            <div className="inline-block w-7 h-7 border-3 border-[#18181B] border-t-[#FFE600] rounded-full animate-spin mb-2" />
+            <p className="text-xs font-bold text-[#71717A]">Memuat data admin...</p>
           </div>
         ) : (
           <>
@@ -144,41 +180,37 @@ export default function AdminPage() {
                 <RsvpSummaryCards stats={stats} />
 
                 {/* Quick actions & recap */}
-                <div className="p-5 rounded-2xl bg-[#FFFDF9] border border-[#C5A059]/30 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="p-5 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <h3 className="font-semibold text-base sm:text-lg text-[#3D261C]">
-                      Rekap Kehadiran Praktik Pawiwahan
+                    <h3 className="font-display font-extrabold text-base sm:text-lg text-[#18181B]">
+                      Rekap Kehadiran Tamu Undangan
                     </h3>
-                    <p className="text-xs text-[#8A6B53] mt-0.5">
-                      Estimasi kehadiran saat ini: <strong className="text-[#5C3A21] font-semibold">{stats.totalHadirOrang} orang</strong> dari {stats.totalHadirTamu} undangan terkonfirmasi.
+                    <p className="text-xs text-[#52525B] mt-0.5 font-medium">
+                      Estimasi kehadiran saat ini: <strong className="text-[#18181B] font-extrabold">{stats.totalHadirOrang} orang</strong> dari {stats.totalHadirTamu} undangan terkonfirmasi.
                     </p>
                   </div>
                   <button
                     onClick={() => {
-                      const text = `REKAP RSVP PAWIWAHAN ARYA & SEKAR\n-----------------------------\nTotal Undangan: ${stats.totalTamu}\nKonfirmasi Hadir: ${stats.totalHadirOrang} Orang (${stats.totalHadirTamu} Siswa/Tamu)\nMasih Ragu: ${stats.totalRagu} Tamu\nTidak Hadir: ${stats.totalTidakHadir} Tamu\nBelum Merespon: ${stats.totalBelumKonfirmasi} Tamu`;
+                      const text = `REKAP RSVP WEDDING ARYA & SEKAR\n-----------------------------\nTotal Undangan: ${stats.totalTamu}\nKonfirmasi Hadir: ${stats.totalHadirOrang} Orang (${stats.totalHadirTamu} Tamu)\nMasih Ragu: ${stats.totalRagu} Tamu\nTidak Hadir: ${stats.totalTidakHadir} Tamu\nBelum Merespon: ${stats.totalBelumKonfirmasi} Tamu`;
                       navigator.clipboard.writeText(text);
                       setReportCopied(true);
                       setTimeout(() => setReportCopied(false), 2500);
                     }}
                     type="button"
-                    className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full border text-xs font-medium transition-all whitespace-nowrap cursor-pointer shadow-xs ${
+                    className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#18181B] text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-[2.5px_2.5px_0px_#18181B] ${
                       reportCopied
-                        ? "bg-emerald-700 text-white border-emerald-600"
-                        : "border-[#C5A059] text-[#3D261C] hover:bg-[#5C3A21] hover:text-[#FFFDF9]"
+                        ? "bg-[#2EE59D] text-[#18181B]"
+                        : "bg-[#FFE600] text-[#18181B] hover:bg-[#FFD700]"
                     }`}
                   >
                     {reportCopied ? (
                       <>
-                        <svg className="w-4 h-4 text-emerald-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Laporan Tersalin!</span>
+                        <span>✓</span>
+                        <span>Laporan Berhasil Tersalin!</span>
                       </>
                     ) : (
                       <>
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                        </svg>
+                        <span>📋</span>
                         <span>Salin Format Laporan</span>
                       </>
                     )}
@@ -188,13 +220,13 @@ export default function AdminPage() {
                 {/* Recent guests preview table */}
                 <div className="pt-2">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-semibold text-lg text-[#3D261C]">
-                      Daftar Tamu Angkatan Terbaru
+                    <h3 className="font-display font-extrabold text-lg text-[#18181B]">
+                      Daftar Tamu Terbaru
                     </h3>
                     <button
                       onClick={() => setActiveTab("tamu")}
                       type="button"
-                      className="text-xs text-[#5C3A21] hover:underline font-medium cursor-pointer"
+                      className="text-xs text-[#FF5D8F] hover:text-[#18181B] font-extrabold cursor-pointer"
                     >
                       Lihat Semua Tamu &rarr;
                     </button>
@@ -228,9 +260,19 @@ export default function AdminPage() {
                 />
               </div>
             )}
+
+            {activeTab === "admin-users" && userRole === "super_admin" && (
+              <div className="animate-in fade-in">
+                <AdminManagement
+                  currentUserEmail={userEmail}
+                  currentUserRole={userRole}
+                />
+              </div>
+            )}
           </>
         )}
       </main>
     </div>
   );
 }
+

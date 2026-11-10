@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import BotanicalCorner from "./BotanicalCorner";
-import BotanicalDivider from "./BotanicalDivider";
+import NeoSticker from "./NeoSticker";
+import NeoDivider from "./NeoDivider";
 
 interface UcapanItem {
   id_ucapan: string;
@@ -40,8 +40,7 @@ export default function GuestbookSection({
     return list;
   }, [messages]);
 
-  // Duration scales with count for steady pleasant reading speed
-  const marqueeDuration = Math.max(22, baseList.length * 4.5);
+  const marqueeDuration = Math.max(20, baseList.length * 4);
 
   // Load messages from Supabase
   const loadMessages = async () => {
@@ -111,7 +110,6 @@ export default function GuestbookSection({
       return new Intl.DateTimeFormat("id-ID", {
         day: "numeric",
         month: "short",
-        year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
       }).format(date);
@@ -120,117 +118,120 @@ export default function GuestbookSection({
     }
   };
 
-  return (
-    <section className="relative w-full py-16 px-4 overflow-hidden">
-      <BotanicalCorner position="top-left" size={110} opacity={0.5} />
-      <BotanicalCorner position="bottom-right" size={110} opacity={0.5} />
+  const avatarColors = ["bg-[#FFE600]", "bg-[#FF5D8F]", "bg-[#38BDF8]", "bg-[#2EE59D]", "bg-[#A78BFA]", "bg-[#FF9233]"];
 
+  return (
+    <section className="relative w-full py-12 px-4 overflow-hidden">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section title */}
-        <div className="fade-up-element mb-10">
-          <p className="font-serif italic text-sm tracking-widest text-[#8A6B53] uppercase mb-1">
-            Donga Pangestu
-          </p>
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#3D261C] font-normal tracking-wide">
-            Serat Pangestu
+        <div className="fade-up-element mb-8">
+          <div className="mb-2">
+            <NeoSticker
+              icon="💬"
+              label="WISHES & PRAYERS"
+              color="cyan"
+              rotate="-rotate-2"
+            />
+          </div>
+          <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-[#18181B] tracking-tight">
+            Buku Tamu &amp; Ucapan Doa
           </h2>
-          <BotanicalDivider width={130} className="!my-3" />
-          <p className="font-sans text-xs text-[#8A6B53] max-w-xs mx-auto leading-relaxed font-light">
-            Kintunaken donga saha berkah pangestu kagem penganten kekalih lumantar serat buku tamu menika.
+          <NeoDivider className="!my-2" />
+          <p className="font-sans text-xs text-[#52525B] max-w-xs mx-auto leading-relaxed font-medium">
+            Tinggalkan pesan manis dan doa restu terbaik Anda untuk kedua mempelai:
           </p>
         </div>
 
         {/* Input Form Card */}
-        <div className="fade-up-element p-6 rounded-3xl bg-[#FFFDF9] border border-[#C5A059]/35 shadow-[0_6px_25px_rgba(61,38,28,0.06)] text-left mb-10 relative">
-          <BotanicalCorner position="top-right" size={70} opacity={0.3} />
-
+        <div className="fade-up-element p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left mb-8 relative">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block font-sans text-xs uppercase tracking-wider text-[#8A6B53] mb-1 font-medium">
-                Asma Jangkep (Nama Lengkap)
+              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-bold">
+                Nama Lengkap
               </label>
               <input
                 type="text"
                 required
                 value={nama}
                 onChange={(e) => setNama(e.target.value)}
-                placeholder="Asma panjenengan..."
-                className="w-full py-2 bg-transparent border-b border-[#C5A059]/40 focus:border-[#3D261C] text-[#3D261C] font-sans text-sm placeholder-[#8A6B53]/50 outline-none transition-colors"
+                placeholder="Tuliskan nama Anda..."
+                className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
               />
             </div>
 
             <div>
-              <label className="block font-sans text-xs uppercase tracking-wider text-[#8A6B53] mb-1 font-medium">
-                Serat Donga Pangestu
+              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-bold">
+                Pesan Ucapan &amp; Doa
               </label>
               <textarea
                 required
                 rows={3}
                 value={isiUcapan}
                 onChange={(e) => setIsiUcapan(e.target.value)}
-                placeholder="Tuliskan donga pangestu kagem Arya & Sekar..."
-                className="w-full py-2 bg-transparent border-b border-[#C5A059]/40 focus:border-[#3D261C] text-[#3D261C] font-sans text-sm placeholder-[#8A6B53]/50 outline-none transition-colors resize-none"
+                placeholder="Berikan ucapan selamat & doa untuk Arya & Sekar..."
+                className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-medium text-xs outline-none transition-colors resize-none"
               />
             </div>
 
             {errorMsg && (
-              <p className="text-xs text-rose-800 bg-rose-50 p-2.5 rounded-xl border border-rose-200">
+              <div className="p-3 rounded-xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold">
                 {errorMsg}
-              </p>
+              </div>
             )}
 
             {successNotice && (
-              <p className="text-xs text-[#3D261C] bg-[#FAF6F0] p-2.5 rounded-xl border border-[#C5A059]/40 animate-in fade-in flex items-center gap-2">
-                <span className="text-[#C5A059]">✦</span>
-                <span>Matur nuwun sanget, donga pangestu panjenengan sampun kakintun.</span>
-              </p>
+              <div className="p-3 rounded-xl bg-[#2EE59D]/40 border-2 border-[#18181B] text-xs text-[#18181B] font-bold flex items-center gap-2">
+                <span>🎉</span>
+                <span>Terima kasih! Pesan dan doa Anda telah berhasil terkirim.</span>
+              </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-6 rounded-full bg-[#5C3A21] hover:bg-[#3D261C] border border-[#C5A059] text-[#FFFDF9] font-sans text-xs uppercase tracking-widest font-medium shadow-sm active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+              className="w-full py-3 px-6 rounded-full bg-[#38BDF8] hover:bg-[#0EA5E9] text-[#18181B] font-display text-xs uppercase tracking-wider font-extrabold border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {loading ? (
-                <span>Ngintunaken Ucapan...</span>
+                <span>Mengirim Ucapan...</span>
               ) : (
                 <>
-                  <svg className="w-3.5 h-3.5 text-[#EAD7A8]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                  <span>Kintun Donga Pangestu</span>
+                  <span>🚀</span>
+                  <span>Kirim Ucapan &amp; Doa Restu</span>
                 </>
               )}
             </button>
           </form>
         </div>
 
-        {/* Message List: Endless Vertical Running Marquee (Atas ke Bawah) */}
-        <div className="fade-up-element text-left px-1 sm:px-2">
-          <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#C5A059]/25">
-            <span className="font-serif text-lg text-[#3D261C] font-medium">
-              Untaian Donga ({messages.length})
+        {/* Message List: Endless Vertical Running Marquee */}
+        <div className="fade-up-element text-left px-1">
+          <div className="flex items-center justify-between mb-3 pb-2 border-b-2 border-[#18181B]">
+            <span className="font-display text-base font-extrabold text-[#18181B]">
+              Kumpulan Doa &amp; Ucapan ({messages.length})
             </span>
-            <span className="font-sans text-[11px] text-[#8A6B53]">
-              Terbaru
+            <span className="px-2 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold text-[10px] border border-[#18181B]">
+              Realtime ✨
             </span>
           </div>
 
           {fetching ? (
-            <p className="text-center py-8 font-sans text-xs text-[#8A6B53] italic animate-pulse">
+            <p className="text-center py-8 font-sans text-xs text-[#71717A] italic">
               Memuat ucapan...
             </p>
           ) : messages.length === 0 ? (
-            <p className="text-center py-8 font-sans text-xs text-[#8A6B53] italic">
-              Dereng wonten serat donga. Dados tiyang sepisanan ingkang maringi donga pangestu!
-            </p>
+            <div className="text-center py-8 p-6 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B]">
+              <p className="font-bold text-sm text-[#18181B]">Belum ada ucapan</p>
+              <p className="font-sans text-xs text-[#71717A] mt-1">
+                Jadilah yang pertama mengirimkan ucapan doa restu!
+              </p>
+            </div>
           ) : (
-            <div className="relative h-[440px] overflow-hidden rounded-3xl bg-[#FAF6F0]/60 p-2 sm:p-3 border border-[#C5A059]/25 select-none">
+            <div className="relative h-[420px] overflow-hidden rounded-[28px] bg-[#FFFDF5] p-3 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] select-none">
               {/* Soft Gradient Fade Overlays (Top & Bottom) */}
-              <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-[#FAF6F0] to-transparent z-10 pointer-events-none" />
-              <div className="absolute bottom-0 inset-x-0 h-10 bg-gradient-to-t from-[#FAF6F0] to-transparent z-10 pointer-events-none" />
+              <div className="absolute top-0 inset-x-0 h-8 bg-gradient-to-b from-[#FFFDF5] to-transparent z-10 pointer-events-none" />
+              <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-[#FFFDF5] to-transparent z-10 pointer-events-none" />
 
-              {/* Seamless Infinite Running Track (Top to Bottom) */}
+              {/* Running Track */}
               <div
                 className="flex flex-col gap-3 animate-marquee-down"
                 style={{
@@ -241,25 +242,26 @@ export default function GuestbookSection({
                 <div className="flex flex-col gap-3">
                   {baseList.map((item, idx) => {
                     const initial = (item.nama || "?").trim().charAt(0).toUpperCase();
+                    const color = avatarColors[idx % avatarColors.length];
                     return (
                       <div
                         key={`m1-${item.id_ucapan}-${idx}`}
-                        className="p-3.5 rounded-2xl bg-[#FFFDF9] border border-[#C5A059]/30 shadow-[0_2px_10px_rgba(61,38,28,0.03)] hover:border-[#C5A059] transition-all text-left"
+                        className="p-3.5 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] text-left"
                       >
                         <div className="flex items-center justify-between gap-2 mb-1.5">
                           <div className="flex items-center gap-2">
-                            <span className="w-6 h-6 rounded-full bg-[#FAF6F0] border border-[#C5A059]/40 flex items-center justify-center font-serif text-[11px] text-[#5C3A21] font-bold">
+                            <span className={`w-7 h-7 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black`}>
                               {initial}
                             </span>
-                            <h4 className="font-serif text-sm sm:text-base text-[#3D261C] font-semibold leading-tight">
+                            <h4 className="font-display text-sm text-[#18181B] font-bold leading-tight">
                               {item.nama}
                             </h4>
                           </div>
-                          <span className="font-sans text-[10px] text-[#8A6B53]/80 whitespace-nowrap bg-[#FAF6F0] px-2 py-0.5 rounded-full border border-[#C5A059]/20">
+                          <span className="font-sans text-[10px] text-[#71717A] font-semibold bg-[#FFFDF5] px-2 py-0.5 rounded-full border border-[#18181B]">
                             {formatDate(item.tgl_kirim)}
                           </span>
                         </div>
-                        <p className="font-sans text-xs text-[#5C3A21] leading-relaxed font-normal pl-8">
+                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-9">
                           {item.isi_ucapan}
                         </p>
                       </div>
@@ -267,29 +269,30 @@ export default function GuestbookSection({
                   })}
                 </div>
 
-                {/* Track Set 2 (Seamless loop clone) */}
+                {/* Track Set 2 (Clone for loop) */}
                 <div className="flex flex-col gap-3" aria-hidden="true">
                   {baseList.map((item, idx) => {
                     const initial = (item.nama || "?").trim().charAt(0).toUpperCase();
+                    const color = avatarColors[idx % avatarColors.length];
                     return (
                       <div
                         key={`m2-${item.id_ucapan}-${idx}`}
-                        className="p-3.5 rounded-2xl bg-[#FFFDF9] border border-[#C5A059]/30 shadow-[0_2px_10px_rgba(61,38,28,0.03)] hover:border-[#C5A059] transition-all text-left"
+                        className="p-3.5 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] text-left"
                       >
                         <div className="flex items-center justify-between gap-2 mb-1.5">
                           <div className="flex items-center gap-2">
-                            <span className="w-6 h-6 rounded-full bg-[#FAF6F0] border border-[#C5A059]/40 flex items-center justify-center font-serif text-[11px] text-[#5C3A21] font-bold">
+                            <span className={`w-7 h-7 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black`}>
                               {initial}
                             </span>
-                            <h4 className="font-serif text-sm sm:text-base text-[#3D261C] font-semibold leading-tight">
+                            <h4 className="font-display text-sm text-[#18181B] font-bold leading-tight">
                               {item.nama}
                             </h4>
                           </div>
-                          <span className="font-sans text-[10px] text-[#8A6B53]/80 whitespace-nowrap bg-[#FAF6F0] px-2 py-0.5 rounded-full border border-[#C5A059]/20">
+                          <span className="font-sans text-[10px] text-[#71717A] font-semibold bg-[#FFFDF5] px-2 py-0.5 rounded-full border border-[#18181B]">
                             {formatDate(item.tgl_kirim)}
                           </span>
                         </div>
-                        <p className="font-sans text-xs text-[#5C3A21] leading-relaxed font-normal pl-8">
+                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-9">
                           {item.isi_ucapan}
                         </p>
                       </div>

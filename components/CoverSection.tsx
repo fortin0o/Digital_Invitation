@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import GununganOrnament from "./GununganOrnament";
-import BotanicalCorner from "./BotanicalCorner";
-import BotanicalDivider from "./BotanicalDivider";
+import NeoSticker from "./NeoSticker";
+import NeoDivider from "./NeoDivider";
 
 interface CoverSectionProps {
   guestName?: string;
@@ -12,7 +11,7 @@ interface CoverSectionProps {
 }
 
 export default function CoverSection({
-  guestName = "Tamu Undangan",
+  guestName = "Sahabat & Keluarga Tercinta",
   onOpen,
   isOpen,
 }: CoverSectionProps) {
@@ -22,121 +21,93 @@ export default function CoverSection({
     setIsOpening(true);
     setTimeout(() => {
       onOpen();
-    }, 1100);
+    }, 800);
   };
 
   if (isOpen) return null;
 
   return (
     <section
-      className={`fixed inset-0 z-50 overflow-hidden flex items-center justify-center bg-[#FAF6F0] transition-opacity duration-1000 ${
-        isOpening ? "pointer-events-none" : ""
+      className={`fixed inset-0 z-50 overflow-hidden flex items-center justify-center bg-[#FFFDF5] transition-all duration-700 ${
+        isOpening ? "opacity-0 scale-105 pointer-events-none" : "opacity-100 scale-100"
       }`}
     >
-      {/* Background Subtle Batik Watermark */}
-      <div className="absolute inset-0 javanese-bg-pattern opacity-40 pointer-events-none" />
+      {/* Background Polka Dots */}
+      <div className="absolute inset-0 neo-bg-pattern opacity-15 pointer-events-none" />
 
-      {/* ========================================================
-          PARALLAX CURTAINS / GATES (KAYON KEMBAR GUNUNGAN KERATON)
-          Saat dibuka, sayap kiri bergeser ke kiri dan sayap kanan ke kanan
-          dengan kedalaman parallax dramatis
-          ======================================================== */}
-      {/* Left Parallax Gate */}
-      <div
-        className={`absolute top-0 left-0 bottom-0 w-1/2 z-20 pointer-events-none flex items-center justify-end overflow-hidden transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isOpening
-            ? "-translate-x-full opacity-0 -rotate-3 scale-95"
-            : "translate-x-0 opacity-100 rotate-0 scale-100"
-        }`}
-      >
-        <div className="relative pr-2 sm:pr-8 translate-x-12 sm:translate-x-16">
-          <GununganOrnament size={260} variant="gold" className="opacity-40 sm:opacity-55 drop-shadow-2xl" />
-        </div>
+      {/* Floating Playful Decorative Stickers (Ambient) */}
+      <div className="hidden sm:block absolute top-10 left-12 animate-neo-float">
+        <NeoSticker icon="🎉" label="CELEBRATE WITH US!" color="yellow" rotate="-rotate-6" />
+      </div>
+      <div className="hidden sm:block absolute top-14 right-12 animate-neo-float" style={{ animationDelay: "1s" }}>
+        <NeoSticker icon="✨" label="14 NOV 2026" color="cyan" rotate="rotate-6" />
+      </div>
+      <div className="hidden sm:block absolute bottom-12 left-16 animate-neo-float" style={{ animationDelay: "0.5s" }}>
+        <NeoSticker icon="💖" label="IT'S A MATCH!" color="pink" rotate="rotate-3" />
+      </div>
+      <div className="hidden sm:block absolute bottom-14 right-16 animate-neo-float" style={{ animationDelay: "1.5s" }}>
+        <NeoSticker icon="🥂" label="PARTY TIME!" color="green" rotate="-rotate-3" />
       </div>
 
-      {/* Right Parallax Gate */}
-      <div
-        className={`absolute top-0 right-0 bottom-0 w-1/2 z-20 pointer-events-none flex items-center justify-start overflow-hidden transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isOpening
-            ? "translate-x-full opacity-0 rotate-3 scale-95"
-            : "translate-x-0 opacity-100 rotate-0 scale-100"
-        }`}
-      >
-        <div className="relative pl-2 sm:pl-8 -translate-x-12 sm:-translate-x-16">
-          <GununganOrnament size={260} variant="gold" flipped className="opacity-40 sm:opacity-55 drop-shadow-2xl" />
-        </div>
-      </div>
-
-      {/* Javanese Ukiran Corner Accents */}
-      <BotanicalCorner position="top-left" size={130} opacity={0.65} className="w-24 h-24 sm:w-36 sm:h-36 z-10" />
-      <BotanicalCorner position="bottom-right" size={130} opacity={0.65} className="w-24 h-24 sm:w-36 sm:h-36 z-10" />
-      <BotanicalCorner position="top-right" size={110} opacity={0.4} className="hidden sm:block z-10" />
-      <BotanicalCorner position="bottom-left" size={110} opacity={0.4} className="hidden sm:block z-10" />
-
-      {/* Center Serat Sedhahan (Royal Invitation Card) */}
-      <div
-        className={`relative z-30 w-full max-w-sm sm:max-w-md mx-4 text-center px-6 sm:px-9 py-8 sm:py-10 bg-[#FFFDF9]/95 backdrop-blur-md rounded-3xl border-2 border-[#C5A059]/40 shadow-[0_16px_50px_rgba(61,38,28,0.12)] flex flex-col items-center transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isOpening
-            ? "scale-105 -translate-y-12 opacity-0"
-            : "scale-100 translate-y-0 opacity-100"
-        }`}
-      >
-        {/* Gunungan Crown Top Badge */}
-        <div className="w-14 h-14 sm:w-16 sm:h-16 mb-2 rounded-full bg-[#FAF6F0] border border-[#C5A059]/50 flex items-center justify-center p-2 shadow-inner">
-          <GununganOrnament size={36} variant="gold" />
+      {/* Main Semi-Neobrutalist Card */}
+      <div className="relative z-30 w-full max-w-sm sm:max-w-md mx-4 text-center px-6 sm:px-8 py-8 sm:py-10 bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#18181B] flex flex-col items-center">
+        {/* Top Tag */}
+        <div className="mb-4">
+          <NeoSticker
+            icon="💌"
+            label="SPECIAL WEDDING INVITATION"
+            color="yellow"
+            rotate="-rotate-1"
+            size="sm"
+          />
         </div>
 
-        {/* Javanese Salutation */}
-        <p className="font-serif italic text-xs sm:text-sm tracking-widest text-[#8A6B53] uppercase mb-1">
-          Serat Sedhahan Pawiwahan
+        <p className="font-display uppercase tracking-[0.2em] text-xs font-bold text-[#FF5D8F] mb-1">
+          WE&apos;RE GETTING MARRIED!
         </p>
 
-        <h2 className="font-serif text-xs tracking-[0.25em] text-[#C5A059] uppercase font-semibold">
-          Pawiwahan Ageng
-        </h2>
-
-        <BotanicalDivider width={120} className="!my-2" />
-
-        {/* Royal Couple Names */}
-        <h1 className="font-serif text-3xl sm:text-5xl text-[#3D261C] font-normal tracking-wide my-2 leading-tight">
-          Arya <span className="font-serif italic text-2xl sm:text-4xl text-[#C5A059]">&amp;</span> Sekar
+        {/* Big Bold Headline */}
+        <h1 className="font-display font-extrabold text-4xl sm:text-5xl text-[#18181B] tracking-tight my-2 leading-none">
+          Arya <span className="text-[#FF5D8F]">&amp;</span> Sekar
         </h1>
 
-        <p className="font-serif text-xs sm:text-sm text-[#8A6B53] italic">
-          Raden Mas Arya Suryo Wicaksono <br />
-          &amp; Raden Ajeng Sekar Arum Kinanti
+        <p className="font-sans text-xs sm:text-sm text-[#52525B] font-semibold mt-1">
+          Arya Suryo Wicaksono &amp; Sekar Arum Kinanti
         </p>
 
-        <p className="font-sans text-[10px] sm:text-xs tracking-widest text-[#C5A059] font-medium uppercase mt-2 mb-5">
-          Setu Legi, 14 November 2026
-        </p>
+        <NeoDivider className="!my-3" />
 
-        {/* Guest Greeting Box (Katur Dhumateng) */}
-        <div className="w-full max-w-xs p-3.5 sm:p-4 rounded-2xl bg-[#FAF6F0] border border-[#C5A059]/30 mb-5 relative shadow-sm">
-          <p className="font-sans text-[10px] uppercase tracking-wider text-[#8A6B53] mb-1">
-            Katur Dhumateng Panjenenganipun:
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold mb-5">
+          <span>📅</span>
+          <span>Sabtu, 14 November 2026 • Surakarta</span>
+        </div>
+
+        {/* Guest Greeting Box */}
+        <div className="w-full p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] mb-6 text-center">
+          <p className="text-[11px] uppercase tracking-wider text-[#71717A] font-bold mb-1">
+            Kepada Yth. Tamu Spesial Kami:
           </p>
-          <p className="font-serif text-lg sm:text-xl text-[#3D261C] font-medium tracking-wide">
+          <p className="font-display text-xl sm:text-2xl text-[#18181B] font-extrabold">
             {guestName}
           </p>
-          <p className="font-sans text-[9px] text-[#8A6B53]/80 mt-1 italic">
-            *Nyuwun pangapunten menawi wonten kalepatan nyerat asma/gelar
+          <p className="text-[11px] text-[#71717A] mt-1 font-medium">
+            Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran Anda.
           </p>
         </div>
 
-        {/* Open Invitation Pill Button */}
+        {/* Open Button */}
         <button
           onClick={handleOpen}
           type="button"
           disabled={isOpening}
-          className="group relative inline-flex items-center gap-2 px-7 sm:px-9 py-3 sm:py-3.5 rounded-full border-2 border-[#C5A059] text-[#FFFDF9] bg-[#5C3A21] hover:bg-[#3D261C] shadow-[0_4px_20px_rgba(92,58,33,0.3)] active:scale-95 transition-all duration-300 font-sans text-xs uppercase tracking-widest font-medium cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#FF5D8F] hover:bg-[#FF4075] text-[#18181B] font-bold text-xs uppercase tracking-wider border-[2.5px] border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
         >
           <svg
-            className="w-4 h-4 text-[#EAD7A8] group-hover:scale-110 transition-transform duration-300"
+            className="w-4 h-4 text-[#18181B]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            strokeWidth="1.8"
+            strokeWidth="2.5"
           >
             <path
               strokeLinecap="round"
@@ -144,7 +115,7 @@ export default function CoverSection({
               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
             />
           </svg>
-          <span>Buka Serat Sedhahan</span>
+          <span>Buka Undangan 💌</span>
         </button>
       </div>
     </section>

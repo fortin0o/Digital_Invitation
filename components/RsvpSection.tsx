@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import BotanicalCorner from "./BotanicalCorner";
-import BotanicalDivider from "./BotanicalDivider";
+import NeoSticker from "./NeoSticker";
+import NeoDivider from "./NeoDivider";
 
 interface TamuData {
   id_tamu: string;
@@ -22,7 +22,6 @@ interface RsvpSectionProps {
 export default function RsvpSection({
   initialTamu,
   guestCode = "",
-  idUndangan,
 }: RsvpSectionProps) {
   const [tamu, setTamu] = useState<TamuData | null>(initialTamu || null);
   const [status, setStatus] = useState<"hadir" | "tidak_hadir" | "ragu">("hadir");
@@ -32,6 +31,7 @@ export default function RsvpSection({
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [existingRsvp, setExistingRsvp] = useState<boolean>(false);
+  const [verifying, setVerifying] = useState(false);
 
   // If initialTamu wasn't loaded on SSR, look up guest via guestCode
   useEffect(() => {
@@ -70,14 +70,11 @@ export default function RsvpSection({
 
   const maxQuota = tamu?.kuota || 1;
 
-  const [verifying, setVerifying] = useState(false);
-
-  // Fungsi untuk memverifikasi apakah nama terdaftar di tabel tamu
+  // Verifikasi apakah nama terdaftar di tabel tamu
   const verifyGuestByName = async (name: string): Promise<TamuData | null> => {
     const trimmed = name.trim();
     if (!trimmed) return null;
 
-    // 1. Coba pencarian persis (case-insensitive)
     const { data: exactMatch } = await supabase
       .from("tamu")
       .select("*")
@@ -87,7 +84,6 @@ export default function RsvpSection({
 
     if (exactMatch) return exactMatch as TamuData;
 
-    // 2. Coba pencarian sebagian nama (contoh: "Budi" cocok dengan "Budi Santoso")
     const { data: partialMatch } = await supabase
       .from("tamu")
       .select("*")
@@ -114,7 +110,7 @@ export default function RsvpSection({
         setJumlahHadir(Math.min(found.kuota || 1, 1));
       } else {
         setErrorMessage(
-          `Nama "${manualName.trim()}" tidak ditemukan dalam daftar undangan resmi. Mohon periksa kembali ejaan nama Anda atau hubungi kedua mempelai.`
+          `Nama "${manualName.trim()}" tidak ditemukan dalam daftar undangan resmi. Silakan periksa kembali ejaan nama Anda.`
         );
       }
     } catch {
@@ -132,7 +128,6 @@ export default function RsvpSection({
     try {
       let currentGuest = tamu;
 
-      // Jika belum terverifikasi, verifikasi nama terlebih dahulu
       if (!currentGuest) {
         if (!manualName.trim()) {
           setErrorMessage("Silakan masukkan nama Anda.");
@@ -142,9 +137,8 @@ export default function RsvpSection({
 
         const found = await verifyGuestByName(manualName);
         if (!found) {
-          // OPSI 2: Tolak orang iseng / nama yang tidak ada di daftar admin!
           setErrorMessage(
-            `Mohon maaf, nama "${manualName.trim()}" tidak terdaftar dalam daftar undangan resmi. RSVP hanya dapat diisi oleh tamu yang telah didaftarkan oleh mempelai.`
+            `Mohon maaf, nama "${manualName.trim()}" tidak terdaftar dalam daftar undangan resmi. RSVP hanya dapat diisi oleh tamu yang telah didaftarkan.`
           );
           setLoading(false);
           return;
@@ -155,7 +149,6 @@ export default function RsvpSection({
         setJumlahHadir(Math.min(found.kuota || 1, 1));
       }
 
-      // Upsert into `rsvp` table untuk tamu yang sudah terverifikasi
       const { error: rsvpErr } = await supabase.from("rsvp").upsert(
         {
           id_tamu: currentGuest.id_tamu,
@@ -167,9 +160,7 @@ export default function RsvpSection({
       );
 
       if (rsvpErr) {
-        // Fallback jika ada isu RLS pada tabel rsvp
         if (rsvpErr.code === "42501") {
-          console.warn("Supabase RLS active: RSVP disimpan di sesi browser.");
           if (typeof window !== "undefined") {
             localStorage.setItem(
               `rsvp_${currentGuest.id_tamu}`,
@@ -192,80 +183,78 @@ export default function RsvpSection({
   };
 
   return (
-    <section className="relative w-full py-16 px-4 overflow-hidden">
-      <BotanicalCorner position="top-right" size={110} opacity={0.5} />
-      <BotanicalCorner position="bottom-left" size={110} opacity={0.5} />
-
+    <section className="relative w-full py-12 px-4 overflow-hidden">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section title */}
-        <div className="fade-up-element mb-10">
-          <p className="font-serif italic text-sm tracking-widest text-[#8A6B53] uppercase mb-1">
-            Palapuran Rawuh
-          </p>
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#3D261C] font-normal tracking-wide">
+        <div className="fade-up-element mb-8">
+          <div className="mb-2">
+            <NeoSticker
+              icon="💌"
+              label="RSVP ONLINE"
+              color="green"
+              rotate="-rotate-2"
+            />
+          </div>
+          <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-[#18181B] tracking-tight">
             Konfirmasi Kehadiran
           </h2>
-          <BotanicalDivider width={130} className="!my-3" />
-          <p className="font-sans text-xs text-[#8A6B53] max-w-xs mx-auto leading-relaxed font-light">
-            Matur nuwun sanget awit saking kawigatosan panjenengan ingkang kersa maringi konfirmasi rawuh.
+          <NeoDivider className="!my-2" />
+          <p className="font-sans text-xs text-[#52525B] max-w-xs mx-auto leading-relaxed font-medium">
+            Bantu kami mempersiapkan jamuan terbaik dengan mengonfirmasi kehadiranmu pada form berikut:
           </p>
         </div>
 
         {/* Form Card */}
-        <div className="fade-up-element p-6 sm:p-8 rounded-3xl bg-[#FFFDF9] border border-[#C5A059]/35 shadow-[0_6px_25px_rgba(61,38,28,0.06)] text-left relative">
-          <BotanicalCorner position="bottom-right" size={80} opacity={0.3} />
-
+        <div className="fade-up-element p-6 sm:p-7 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[6px_6px_0px_#18181B] text-left relative">
           {submitted ? (
-            <div className="py-6 text-center animate-in fade-in duration-500">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#FAF6F0] text-[#C5A059] border border-[#C5A059]/40 flex items-center justify-center">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
+            <div className="py-4 text-center animate-in fade-in duration-400">
+              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-2xl">
+                🎉
               </div>
-              <h3 className="font-serif text-2xl text-[#3D261C] mb-1">
-                Matur Nuwun!
+              <h3 className="font-display font-extrabold text-2xl text-[#18181B] mb-1">
+                Terima Kasih Banyak!
               </h3>
-              <p className="font-sans text-xs text-[#8A6B53] leading-relaxed mb-3 font-light">
-                Konfirmasi rawuh panjenengan sampun kasimpen kanthi sae.
+              <p className="font-sans text-xs text-[#52525B] leading-relaxed mb-4 font-medium">
+                Konfirmasi kehadiran Anda telah berhasil kami simpan.
                 {status === "hadir" && (
-                  <span className="block mt-1 font-medium text-[#C5A059]">
-                    Sugeng rawuh ing pahargyan pawiwahan ({jumlahHadir} orang).
+                  <span className="block mt-1.5 font-bold text-[#18181B] bg-[#2EE59D]/30 p-2 rounded-xl border border-[#18181B]">
+                    Sampai jumpa di hari perayaan kami ({jumlahHadir} orang)! ✨
                   </span>
                 )}
               </p>
 
-              {/* QR Code Pass for Hadir */}
+              {/* Digital Pass Ticket for Hadir */}
               {status === "hadir" && tamu && (
-                <div className="my-5 p-4 rounded-2xl bg-[#FAF6F0] border border-[#C5A059]/40 shadow-xs max-w-xs mx-auto text-center">
-                  <div className="flex items-center justify-between pb-2 border-b border-[#C5A059]/25 mb-3">
-                    <span className="font-serif text-xs font-bold text-[#3D261C] uppercase tracking-wider">
-                      Tiket Resepsi Digital
+                <div className="my-5 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] max-w-xs mx-auto text-center relative">
+                  <div className="flex items-center justify-between pb-2 border-b-2 border-dashed border-[#18181B] mb-3">
+                    <span className="font-display text-xs font-black uppercase tracking-wider text-[#18181B]">
+                      🎟️ TIKET MASUK RESEPSI
                     </span>
-                    <span className="font-sans text-[10px] text-[#C5A059] font-semibold bg-[#FFFDF9] px-2 py-0.5 rounded-full border border-[#C5A059]/30">
+                    <span className="font-sans text-[10px] bg-[#FFE600] text-[#18181B] font-bold px-2 py-0.5 rounded-full border border-[#18181B]">
                       {jumlahHadir} Orang
                     </span>
                   </div>
 
                   {/* QR Code image */}
-                  <div className="bg-[#FFFDF9] p-3 rounded-xl border border-[#C5A059]/20 inline-block shadow-inner mb-2">
+                  <div className="bg-white p-2.5 rounded-xl border-2 border-[#18181B] inline-block shadow-[2px_2px_0px_#18181B] mb-2">
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
-                        `PAWIWAHAN-ARYA-SEKAR:${tamu.kode}:${tamu.nama_tamu}:${jumlahHadir}`
-                      )}&color=5C3A21&bgcolor=FFFDF9`}
+                        `WEDDING-ARYA-SEKAR:${tamu.kode}:${tamu.nama_tamu}:${jumlahHadir}`
+                      )}&color=18181B&bgcolor=FFFFFF`}
                       alt="QR Code Tiket Masuk Resepsi"
                       className="w-36 h-36 mx-auto rounded-lg"
                       loading="lazy"
                     />
                   </div>
 
-                  <p className="font-mono text-xs font-bold text-[#3D261C] tracking-widest mt-1">
+                  <p className="font-mono text-xs font-extrabold text-[#18181B] tracking-widest mt-1">
                     {tamu.kode}
                   </p>
-                  <p className="font-serif text-sm font-semibold text-[#5C3A21] mt-0.5">
+                  <p className="font-display text-sm font-bold text-[#FF5D8F] mt-0.5">
                     {tamu.nama_tamu}
                   </p>
-                  <p className="font-sans text-[10px] text-[#8A6B53] mt-1.5 leading-snug">
-                    *Tampilaken QR Code menika dhumateng among tamu / meja resepsi.
+                  <p className="font-sans text-[10px] text-[#71717A] mt-2 font-medium">
+                    *Tunjukkan QR Code ini kepada penerima tamu di meja resepsi.
                   </p>
                 </div>
               )}
@@ -274,53 +263,56 @@ export default function RsvpSection({
                 <button
                   type="button"
                   onClick={() => setSubmitted(false)}
-                  className="inline-flex px-5 py-2 rounded-full border border-[#C5A059]/50 text-[#3D261C] hover:bg-[#C5A059]/15 text-xs font-sans tracking-wider transition-colors cursor-pointer"
+                  className="inline-flex px-5 py-2 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_#18181B]"
                 >
-                  Ewahi Konfirmasi
+                  Ubah Konfirmasi Kehadiran
                 </button>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {existingRsvp && (
-                <div className="p-3 rounded-2xl bg-[#FAF6F0] border border-[#C5A059]/30 text-xs text-[#8A6B53] space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-[#C5A059] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    <span>Panjenengan sampun konfirmasi saderengipun ({status === "hadir" ? "Hadir" : status === "ragu" ? "Ragu" : "Absen"}).</span>
+                <div className="p-3 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs text-[#18181B] space-y-1">
+                  <div className="flex items-center gap-2 font-bold">
+                    <span>✓</span>
+                    <span>
+                      Anda sudah konfirmasi sebelumnya:{" "}
+                      <span className="underline">
+                        {status === "hadir" ? "Pasti Hadir" : status === "ragu" ? "Masih Ragu" : "Berhalangan"}
+                      </span>
+                    </span>
                   </div>
                   {status === "hadir" && (
                     <button
                       type="button"
                       onClick={() => setSubmitted(true)}
-                      className="text-[11px] font-semibold text-[#5C3A21] underline hover:text-[#3D261C] cursor-pointer block pl-6"
+                      className="text-[11px] font-bold text-[#FF5D8F] underline hover:text-[#18181B] cursor-pointer block pl-5"
                     >
-                      Bikak QR Code Tiket Masuk Resepsi &rarr;
+                      Buka Tiket Masuk QR Code &rarr;
                     </button>
                   )}
                 </div>
               )}
 
-              {/* Guest name field */}
+              {/* Guest Name Field */}
               <div>
-                <label className="block font-sans text-xs uppercase tracking-wider text-[#8A6B53] mb-1.5 font-medium">
-                  Asma Tamu Undangan
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1.5 font-bold">
+                  Nama Tamu Undangan
                 </label>
                 {tamu ? (
-                  <div className="py-2 border-b border-[#C5A059]/40 font-serif text-lg text-[#3D261C] flex items-center justify-between">
+                  <div className="p-3 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-between">
                     <div>
-                      <span className="block">{tamu.nama_tamu}</span>
-                      <span className="text-[11px] font-sans text-[#C5A059] flex items-center gap-1 mt-0.5 font-light">
-                        <svg className="w-3.5 h-3.5 text-[#C5A059]" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        Kacathet wonten serat sedhahan resmi
+                      <span className="font-display font-extrabold text-base text-[#18181B] block">
+                        {tamu.nama_tamu}
+                      </span>
+                      <span className="text-[11px] text-[#2EE59D] font-bold flex items-center gap-1 mt-0.5">
+                        <span className="w-2 h-2 rounded-full bg-[#2EE59D]" />
+                        Terdaftar di buku tamu resmi
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-sans px-2.5 py-0.5 rounded-full bg-[#FAF6F0] text-[#C5A059] border border-[#C5A059]/30">
-                        Kuota: {tamu.kuota || 1} orang
+                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold border border-[#18181B]">
+                        Maks {tamu.kuota || 1} org
                       </span>
                       {!initialTamu && (
                         <button
@@ -329,9 +321,9 @@ export default function RsvpSection({
                             setTamu(null);
                             setExistingRsvp(false);
                           }}
-                          className="text-[10px] font-sans text-[#8A6B53] hover:text-[#3D261C] underline ml-1 cursor-pointer"
+                          className="text-[10px] text-[#71717A] hover:text-[#18181B] underline font-bold cursor-pointer"
                         >
-                          Ubah
+                          Ganti
                         </button>
                       )}
                     </div>
@@ -347,44 +339,44 @@ export default function RsvpSection({
                           setManualName(e.target.value);
                           setErrorMessage(null);
                         }}
-                        placeholder="Serat asma panjenengan jumbuh undangan..."
-                        className="w-full py-2 pr-20 bg-transparent border-b border-[#C5A059]/40 focus:border-[#3D261C] text-[#3D261C] font-serif text-base placeholder-[#8A6B53]/50 outline-none transition-colors"
+                        placeholder="Ketikkan nama lengkap Anda..."
+                        className="w-full py-2.5 px-3.5 pr-24 bg-[#FFFDF5] rounded-xl border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
                       />
                       <button
                         type="button"
                         onClick={handleManualCheck}
                         disabled={verifying || !manualName.trim()}
-                        className="absolute right-0 bottom-1.5 px-3 py-1 rounded-full bg-[#C5A059]/15 hover:bg-[#C5A059]/25 text-[#3D261C] text-[11px] font-sans transition-colors disabled:opacity-40 cursor-pointer"
+                        className="absolute right-1.5 px-3 py-1.5 rounded-lg bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] text-[11px] font-extrabold border border-[#18181B] transition-colors disabled:opacity-40 cursor-pointer"
                       >
-                        {verifying ? "Mriksani..." : "Cek Asma"}
+                        {verifying ? "Memeriksa..." : "Cek Nama"}
                       </button>
                     </div>
-                    <p className="text-[11px] text-[#8A6B53] mt-1.5 font-light">
-                      Ketik nama sesuai daftar angkatan sekolah untuk verifikasi.
+                    <p className="text-[11px] text-[#71717A] mt-1.5 font-medium">
+                      Ketikkan nama sesuai daftar angkatan sekolah untuk verifikasi.
                     </p>
                   </div>
                 )}
               </div>
 
-              {/* Status Radio / Pills */}
+              {/* Status Pills */}
               <div>
-                <label className="block font-sans text-xs uppercase tracking-wider text-[#8A6B53] mb-2.5 font-medium">
-                  Konfirmasi Rawuh
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-2 font-bold">
+                  Status Kehadiran
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { id: "hadir", label: "Insya Allah Rawuh" },
-                    { id: "ragu", label: "Taksih Rangu" },
-                    { id: "tidak_hadir", label: "Nyenyuwun Pangapunten" },
+                    { id: "hadir", label: "🎉 Hadir", activeBg: "bg-[#2EE59D]" },
+                    { id: "ragu", label: "🤔 Ragu", activeBg: "bg-[#FFE600]" },
+                    { id: "tidak_hadir", label: "😢 Berhalangan", activeBg: "bg-[#FF5D8F]" },
                   ].map((opt) => (
                     <button
                       key={opt.id}
                       type="button"
                       onClick={() => setStatus(opt.id as "hadir" | "tidak_hadir" | "ragu")}
-                      className={`py-2.5 px-2 rounded-full text-xs font-sans tracking-wide transition-all border cursor-pointer ${
+                      className={`py-2.5 px-2 rounded-2xl text-xs font-bold tracking-tight transition-all border-2 border-[#18181B] cursor-pointer ${
                         status === opt.id
-                          ? "bg-[#5C3A21] text-[#FFFDF9] border-[#C5A059] shadow-sm font-medium"
-                          : "bg-[#FAF6F0] text-[#3D261C] border-[#C5A059]/30 hover:border-[#C5A059]"
+                          ? `${opt.activeBg} text-[#18181B] shadow-[3px_3px_0px_#18181B] -translate-x-0.5 -translate-y-0.5`
+                          : "bg-[#FFFDF5] text-[#52525B] hover:bg-white"
                       }`}
                     >
                       {opt.label}
@@ -395,25 +387,25 @@ export default function RsvpSection({
 
               {/* Guest Count (if status != 'tidak_hadir') */}
               {status !== "tidak_hadir" && (
-                <div className="pt-2">
+                <div className="pt-1">
                   <div className="flex items-center justify-between mb-2">
-                    <label className="font-sans text-xs uppercase tracking-wider text-[#8A6B53] font-medium">
-                      Gunggungipun Rawuh (Jumlah Orang)
+                    <label className="text-xs uppercase tracking-wider text-[#18181B] font-bold">
+                      Jumlah Orang yang Hadir
                     </label>
-                    <span className="font-serif text-sm text-[#3D261C]">
+                    <span className="text-xs font-extrabold text-[#FF5D8F]">
                       {jumlahHadir} Orang (Maks {maxQuota})
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     {Array.from({ length: maxQuota }, (_, i) => i + 1).map((num) => (
                       <button
                         key={num}
                         type="button"
                         onClick={() => setJumlahHadir(num)}
-                        className={`w-10 h-10 rounded-full font-serif text-sm transition-all border cursor-pointer ${
+                        className={`w-10 h-10 rounded-xl font-display font-extrabold text-sm transition-all border-2 border-[#18181B] cursor-pointer ${
                           jumlahHadir === num
-                            ? "bg-[#5C3A21] text-[#FFFDF9] border-[#C5A059] shadow-sm"
-                            : "bg-[#FAF6F0] text-[#3D261C] border-[#C5A059]/30 hover:border-[#C5A059]"
+                            ? "bg-[#FFE600] text-[#18181B] shadow-[3px_3px_0px_#18181B] -translate-y-0.5"
+                            : "bg-[#FFFDF5] text-[#52525B] hover:bg-white"
                         }`}
                       >
                         {num}
@@ -424,27 +416,27 @@ export default function RsvpSection({
               )}
 
               {errorMessage && (
-                <p className="text-xs text-rose-800 bg-rose-50 p-2.5 rounded-xl border border-rose-200">
+                <div className="p-3 rounded-2xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold">
                   {errorMessage}
-                </p>
+                </div>
               )}
 
-              {/* Submit Button (Javanese Sogan and Gold) */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-6 rounded-full bg-[#5C3A21] hover:bg-[#3D261C] border border-[#C5A059] text-[#FFFDF9] font-sans text-xs uppercase tracking-widest font-medium shadow-[0_4px_16px_rgba(92,58,33,0.3)] active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-6 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-[2.5px] border-[#18181B] text-[#18181B] font-display text-xs uppercase tracking-wider font-extrabold shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#18181B]" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                     </svg>
-                    <span>Ngintun Data...</span>
+                    <span>Menyimpan RSVP...</span>
                   </>
                 ) : (
-                  <span>Kintun Konfirmasi Rawuh</span>
+                  <span>Kirim Konfirmasi Kehadiran 🚀</span>
                 )}
               </button>
             </form>

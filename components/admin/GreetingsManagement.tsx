@@ -30,7 +30,7 @@ export default function GreetingsManagement({
   );
 
   const handleDelete = async (idUcapan: string) => {
-    if (!confirm("Hapus serat donga ini dari buku tamu?")) return;
+    if (!confirm("Hapus ucapan ini dari buku tamu?")) return;
 
     setDeletingId(idUcapan);
     try {
@@ -64,33 +64,25 @@ export default function GreetingsManagement({
   };
 
   return (
-    <div className="bg-[#FFFDF9] rounded-2xl border border-[#C5A059]/30 shadow-xs p-5 sm:p-6 space-y-4 font-inter">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#C5A059]/20 gap-3">
+    <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] p-5 sm:p-6 space-y-4 font-sans">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-[#18181B] gap-3">
         <div>
-          <h2 className="text-lg sm:text-xl font-bold text-[#3D261C]">
-            Daftar Serat Donga Pangestu ({greetings.length})
+          <h2 className="font-display text-lg sm:text-xl font-extrabold text-[#18181B]">
+            Daftar Ucapan &amp; Doa Restu ({greetings.length})
           </h2>
-          <p className="text-xs text-[#8A6B53] mt-0.5">
-            Semua ucapan dan doa dari siswa/tamu yang masuk secara realtime.
+          <p className="text-xs text-[#71717A] mt-0.5 font-bold">
+            Semua ucapan dan doa dari para tamu undangan yang masuk secara realtime.
           </p>
         </div>
 
         {greetings.length > 0 && (
           <div className="relative max-w-xs w-full">
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8A6B53]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari pengirim atau ucapan..."
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/30 text-xs text-[#3D261C] outline-none focus:border-[#5C3A21] transition-colors"
+              placeholder="🔍 Cari pengirim atau pesan..."
+              className="w-full px-3 py-1.5 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
             />
           </div>
         )}
@@ -98,15 +90,15 @@ export default function GreetingsManagement({
 
       {greetings.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-base font-semibold text-[#3D261C]">Belum ada ucapan</p>
-          <p className="text-xs text-[#8A6B53] mt-1">
+          <p className="font-display text-base font-extrabold text-[#18181B]">Belum ada ucapan</p>
+          <p className="text-xs text-[#71717A] mt-1 font-medium">
             Ucapan dari para tamu undangan akan otomatis tampil di sini.
           </p>
         </div>
       ) : filteredGreetings.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-sm font-semibold text-[#3D261C]">Tidak ada ucapan yang cocok</p>
-          <p className="text-xs text-[#8A6B53] mt-1">
+          <p className="text-sm font-bold text-[#18181B]">Tidak ada ucapan yang cocok</p>
+          <p className="text-xs text-[#71717A] mt-1 font-medium">
             Coba gunakan kata kunci pencarian yang lain.
           </p>
         </div>
@@ -115,18 +107,18 @@ export default function GreetingsManagement({
           {filteredGreetings.map((item) => (
             <div
               key={item.id_ucapan}
-              className="p-4 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/25 flex flex-col sm:flex-row sm:items-start justify-between gap-3 hover:border-[#C5A059]/50 transition-colors"
+              className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2.5px_2.5px_0px_#18181B] flex flex-col sm:flex-row sm:items-start justify-between gap-3 hover:bg-white transition-colors"
             >
               <div className="space-y-1">
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-sm font-semibold text-[#3D261C]">
+                  <h3 className="font-display text-sm font-extrabold text-[#18181B]">
                     {item.nama}
                   </h3>
-                  <span className="text-[10px] text-[#8A6B53]">
+                  <span className="text-[10px] text-[#71717A] font-bold">
                     • {formatDate(item.tgl_kirim)}
                   </span>
                 </div>
-                <p className="text-xs text-[#5C3A21] leading-relaxed font-light">
+                <p className="text-xs text-[#27272A] leading-relaxed font-medium">
                   {item.isi_ucapan}
                 </p>
               </div>
@@ -135,7 +127,7 @@ export default function GreetingsManagement({
                 onClick={() => handleDelete(item.id_ucapan)}
                 disabled={deletingId === item.id_ucapan}
                 type="button"
-                className="self-end sm:self-start px-2.5 py-1 rounded-full border border-rose-200 text-rose-600 hover:bg-rose-50 text-[11px] transition-colors disabled:opacity-50 cursor-pointer"
+                className="self-end sm:self-start px-3 py-1 rounded-lg border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold transition-colors disabled:opacity-50 cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
               >
                 {deletingId === item.id_ucapan ? "Menghapus..." : "Hapus"}
               </button>

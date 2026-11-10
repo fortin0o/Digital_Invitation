@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import BotanicalCorner from "../BotanicalCorner";
-import BotanicalDivider from "../BotanicalDivider";
+import NeoSticker from "../NeoSticker";
+import NeoDivider from "../NeoDivider";
 
 interface AdminLoginFormProps {
-  onLoginSuccess: (email?: string) => void;
+  onLoginSuccess: (email?: string, role?: "super_admin" | "admin") => void;
 }
 
 export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) {
@@ -20,21 +20,24 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [infoMsg, setInfoMsg] = useState<string | null>(null);
 
-  // Fast passcode fallback login for practical school usage
   const handlePasscodeLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
 
-    // Default universal passcode for school practice
-    if (passcode.trim() === "admin123" || passcode.trim() === "nikah2026") {
-      localStorage.setItem("admin_auth_user", "Admin Praktik");
-      onLoginSuccess("Admin Praktik");
+    const code = passcode.trim();
+    if (code === "dev2026" || code === "superadmin123" || code === "developer") {
+      localStorage.setItem("admin_auth_user", "Developer (Super Admin)");
+      localStorage.setItem("admin_auth_role", "super_admin");
+      onLoginSuccess("Developer (Super Admin)", "super_admin");
+    } else if (code === "admin123" || code === "nikah2026") {
+      localStorage.setItem("admin_auth_user", "Admin Acara");
+      localStorage.setItem("admin_auth_role", "admin");
+      onLoginSuccess("Admin Acara", "admin");
     } else {
-      setErrorMsg("Kode sandi salah. Gunakan sandi: 'admin123' atau 'nikah2026'.");
+      setErrorMsg("Kode sandi salah. Gunakan sandi 'dev2026' (Super Admin) atau 'admin123' (Admin Acara).");
     }
   };
 
-  // Supabase Auth Login
   const handleSupabaseAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -51,7 +54,15 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         if (error) throw error;
 
         if (data.session) {
-          onLoginSuccess(data.user?.email);
+          const userEmailClean = data.user?.email || email.trim();
+          const role: "super_admin" | "admin" =
+            userEmailClean.toLowerCase().includes("dev") || userEmailClean.toLowerCase().includes("superadmin")
+              ? "super_admin"
+              : "admin";
+
+          localStorage.setItem("admin_auth_user", userEmailClean);
+          localStorage.setItem("admin_auth_role", role);
+          onLoginSuccess(userEmailClean, role);
         } else {
           setInfoMsg("Akun berhasil didaftarkan! Cek email untuk verifikasi atau gunakan Akses Sandi Cepat di tab samping.");
         }
@@ -64,7 +75,30 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         if (error) throw error;
 
         if (data.session) {
-          onLoginSuccess(data.user?.email);
+          const userEmailClean = data.user?.email || email.trim();
+          let role: "super_admin" | "admin" = "admin";
+
+          try {
+            const { data: adminRecord } = await supabase
+              .from("admin_users")
+              .select("role")
+              .eq("email", userEmailClean.toLowerCase())
+              .maybeSingle();
+
+            if (adminRecord?.role === "super_admin") {
+              role = "super_admin";
+            } else if (!adminRecord && (userEmailClean.toLowerCase().includes("dev") || userEmailClean.toLowerCase().includes("superadmin"))) {
+              role = "super_admin";
+            }
+          } catch {
+            if (userEmailClean.toLowerCase().includes("dev") || userEmailClean.toLowerCase().includes("superadmin")) {
+              role = "super_admin";
+            }
+          }
+
+          localStorage.setItem("admin_auth_user", userEmailClean);
+          localStorage.setItem("admin_auth_role", role);
+          onLoginSuccess(userEmailClean, role);
         }
       }
     } catch (err: unknown) {
@@ -76,41 +110,44 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF6F0] flex items-center justify-center p-4 relative overflow-hidden font-inter">
-      <BotanicalCorner position="top-left" size={130} opacity={0.5} />
-      <BotanicalCorner position="bottom-right" size={130} opacity={0.5} />
+    <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+      <div className="absolute inset-0 neo-bg-pattern opacity-15 pointer-events-none" />
 
-      <div className="w-full max-w-md bg-[#FFFDF9] rounded-3xl border border-[#C5A059]/35 shadow-[0_12px_40px_rgba(61,38,28,0.08)] p-6 sm:p-8 relative z-10">
-        <BotanicalCorner position="top-right" size={80} opacity={0.3} />
-
+      <div className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-6 sm:p-8 relative z-10">
         <div className="text-center mb-6">
-          <p className="text-xs tracking-widest text-[#8A6B53] uppercase mb-1 font-semibold">
-            Pawiwahan Ageng Arya &amp; Sekar
-          </p>
-          <h1 className="text-2xl sm:text-3xl text-[#3D261C] font-bold tracking-wide">
+          <div className="mb-2">
+            <NeoSticker
+              icon="🔐"
+              label="ADMIN DASHBOARD"
+              color="yellow"
+              rotate="-rotate-2"
+              size="sm"
+            />
+          </div>
+          <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-[#18181B] tracking-tight">
             Panel Administrator
           </h1>
-          <BotanicalDivider width={120} className="!my-2" />
-          <p className="text-xs text-[#8A6B53] font-normal">
-            Akses kelola data tamu angkatan, rekap RSVP, dan moderasi doa restu.
+          <NeoDivider className="!my-2" />
+          <p className="text-xs text-[#52525B] font-semibold">
+            Akses kelola daftar tamu, rekap RSVP, dan moderasi buku tamu.
           </p>
         </div>
 
         {/* Tab Selection */}
-        <div className="flex rounded-full bg-[#FAF6F0] p-1 border border-[#C5A059]/30 mb-6">
+        <div className="flex rounded-2xl bg-[#FFFDF5] p-1 border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] mb-5">
           <button
             type="button"
             onClick={() => {
               setAuthMode("passcode");
               setErrorMsg(null);
             }}
-            className={`flex-1 py-1.5 rounded-full text-xs tracking-wide transition-all cursor-pointer ${
+            className={`flex-1 py-2 rounded-xl text-xs font-extrabold tracking-wide transition-all cursor-pointer ${
               authMode === "passcode"
-                ? "bg-[#5C3A21] text-[#FFFDF9] font-semibold shadow-xs"
-                : "text-[#8A6B53] hover:text-[#3D261C]"
+                ? "bg-[#FFE600] text-[#18181B] shadow-[1.5px_1.5px_0px_#18181B] border border-[#18181B]"
+                : "text-[#71717A] hover:text-[#18181B]"
             }`}
           >
-            Akses Sandi Cepat
+            Akses Sandi Cepat ⚡
           </button>
           <button
             type="button"
@@ -118,10 +155,10 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
               setAuthMode("auth");
               setErrorMsg(null);
             }}
-            className={`flex-1 py-1.5 rounded-full text-xs tracking-wide transition-all cursor-pointer ${
+            className={`flex-1 py-2 rounded-xl text-xs font-extrabold tracking-wide transition-all cursor-pointer ${
               authMode === "auth"
-                ? "bg-[#5C3A21] text-[#FFFDF9] font-semibold shadow-xs"
-                : "text-[#8A6B53] hover:text-[#3D261C]"
+                ? "bg-[#FFE600] text-[#18181B] shadow-[1.5px_1.5px_0px_#18181B] border border-[#18181B]"
+                : "text-[#71717A] hover:text-[#18181B]"
             }`}
           >
             Supabase Auth
@@ -129,13 +166,13 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-800 animate-in fade-in">
+          <div className="mb-4 p-3 rounded-xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold animate-in fade-in">
             {errorMsg}
           </div>
         )}
 
         {infoMsg && (
-          <div className="mb-4 p-3 rounded-2xl bg-[#FAF6F0] border border-[#C5A059]/40 text-xs text-[#3D261C] animate-in fade-in">
+          <div className="mb-4 p-3 rounded-xl bg-[#2EE59D]/30 border-2 border-[#18181B] text-xs text-[#18181B] font-bold animate-in fade-in">
             {infoMsg}
           </div>
         )}
@@ -144,27 +181,34 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         {authMode === "passcode" && (
           <form onSubmit={handlePasscodeLogin} className="space-y-4">
             <div>
-              <label className="block text-xs uppercase tracking-wider text-[#8A6B53] mb-1 font-semibold">
-                Kode Sandi Admin
+              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
+                Kode Sandi Akses
               </label>
               <input
                 type="password"
                 required
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Masukkan sandi: admin123"
-                className="w-full py-2.5 px-3 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/30 focus:border-[#5C3A21] text-xs text-[#3D261C] outline-none"
+                placeholder="Masukkan sandi akses..."
+                className="w-full py-2.5 px-3.5 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
-              <p className="text-[11px] text-[#8A6B53] mt-1.5 font-light">
-                Gunakan sandi default: <strong className="font-semibold text-[#5C3A21]">admin123</strong>
-              </p>
+              <div className="mt-3 p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-[11px] text-[#18181B] space-y-1.5 font-bold">
+                <div className="flex items-center justify-between">
+                  <span>👑 Super Admin (Dev):</span>
+                  <code className="px-2 py-0.5 rounded-md bg-[#FFE600] border border-[#18181B]">dev2026</code>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>👤 Admin Acara:</span>
+                  <code className="px-2 py-0.5 rounded-md bg-white border border-[#18181B]">admin123</code>
+                </div>
+              </div>
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 rounded-full bg-[#5C3A21] hover:bg-[#3D261C] border border-[#C5A059] text-[#FFFDF9] text-xs font-semibold tracking-wider transition-all shadow-xs cursor-pointer"
+              className="w-full py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold tracking-wider transition-all shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer"
             >
-              Masuk Panel Admin
+              Masuk Panel Admin 🚀
             </button>
           </form>
         )}
@@ -173,7 +217,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         {authMode === "auth" && (
           <form onSubmit={handleSupabaseAuth} className="space-y-4">
             <div>
-              <label className="block text-xs uppercase tracking-wider text-[#8A6B53] mb-1 font-semibold">
+              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
                 Email
               </label>
               <input
@@ -181,13 +225,13 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@sekolah.sch.id"
-                className="w-full py-2.5 px-3 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/30 focus:border-[#5C3A21] text-xs text-[#3D261C] outline-none"
+                placeholder="admin@email.com"
+                className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider text-[#8A6B53] mb-1 font-semibold">
+              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
                 Password
               </label>
               <input
@@ -196,14 +240,14 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full py-2.5 px-3 rounded-xl bg-[#FAF6F0] border border-[#C5A059]/30 focus:border-[#5C3A21] text-xs text-[#3D261C] outline-none"
+                className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-full bg-[#5C3A21] hover:bg-[#3D261C] border border-[#C5A059] text-[#FFFDF9] text-xs font-semibold tracking-wider transition-all shadow-xs disabled:opacity-60 cursor-pointer"
+              className="w-full py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold tracking-wider transition-all shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] disabled:opacity-60 cursor-pointer"
             >
               {loading
                 ? "Memproses..."
@@ -212,7 +256,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 : "Masuk dengan Supabase"}
             </button>
 
-            <div className="text-center pt-2">
+            <div className="text-center pt-1">
               <button
                 type="button"
                 onClick={() => {
@@ -220,7 +264,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                   setErrorMsg(null);
                   setInfoMsg(null);
                 }}
-                className="text-xs text-[#8A6B53] hover:text-[#3D261C] underline transition-colors cursor-pointer"
+                className="text-xs text-[#52525B] hover:text-[#18181B] underline font-bold cursor-pointer"
               >
                 {isRegistering
                   ? "Sudah punya akun? Masuk di sini"
@@ -230,10 +274,10 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
           </form>
         )}
 
-        <div className="mt-8 pt-4 border-t border-[#C5A059]/20 text-center">
+        <div className="mt-6 pt-4 border-t-2 border-[#18181B] text-center">
           <Link
             href="/"
-            className="text-xs text-[#8A6B53] hover:text-[#3D261C] transition-colors"
+            className="text-xs text-[#52525B] hover:text-[#18181B] font-bold transition-colors"
           >
             &larr; Kembali ke Undangan Tamu
           </Link>
