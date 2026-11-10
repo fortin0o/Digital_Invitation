@@ -5,9 +5,9 @@ import NeoDivider from "./NeoDivider";
 export default function QuoteSection() {
   return (
     <section className="relative w-full py-8 px-4 text-center fade-up-element">
-      <div className="max-w-md mx-auto relative z-10 px-6 py-7 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
+      <div className="max-w-md mx-auto relative z-10 px-6 py-8 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
         {/* Top Sticker */}
-        <div className="mb-3">
+        <div className="mb-4">
           <NeoSticker
             label="OUR LOVE STORY"
             color="purple"
@@ -16,7 +16,7 @@ export default function QuoteSection() {
           />
         </div>
 
-        <p className="font-display font-bold text-sm sm:text-base text-[#FF5D8F] mb-3 leading-snug">
+        <p className="font-display font-bold text-sm sm:text-base text-[#FF5D8F] mb-4 leading-snug">
           &ldquo;Dua hati, satu janji suci, melangkah bersama menuju masa depan yang penuh cinta, tawa, dan keberkahan.&rdquo;
         </p>
 
@@ -26,7 +26,7 @@ export default function QuoteSection() {
 
         <NeoDivider className="!my-2" />
 
-        <div className="inline-flex mt-1">
+        <div className="inline-flex mt-2">
           <NeoSticker
             label="QS. Ar-Rum : 21"
             color="yellow"
