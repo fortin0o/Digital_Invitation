@@ -127,7 +127,6 @@ export default function GuestbookSection({
         <div className="fade-up-element mb-8">
           <div className="mb-2">
             <NeoSticker
-              icon="💬"
               label="WISHES & PRAYERS"
               color="cyan"
               rotate="-rotate-2"
@@ -180,9 +179,8 @@ export default function GuestbookSection({
             )}
 
             {successNotice && (
-              <div className="p-3 rounded-xl bg-[#2EE59D]/40 border-2 border-[#18181B] text-xs text-[#18181B] font-bold flex items-center gap-2">
-                <span>🎉</span>
-                <span>Terima kasih! Pesan dan doa Anda telah berhasil terkirim.</span>
+              <div className="p-3 rounded-xl bg-[#2EE59D]/40 border-2 border-[#18181B] text-xs text-[#18181B] font-bold">
+                Terima kasih, pesan dan doa Anda telah berhasil terkirim.
               </div>
             )}
 
@@ -194,10 +192,7 @@ export default function GuestbookSection({
               {loading ? (
                 <span>Mengirim Ucapan...</span>
               ) : (
-                <>
-                  <span>🚀</span>
-                  <span>Kirim Ucapan &amp; Doa Restu</span>
-                </>
+                <span>Kirim Ucapan &amp; Doa Restu</span>
               )}
             </button>
           </form>
@@ -209,8 +204,8 @@ export default function GuestbookSection({
             <span className="font-display text-base font-extrabold text-[#18181B]">
               Kumpulan Doa &amp; Ucapan ({messages.length})
             </span>
-            <span className="px-2 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold text-[10px] border border-[#18181B]">
-              Realtime ✨
+            <span className="px-2.5 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold text-[10px] border border-[#18181B]">
+              Realtime
             </span>
           </div>
 

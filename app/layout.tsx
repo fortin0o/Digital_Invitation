@@ -17,12 +17,12 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "The Wedding of Arya & Sekar — We're Getting Married! 🎉",
+  title: "The Wedding of Arya & Sekar — We're Getting Married",
   description:
-    "You are cordially invited to celebrate the wedding of Arya Suryo Wicaksono & Sekar Arum Kinanti. Join our celebration of love and happiness!",
+    "You are cordially invited to celebrate the wedding of Arya Suryo Wicaksono & Sekar Arum Kinanti. Join our celebration of love and happiness.",
   openGraph: {
-    title: "The Wedding of Arya & Sekar 🎉",
-    description: "Rayakan Momen Bahagia Arya & Sekar bersama kami!",
+    title: "The Wedding of Arya & Sekar",
+    description: "Rayakan Momen Bahagia Arya & Sekar bersama kami.",
     type: "website",
   },
 };

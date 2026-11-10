@@ -42,7 +42,6 @@ export default function DigitalGiftSection() {
         <div className="fade-up-element mb-8">
           <div className="mb-2">
             <NeoSticker
-              icon="🎁"
               label="WEDDING REGISTRY"
               color="orange"
               rotate="-rotate-2"
@@ -62,9 +61,8 @@ export default function DigitalGiftSection() {
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-full bg-[#FF9233] hover:bg-[#FF8015] text-[#18181B] text-xs font-display font-extrabold uppercase tracking-wider border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#FF9233] hover:bg-[#FF8015] text-[#18181B] text-xs font-display font-extrabold uppercase tracking-wider border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
           >
-            <span>💳</span>
             <span>{isOpen ? "Tutup Amplop Digital" : "Buka Amplop Digital & Kirim Kado"}</span>
           </button>
         </div>
@@ -108,15 +106,9 @@ export default function DigitalGiftSection() {
                   }`}
                 >
                   {copiedBank === account.id ? (
-                    <>
-                      <span>✓</span>
-                      <span>Nomor Rekening Tersalin!</span>
-                    </>
+                    <span>Nomor Rekening Tersalin</span>
                   ) : (
-                    <>
-                      <span>📋</span>
-                      <span>Salin Nomor Rekening</span>
-                    </>
+                    <span>Salin Nomor Rekening</span>
                   )}
                 </button>
               </div>
@@ -125,7 +117,6 @@ export default function DigitalGiftSection() {
             {/* Alamat Pengiriman Kado Fisik */}
             <div className="p-5 rounded-[24px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg">📦</span>
                 <h4 className="font-display text-base font-extrabold text-[#18181B]">
                   Kirim Kado Fisik (Alamat)
                 </h4>
@@ -146,7 +137,7 @@ export default function DigitalGiftSection() {
                     : "bg-[#FFFDF5] text-[#18181B] hover:bg-[#FFE600]"
                 }`}
               >
-                {copiedBank === "alamat" ? "Alamat Berhasil Disalin! ✓" : "📋 Salin Alamat Pengiriman"}
+                {copiedBank === "alamat" ? "Alamat Berhasil Disalin" : "Salin Alamat Pengiriman"}
               </button>
             </div>
           </div>

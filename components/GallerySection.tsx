@@ -54,7 +54,6 @@ export default function GallerySection() {
         <div className="fade-up-element mb-8">
           <div className="mb-2">
             <NeoSticker
-              icon="📸"
               label="OUR MEMORIES"
               color="purple"
               rotate="-rotate-2"
@@ -84,10 +83,10 @@ export default function GallerySection() {
                 sizes="(max-width: 640px) 45vw, 240px"
                 className="object-cover object-center group-hover:scale-105 transition-transform duration-300"
               />
-              {/* Playful hover zoom pill */}
+              {/* Clean hover zoom pill */}
               <div className="absolute inset-0 bg-[#18181B]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span className="p-2 rounded-full bg-[#FFE600] text-[#18181B] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold">
-                  🔍 Lihat
+                <span className="px-3 py-1.5 rounded-full bg-[#FFE600] text-[#18181B] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold">
+                  Lihat Foto
                 </span>
               </div>
             </div>

@@ -9,7 +9,6 @@ export default function QuoteSection() {
         {/* Top Sticker */}
         <div className="mb-3">
           <NeoSticker
-            icon="💬"
             label="OUR LOVE STORY"
             color="purple"
             rotate="-rotate-1"
@@ -29,7 +28,6 @@ export default function QuoteSection() {
 
         <div className="inline-flex mt-1">
           <NeoSticker
-            icon="✨"
             label="QS. Ar-Rum : 21"
             color="yellow"
             rotate="rotate-2"

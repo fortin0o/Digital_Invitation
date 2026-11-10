@@ -43,7 +43,6 @@ export default function EventSection() {
         <div className="fade-up-element mb-8">
           <div className="mb-2">
             <NeoSticker
-              icon="📅"
               label="SAVE THE DATE"
               color="yellow"
               rotate="-rotate-2"
@@ -60,10 +59,8 @@ export default function EventSection() {
 
         {/* Colorful Neobrutalist Countdown Timer */}
         <div className="fade-up-element mb-8 p-5 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
-          <p className="font-display font-bold text-xs uppercase tracking-wider text-[#18181B] mb-3 flex items-center justify-center gap-1.5">
-            <span>⚡</span>
-            <span>COUNTING DOWN TO THE BIG DAY!</span>
-            <span>⚡</span>
+          <p className="font-display font-bold text-xs uppercase tracking-wider text-[#18181B] mb-3 text-center">
+            COUNTING DOWN TO THE BIG DAY
           </p>
 
           <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
@@ -92,7 +89,7 @@ export default function EventSection() {
         <div className="fade-up-element mb-6 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
           <div className="mb-3">
             <span className="px-3 py-1 rounded-full bg-[#FFE600] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
-              💍 AKAD NIKAH
+              AKAD NIKAH
             </span>
           </div>
 
@@ -104,13 +101,11 @@ export default function EventSection() {
           </p>
 
           <div className="space-y-2 text-xs text-[#52525B] font-sans font-medium">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
-              <span>📅</span>
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
               <span>Sabtu, 14 November 2026</span>
             </div>
             <br />
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
-              <span>⏰</span>
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
               <span>Pukul 08.00 - 10.00 WIB</span>
             </div>
             <div className="pt-3 text-[#18181B] font-bold font-display text-base">
@@ -123,7 +118,7 @@ export default function EventSection() {
         <div className="fade-up-element mb-6 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
           <div className="mb-3">
             <span className="px-3 py-1 rounded-full bg-[#FF5D8F] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
-              🎉 RESEPSI PERNIKAHAN
+              RESEPSI PERNIKAHAN
             </span>
           </div>
 
@@ -135,13 +130,11 @@ export default function EventSection() {
           </p>
 
           <div className="space-y-2 text-xs text-[#52525B] font-sans font-medium">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
-              <span>📅</span>
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
               <span>Sabtu, 14 November 2026</span>
             </div>
             <br />
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
-              <span>⏰</span>
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
               <span>Pukul 11.00 - 14.00 WIB</span>
             </div>
             <div className="pt-3 text-[#18181B] font-bold font-display text-base">
@@ -154,7 +147,7 @@ export default function EventSection() {
         <div className="fade-up-element p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center">
           <div className="mb-3">
             <span className="px-3 py-1 rounded-full bg-[#38BDF8] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
-              📍 LOKASI VENUE
+              LOKASI VENUE
             </span>
           </div>
 
@@ -172,7 +165,6 @@ export default function EventSection() {
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 text-xs font-bold transition-all"
             >
-              <span>🗺️</span>
               <span>Buka Google Maps</span>
             </a>
 
@@ -182,7 +174,6 @@ export default function EventSection() {
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 text-xs font-bold transition-all"
             >
-              <span>📅</span>
               <span>Simpan ke Kalender</span>
             </a>
           </div>

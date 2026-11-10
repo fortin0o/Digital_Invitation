@@ -37,16 +37,16 @@ export default function CoverSection({
 
       {/* Floating Playful Decorative Stickers (Ambient) */}
       <div className="hidden sm:block absolute top-10 left-12 animate-neo-float">
-        <NeoSticker icon="🎉" label="CELEBRATE WITH US!" color="yellow" rotate="-rotate-6" />
+        <NeoSticker label="CELEBRATE WITH US" color="yellow" rotate="-rotate-6" />
       </div>
       <div className="hidden sm:block absolute top-14 right-12 animate-neo-float" style={{ animationDelay: "1s" }}>
-        <NeoSticker icon="✨" label="14 NOV 2026" color="cyan" rotate="rotate-6" />
+        <NeoSticker label="14 NOV 2026" color="cyan" rotate="rotate-6" />
       </div>
       <div className="hidden sm:block absolute bottom-12 left-16 animate-neo-float" style={{ animationDelay: "0.5s" }}>
-        <NeoSticker icon="💖" label="IT'S A MATCH!" color="pink" rotate="rotate-3" />
+        <NeoSticker label="WEDDING CEREMONY" color="pink" rotate="rotate-3" />
       </div>
       <div className="hidden sm:block absolute bottom-14 right-16 animate-neo-float" style={{ animationDelay: "1.5s" }}>
-        <NeoSticker icon="🥂" label="PARTY TIME!" color="green" rotate="-rotate-3" />
+        <NeoSticker label="RECEPTION" color="green" rotate="-rotate-3" />
       </div>
 
       {/* Main Semi-Neobrutalist Card */}
@@ -54,7 +54,6 @@ export default function CoverSection({
         {/* Top Tag */}
         <div className="mb-3 sm:mb-4">
           <NeoSticker
-            icon="💌"
             label="SPECIAL WEDDING INVITATION"
             color="yellow"
             rotate="-rotate-1"
@@ -77,8 +76,7 @@ export default function CoverSection({
 
         <NeoDivider className="!my-2.5 sm:!my-3" />
 
-        <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-[10px] sm:text-xs font-bold mb-4 sm:mb-5 max-w-full">
-          <span>📅</span>
+        <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-[10px] sm:text-xs font-bold mb-4 sm:mb-5 max-w-full">
           <span className="truncate">Sabtu, 14 Nov 2026 • Surakarta</span>
         </div>
 
@@ -100,7 +98,7 @@ export default function CoverSection({
           onClick={handleOpen}
           type="button"
           disabled={isOpening}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#FF5D8F] hover:bg-[#FF4075] text-[#18181B] font-bold text-xs uppercase tracking-wider border-[2.5px] border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#FF5D8F] hover:bg-[#FF4075] text-[#18181B] font-bold text-xs uppercase tracking-wider border-[2.5px] border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
         >
           <svg
             className="w-4 h-4 text-[#18181B]"
@@ -115,7 +113,7 @@ export default function CoverSection({
               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
             />
           </svg>
-          <span>Buka Undangan 💌</span>
+          <span>Buka Undangan</span>
         </button>
       </div>
     </section>

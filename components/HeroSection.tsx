@@ -10,7 +10,6 @@ export default function HeroSection() {
         {/* Top Playful Badge */}
         <div className="mb-3 animate-neo-wiggle">
           <NeoSticker
-            icon="💒"
             label="THE WEDDING CELEBRATION"
             color="yellow"
             rotate="-rotate-2"
@@ -28,7 +27,6 @@ export default function HeroSection() {
 
         <div className="mt-3">
           <NeoSticker
-            icon="📍"
             label="14 November 2026 • Surakarta"
             color="cyan"
             rotate="rotate-1"
@@ -53,11 +51,11 @@ export default function HeroSection() {
 
           {/* Fun Corner Stickers on Frame */}
           <div className="absolute -top-3 -right-3 z-20">
-            <NeoSticker icon="💖" label="IN LOVE" color="pink" rotate="rotate-6" size="sm" />
+            <NeoSticker label="IN LOVE" color="pink" rotate="rotate-6" size="sm" />
           </div>
 
           <div className="absolute -bottom-3 -left-3 z-20">
-            <NeoSticker icon="✨" label="FOREVER" color="green" rotate="-rotate-6" size="sm" />
+            <NeoSticker label="FOREVER" color="green" rotate="-rotate-6" size="sm" />
           </div>
         </div>
 

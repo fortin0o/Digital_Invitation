@@ -11,7 +11,6 @@ export default function CoupleSection() {
         <div className="fade-up-element mb-10">
           <div className="mb-2">
             <NeoSticker
-              icon="💍"
               label="MEET THE COUPLE"
               color="pink"
               rotate="-rotate-2"
@@ -31,7 +30,7 @@ export default function CoupleSection() {
           {/* Top accent badge */}
           <div className="absolute top-4 right-4">
             <span className="px-2.5 py-0.5 rounded-full bg-[#FF5D8F] text-[#18181B] font-bold text-[10px] border-2 border-[#18181B]">
-              👰 THE BRIDE
+              THE BRIDE
             </span>
           </div>
 
@@ -68,11 +67,10 @@ export default function CoupleSection() {
           </a>
         </div>
 
-        {/* Playful Match Center Badge */}
+        {/* Match Center Badge */}
         <div className="fade-up-element my-4 flex items-center justify-center">
           <NeoSticker
-            icon="💖"
-            label="IT'S A MATCH!"
+            label="THE PERFECT PAIR"
             color="yellow"
             rotate="rotate-3"
             size="md"
@@ -84,7 +82,7 @@ export default function CoupleSection() {
           {/* Top accent badge */}
           <div className="absolute top-4 right-4">
             <span className="px-2.5 py-0.5 rounded-full bg-[#38BDF8] text-[#18181B] font-bold text-[10px] border-2 border-[#18181B]">
-              🤵 THE GROOM
+              THE GROOM
             </span>
           </div>
 

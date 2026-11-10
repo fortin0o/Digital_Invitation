@@ -189,7 +189,6 @@ export default function RsvpSection({
         <div className="fade-up-element mb-8">
           <div className="mb-2">
             <NeoSticker
-              icon="💌"
               label="RSVP ONLINE"
               color="green"
               rotate="-rotate-2"
@@ -208,17 +207,17 @@ export default function RsvpSection({
         <div className="fade-up-element p-6 sm:p-7 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[6px_6px_0px_#18181B] text-left relative">
           {submitted ? (
             <div className="py-4 text-center animate-in fade-in duration-400">
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-2xl">
-                🎉
+              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-lg font-black text-[#18181B]">
+                ✓
               </div>
               <h3 className="font-display font-extrabold text-2xl text-[#18181B] mb-1">
-                Terima Kasih Banyak!
+                Terima Kasih Banyak
               </h3>
               <p className="font-sans text-xs text-[#52525B] leading-relaxed mb-4 font-medium">
                 Konfirmasi kehadiran Anda telah berhasil kami simpan.
                 {status === "hadir" && (
                   <span className="block mt-1.5 font-bold text-[#18181B] bg-[#2EE59D]/30 p-2 rounded-xl border border-[#18181B]">
-                    Sampai jumpa di hari perayaan kami ({jumlahHadir} orang)! ✨
+                    Sampai jumpa di hari perayaan kami ({jumlahHadir} orang).
                   </span>
                 )}
               </p>
@@ -228,7 +227,7 @@ export default function RsvpSection({
                 <div className="my-5 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] max-w-xs mx-auto text-center relative">
                   <div className="flex items-center justify-between pb-2 border-b-2 border-dashed border-[#18181B] mb-3">
                     <span className="font-display text-xs font-black uppercase tracking-wider text-[#18181B]">
-                      🎟️ TIKET MASUK RESEPSI
+                      TIKET MASUK RESEPSI
                     </span>
                     <span className="font-sans text-[10px] bg-[#FFE600] text-[#18181B] font-bold px-2 py-0.5 rounded-full border border-[#18181B]">
                       {jumlahHadir} Orang
@@ -365,9 +364,9 @@ export default function RsvpSection({
                 </label>
                 <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                   {[
-                    { id: "hadir", label: "🎉 Hadir", activeBg: "bg-[#2EE59D]" },
-                    { id: "ragu", label: "🤔 Ragu", activeBg: "bg-[#FFE600]" },
-                    { id: "tidak_hadir", label: "😢 Absen", activeBg: "bg-[#FF5D8F]" },
+                    { id: "hadir", label: "Hadir", activeBg: "bg-[#2EE59D]" },
+                    { id: "ragu", label: "Ragu", activeBg: "bg-[#FFE600]" },
+                    { id: "tidak_hadir", label: "Absen", activeBg: "bg-[#FF5D8F]" },
                   ].map((opt) => (
                     <button
                       key={opt.id}
@@ -436,7 +435,7 @@ export default function RsvpSection({
                     <span>Menyimpan RSVP...</span>
                   </>
                 ) : (
-                  <span>Kirim Konfirmasi Kehadiran 🚀</span>
+                  <span>Kirim Konfirmasi Kehadiran</span>
                 )}
               </button>
             </form>

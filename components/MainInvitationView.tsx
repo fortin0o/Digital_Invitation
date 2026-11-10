@@ -11,7 +11,6 @@ import RsvpSection from "./RsvpSection";
 import DigitalGiftSection from "./DigitalGiftSection";
 import GuestbookSection from "./GuestbookSection";
 import FooterSection from "./FooterSection";
-import AudioPlayer from "./AudioPlayer";
 import ScrollFadeProvider from "./ScrollFadeProvider";
 import NeoSticker from "./NeoSticker";
 
@@ -81,7 +80,6 @@ export default function MainInvitationView({
         <div className="hidden lg:block fixed top-12 left-12 pointer-events-none select-none z-10">
           <div className="mb-2">
             <NeoSticker
-              icon="💒"
               label="WEDDING CELEBRATION"
               color="yellow"
               rotate="-rotate-3"
@@ -97,8 +95,7 @@ export default function MainInvitationView({
 
         <div className="hidden lg:block fixed bottom-12 left-12 pointer-events-none select-none z-10">
           <NeoSticker
-            icon="🎉"
-            label="JOIN THE PARTY!"
+            label="JOIN THE CELEBRATION"
             color="green"
             rotate="rotate-3"
           />
@@ -185,9 +182,6 @@ export default function MainInvitationView({
             </div>
           )}
         </main>
-
-        {/* Ambient Romantic Music Player */}
-        <AudioPlayer autoPlayTrigger={isOpen} />
       </div>
     </ScrollFadeProvider>
   );
