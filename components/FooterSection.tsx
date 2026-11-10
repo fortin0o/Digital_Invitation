@@ -5,7 +5,7 @@ import NeoDivider from "./NeoDivider";
 
 export default function FooterSection() {
   return (
-    <footer className="relative w-full pt-10 pb-24 px-4 text-center overflow-hidden">
+    <footer className="relative w-full pt-12 pb-24 px-4 text-center overflow-hidden">
       <div className="max-w-md mx-auto relative z-10">
         <div className="fade-up-element px-6 py-8 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] mb-6">
           <div className="mb-2">
@@ -25,9 +25,9 @@ export default function FooterSection() {
             Merupakan suatu kebahagiaan dan kehormatan yang teramat besar bagi kami atas kehadiran dan untaian doa restu dari Bapak/Ibu/Saudara/i sekalian.
           </p>
 
-          <NeoDivider className="!my-3" />
+          <NeoDivider className="!my-4" />
 
-          <p className="font-sans text-xs text-[#71717A] font-semibold mt-3">
+          <p className="font-sans text-xs text-[#71717A] font-semibold mt-4">
             Sampai jumpa di hari perayaan kami.
           </p>
         </div>
@@ -39,7 +39,7 @@ export default function FooterSection() {
         <div className="mt-4">
           <Link
             href="/admin"
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold text-[#18181B] transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold text-[#18181B] transition-all"
           >
             <span>Panel Admin</span>
           </Link>

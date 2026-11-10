@@ -202,8 +202,8 @@ export default function GuestManagement({
       )}
 
       {/* Header Bar */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B]">
-        <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B]">
+        <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
           {/* Search Box */}
           <div className="relative flex-1">
             <input
@@ -211,7 +211,7 @@ export default function GuestManagement({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari nama tamu atau kode..."
-              className="w-full px-3 py-2 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
+              className="w-full px-4 py-2 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
             />
           </div>
 
@@ -219,7 +219,7 @@ export default function GuestManagement({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs text-[#18181B] font-bold outline-none cursor-pointer"
+            className="py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs text-[#18181B] font-bold outline-none cursor-pointer"
           >
             <option value="all">Semua Tamu ({guests.length})</option>
             <option value="hadir">Konfirmasi Hadir ({guests.filter((g) => g.rsvp?.status === "hadir").length})</option>
@@ -234,7 +234,7 @@ export default function GuestManagement({
           <button
             onClick={handleExportCSV}
             type="button"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
             title="Unduh Laporan Excel (CSV)"
           >
             <span>Ekspor Excel</span>
@@ -244,7 +244,7 @@ export default function GuestManagement({
           <button
             onClick={() => setShowAddModal(true)}
             type="button"
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
           >
             <span>+ Tambah Tamu</span>
           </button>
@@ -439,11 +439,11 @@ export default function GuestManagement({
       {/* Add Guest Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
-          <div className="w-full max-w-sm rounded-[28px] bg-white border-[3px] border-[#18181B] p-5 sm:p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-sm rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[90vh] overflow-y-auto">
             <h3 className="font-display text-xl font-extrabold text-[#18181B] mb-1">
               Tambah Tamu Undangan
             </h3>
-            <p className="text-xs text-[#71717A] mb-5 font-semibold">
+            <p className="text-xs text-[#71717A] mb-6 font-semibold">
               Kode personal unik otomatis digenerate untuk link undangan personal.
             </p>
 
@@ -458,7 +458,7 @@ export default function GuestManagement({
                   value={newNama}
                   onChange={(e) => setNewNama(e.target.value)}
                   placeholder="Contoh: Muhammad Rizki"
-                  className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
               </div>
 
@@ -473,7 +473,7 @@ export default function GuestManagement({
                   required
                   value={newKuota}
                   onChange={(e) => setNewKuota(Number(e.target.value))}
-                  className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
               </div>
 
@@ -501,7 +501,7 @@ export default function GuestManagement({
       {/* Guest QR Code Pass Modal */}
       {qrModalGuest && (
         <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
-          <div className="w-full max-w-xs rounded-[28px] bg-white border-[3px] border-[#18181B] p-5 sm:p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-xs rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setQrModalGuest(null)}
               type="button"
@@ -513,11 +513,11 @@ export default function GuestManagement({
             <span className="text-[10px] uppercase tracking-wider text-[#18181B] font-extrabold bg-[#FFE600] px-2.5 py-0.5 rounded-full border border-[#18181B]">
               TIKET MASUK DIGITAL
             </span>
-            <h3 className="font-display text-lg font-extrabold text-[#18181B] mt-2 mb-3">
+            <h3 className="font-display text-lg font-extrabold text-[#18181B] mt-2 mb-4">
               {qrModalGuest.nama_tamu}
             </h3>
 
-            <div className="bg-[#FFFDF5] p-3 rounded-2xl border-2 border-[#18181B] inline-block shadow-[3px_3px_0px_#18181B] mb-3">
+            <div className="bg-[#FFFDF5] p-4 rounded-2xl border-2 border-[#18181B] inline-block shadow-[3px_3px_0px_#18181B] mb-4">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
                   `WEDDING-ARYA-SEKAR:${qrModalGuest.kode}:${qrModalGuest.nama_tamu}:${qrModalGuest.rsvp?.jumlah_hadir || qrModalGuest.kuota || 1}`
@@ -534,7 +534,7 @@ export default function GuestManagement({
               Kuota: {qrModalGuest.rsvp?.jumlah_hadir || qrModalGuest.kuota || 1} Orang
             </p>
 
-            <div className="mt-4 pt-3 border-t-2 border-[#18181B] flex items-center gap-2">
+            <div className="mt-4 pt-4 border-t-2 border-[#18181B] flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => copyInvitationLink(qrModalGuest.kode, qrModalGuest.nama_tamu)}

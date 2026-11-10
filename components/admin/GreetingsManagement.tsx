@@ -64,13 +64,13 @@ export default function GreetingsManagement({
   };
 
   return (
-    <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] p-5 sm:p-6 space-y-4 font-sans">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-[#18181B] gap-3">
+    <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] p-6 space-y-4 font-sans">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b-2 border-[#18181B] gap-4">
         <div>
           <h2 className="font-display text-lg sm:text-xl font-extrabold text-[#18181B]">
             Daftar Ucapan &amp; Doa Restu ({greetings.length})
           </h2>
-          <p className="text-xs text-[#71717A] mt-0.5 font-bold">
+          <p className="text-xs text-[#71717A] mt-1 font-bold">
             Semua ucapan dan doa dari para tamu undangan yang masuk secara realtime.
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function GreetingsManagement({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari pengirim atau pesan..."
-              className="w-full px-3 py-1.5 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
+              className="w-full px-4 py-2 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
             />
           </div>
         )}
@@ -103,11 +103,11 @@ export default function GreetingsManagement({
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {filteredGreetings.map((item) => (
             <div
               key={item.id_ucapan}
-              className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2.5px_2.5px_0px_#18181B] flex flex-col sm:flex-row sm:items-start justify-between gap-3 hover:bg-white transition-colors"
+              className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2.5px_2.5px_0px_#18181B] flex flex-col sm:flex-row sm:items-start justify-between gap-4 hover:bg-white transition-colors"
             >
               <div className="space-y-1">
                 <div className="flex items-baseline gap-2">

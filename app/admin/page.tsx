@@ -170,7 +170,7 @@ export default function AdminPage() {
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {loading ? (
           <div className="py-20 text-center">
-            <div className="inline-block w-7 h-7 border-3 border-[#18181B] border-t-[#FFE600] rounded-full animate-spin mb-2" />
+            <div className="inline-block w-8 h-8 border-3 border-[#18181B] border-t-[#FFE600] rounded-full animate-spin mb-2" />
             <p className="text-xs font-bold text-[#71717A]">Memuat data admin...</p>
           </div>
         ) : (
@@ -180,12 +180,12 @@ export default function AdminPage() {
                 <RsvpSummaryCards stats={stats} />
 
                 {/* Quick actions & recap */}
-                <div className="p-5 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="p-6 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <h3 className="font-display font-extrabold text-base sm:text-lg text-[#18181B]">
                       Rekap Kehadiran Tamu Undangan
                     </h3>
-                    <p className="text-xs text-[#52525B] mt-0.5 font-medium">
+                    <p className="text-xs text-[#52525B] mt-1 font-medium">
                       Estimasi kehadiran saat ini: <strong className="text-[#18181B] font-extrabold">{stats.totalHadirOrang} orang</strong> dari {stats.totalHadirTamu} undangan terkonfirmasi.
                     </p>
                   </div>
@@ -197,7 +197,7 @@ export default function AdminPage() {
                       setTimeout(() => setReportCopied(false), 2500);
                     }}
                     type="button"
-                    className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#18181B] text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-[2.5px_2.5px_0px_#18181B] ${
+                    className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border-2 border-[#18181B] text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-[2px_2px_0px_#18181B] ${
                       reportCopied
                         ? "bg-[#2EE59D] text-[#18181B]"
                         : "bg-[#FFE600] text-[#18181B] hover:bg-[#FFD700]"
@@ -213,7 +213,7 @@ export default function AdminPage() {
 
                 {/* Recent guests preview table */}
                 <div className="pt-2">
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-4">
                     <h3 className="font-display font-extrabold text-lg text-[#18181B]">
                       Daftar Tamu Terbaru
                     </h3>

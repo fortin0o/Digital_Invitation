@@ -204,10 +204,10 @@ export default function RsvpSection({
         </div>
 
         {/* Form Card */}
-        <div className="fade-up-element p-6 sm:p-7 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[6px_6px_0px_#18181B] text-left relative">
+        <div className="fade-up-element p-6 sm:p-8 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[6px_6px_0px_#18181B] text-left relative">
           {submitted ? (
             <div className="py-4 text-center animate-in fade-in duration-400">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-lg font-black text-[#18181B]">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-lg font-black text-[#18181B]">
                 ✓
               </div>
               <h3 className="font-display font-extrabold text-2xl text-[#18181B] mb-1">
@@ -216,7 +216,7 @@ export default function RsvpSection({
               <p className="font-sans text-xs text-[#52525B] leading-relaxed mb-4 font-medium">
                 Konfirmasi kehadiran Anda telah berhasil kami simpan.
                 {status === "hadir" && (
-                  <span className="block mt-1.5 font-bold text-[#18181B] bg-[#2EE59D]/30 p-2 rounded-xl border border-[#18181B]">
+                  <span className="block mt-2 font-bold text-[#18181B] bg-[#2EE59D]/30 p-2 sm:p-4 rounded-xl border border-[#18181B]">
                     Sampai jumpa di hari perayaan kami ({jumlahHadir} orang).
                   </span>
                 )}
@@ -224,8 +224,8 @@ export default function RsvpSection({
 
               {/* Digital Pass Ticket for Hadir */}
               {status === "hadir" && tamu && (
-                <div className="my-5 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] max-w-xs mx-auto text-center relative">
-                  <div className="flex items-center justify-between pb-2 border-b-2 border-dashed border-[#18181B] mb-3">
+                <div className="my-6 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] max-w-xs mx-auto text-center relative">
+                  <div className="flex items-center justify-between pb-2 border-b-2 border-dashed border-[#18181B] mb-4">
                     <span className="font-display text-xs font-black uppercase tracking-wider text-[#18181B]">
                       TIKET MASUK RESEPSI
                     </span>
@@ -235,7 +235,7 @@ export default function RsvpSection({
                   </div>
 
                   {/* QR Code image */}
-                  <div className="bg-white p-2.5 rounded-xl border-2 border-[#18181B] inline-block shadow-[2px_2px_0px_#18181B] mb-2">
+                  <div className="bg-white p-2 rounded-xl border-2 border-[#18181B] inline-block shadow-[2px_2px_0px_#18181B] mb-2">
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
                         `WEDDING-ARYA-SEKAR:${tamu.kode}:${tamu.nama_tamu}:${jumlahHadir}`
@@ -249,7 +249,7 @@ export default function RsvpSection({
                   <p className="font-mono text-xs font-extrabold text-[#18181B] tracking-widest mt-1">
                     {tamu.kode}
                   </p>
-                  <p className="font-display text-sm font-bold text-[#FF5D8F] mt-0.5">
+                  <p className="font-display text-sm font-bold text-[#FF5D8F] mt-1">
                     {tamu.nama_tamu}
                   </p>
                   <p className="font-sans text-[10px] text-[#71717A] mt-2 font-medium">
@@ -262,16 +262,16 @@ export default function RsvpSection({
                 <button
                   type="button"
                   onClick={() => setSubmitted(false)}
-                  className="inline-flex px-5 py-2 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_#18181B]"
+                  className="inline-flex px-6 py-2 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_#18181B]"
                 >
                   Ubah Konfirmasi Kehadiran
                 </button>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {existingRsvp && (
-                <div className="p-3 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs text-[#18181B] space-y-1">
+                <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs text-[#18181B] space-y-2">
                   <div className="flex items-center gap-2 font-bold">
                     <span>✓</span>
                     <span>
@@ -285,7 +285,7 @@ export default function RsvpSection({
                     <button
                       type="button"
                       onClick={() => setSubmitted(true)}
-                      className="text-[11px] font-bold text-[#FF5D8F] underline hover:text-[#18181B] cursor-pointer block pl-5"
+                      className="text-[11px] font-bold text-[#FF5D8F] underline hover:text-[#18181B] cursor-pointer block pl-6"
                     >
                       Buka Tiket Masuk QR Code &rarr;
                     </button>
@@ -295,22 +295,22 @@ export default function RsvpSection({
 
               {/* Guest Name Field */}
               <div>
-                <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1.5 font-bold">
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-2 font-bold">
                   Nama Tamu Undangan
                 </label>
                 {tamu ? (
-                  <div className="p-3 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-between">
+                  <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-between">
                     <div>
                       <span className="font-display font-extrabold text-base text-[#18181B] block">
                         {tamu.nama_tamu}
                       </span>
-                      <span className="text-[11px] text-[#2EE59D] font-bold flex items-center gap-1 mt-0.5">
+                      <span className="text-[11px] text-[#2EE59D] font-bold flex items-center gap-1 mt-1">
                         <span className="w-2 h-2 rounded-full bg-[#2EE59D]" />
                         Terdaftar di buku tamu resmi
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold border border-[#18181B]">
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold border border-[#18181B]">
                         Maks {tamu.kuota || 1} org
                       </span>
                       {!initialTamu && (
@@ -339,18 +339,18 @@ export default function RsvpSection({
                           setErrorMessage(null);
                         }}
                         placeholder="Ketikkan nama lengkap Anda..."
-                        className="w-full py-2.5 px-3.5 pr-24 bg-[#FFFDF5] rounded-xl border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
+                        className="w-full py-2.5 px-4 pr-24 bg-[#FFFDF5] rounded-xl border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
                       />
                       <button
                         type="button"
                         onClick={handleManualCheck}
                         disabled={verifying || !manualName.trim()}
-                        className="absolute right-1.5 px-3 py-1.5 rounded-lg bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] text-[11px] font-extrabold border border-[#18181B] transition-colors disabled:opacity-40 cursor-pointer"
+                        className="absolute right-2 px-3 py-1.5 rounded-lg bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] text-[11px] font-extrabold border border-[#18181B] transition-colors disabled:opacity-40 cursor-pointer"
                       >
                         {verifying ? "Memeriksa..." : "Cek Nama"}
                       </button>
                     </div>
-                    <p className="text-[11px] text-[#71717A] mt-1.5 font-medium">
+                    <p className="text-[11px] text-[#71717A] mt-2 font-medium">
                       Ketikkan nama sesuai daftar angkatan sekolah untuk verifikasi.
                     </p>
                   </div>
@@ -362,7 +362,7 @@ export default function RsvpSection({
                 <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-2 font-bold">
                   Status Kehadiran
                 </label>
-                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   {[
                     { id: "hadir", label: "Hadir", activeBg: "bg-[#2EE59D]" },
                     { id: "ragu", label: "Ragu", activeBg: "bg-[#FFE600]" },
@@ -372,7 +372,7 @@ export default function RsvpSection({
                       key={opt.id}
                       type="button"
                       onClick={() => setStatus(opt.id as "hadir" | "tidak_hadir" | "ragu")}
-                      className={`py-2 sm:py-2.5 px-1.5 sm:px-2 rounded-2xl text-[11px] sm:text-xs font-bold tracking-tight transition-all border-2 border-[#18181B] cursor-pointer text-center ${
+                      className={`py-2 sm:py-3 px-2 rounded-2xl text-[11px] sm:text-xs font-bold tracking-tight transition-all border-2 border-[#18181B] cursor-pointer text-center ${
                         status === opt.id
                           ? `${opt.activeBg} text-[#18181B] shadow-[2.5px_2.5px_0px_#18181B] sm:shadow-[3px_3px_0px_#18181B] -translate-x-0.5 -translate-y-0.5`
                           : "bg-[#FFFDF5] text-[#52525B] hover:bg-white"
@@ -386,7 +386,7 @@ export default function RsvpSection({
 
               {/* Guest Count (if status != 'tidak_hadir') */}
               {status !== "tidak_hadir" && (
-                <div className="pt-1">
+                <div className="pt-2">
                   <div className="flex items-center justify-between mb-2">
                     <label className="text-xs uppercase tracking-wider text-[#18181B] font-bold">
                       Jumlah Orang yang Hadir
@@ -415,7 +415,7 @@ export default function RsvpSection({
               )}
 
               {errorMessage && (
-                <div className="p-3 rounded-2xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold">
+                <div className="p-4 rounded-2xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold">
                   {errorMessage}
                 </div>
               )}
@@ -424,7 +424,7 @@ export default function RsvpSection({
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-6 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-[2.5px] border-[#18181B] text-[#18181B] font-display text-xs uppercase tracking-wider font-extrabold shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+                className="w-full py-4 px-6 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-[2.5px] border-[#18181B] text-[#18181B] font-display text-xs uppercase tracking-wider font-extrabold shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>

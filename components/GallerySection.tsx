@@ -69,7 +69,7 @@ export default function GallerySection() {
         </div>
 
         {/* 2-Column Grid with Semi-Neobrutalist Frames */}
-        <div className="grid grid-cols-2 gap-3.5">
+        <div className="grid grid-cols-2 gap-4">
           {galleryImages.map((img, idx) => (
             <div
               key={idx}
@@ -85,7 +85,7 @@ export default function GallerySection() {
               />
               {/* Clean hover zoom pill */}
               <div className="absolute inset-0 bg-[#18181B]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span className="px-3 py-1.5 rounded-full bg-[#FFE600] text-[#18181B] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold">
+                <span className="px-4 py-2 rounded-full bg-[#FFE600] text-[#18181B] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold">
                   Lihat Foto
                 </span>
               </div>
@@ -102,7 +102,7 @@ export default function GallerySection() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-lg w-full max-h-[85vh] rounded-[32px] overflow-hidden bg-white border-[3px] border-[#18181B] p-3 shadow-[8px_8px_0px_#FFE600]"
+            className="relative max-w-lg w-full max-h-[85vh] rounded-[32px] overflow-hidden bg-white border-[3px] border-[#18181B] p-4 shadow-[8px_8px_0px_#FFE600]"
           >
             <div className="relative w-full h-[65vh] rounded-2xl overflow-hidden border-2 border-[#18181B]">
               <Image
@@ -117,7 +117,7 @@ export default function GallerySection() {
             <button
               onClick={() => setSelectedImage(null)}
               type="button"
-              className="absolute top-5 right-5 w-9 h-9 rounded-full bg-[#FF5D8F] text-[#18181B] font-extrabold flex items-center justify-center border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] hover:scale-110 active:scale-95 transition-transform cursor-pointer"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#FF5D8F] text-[#18181B] font-extrabold flex items-center justify-center border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] hover:scale-110 active:scale-95 transition-transform cursor-pointer"
               aria-label="Tutup foto"
             >
               ✕

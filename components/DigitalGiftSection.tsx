@@ -73,18 +73,18 @@ export default function DigitalGiftSection() {
             {bankAccounts.map((account) => (
               <div
                 key={account.id}
-                className="p-5 rounded-[24px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left relative overflow-hidden"
+                className="p-6 rounded-[24px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left relative overflow-hidden"
               >
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-4">
                   <span className="font-display text-lg font-extrabold text-[#18181B]">
                     {account.bankName}
                   </span>
-                  <span className={`text-[10px] font-display font-black px-2.5 py-0.5 rounded-full ${account.color} text-[#18181B] border-2 border-[#18181B]`}>
+                  <span className={`text-[10px] font-display font-black px-2 py-0.5 rounded-full ${account.color} text-[#18181B] border-2 border-[#18181B]`}>
                     {account.tag}
                   </span>
                 </div>
 
-                <div className="space-y-0.5 mb-4">
+                <div className="space-y-1 mb-4">
                   <p className="text-[11px] uppercase tracking-wider text-[#71717A] font-bold">
                     Nomor Rekening:
                   </p>
@@ -99,7 +99,7 @@ export default function DigitalGiftSection() {
                 <button
                   type="button"
                   onClick={() => handleCopy(account.accountNumber, account.id)}
-                  className={`w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border-2 border-[#18181B] transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] ${
+                  className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border-2 border-[#18181B] transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] ${
                     copiedBank === account.id
                       ? "bg-[#2EE59D] text-[#18181B]"
                       : "bg-[#FFFDF5] text-[#18181B] hover:bg-[#FFE600]"
@@ -115,13 +115,13 @@ export default function DigitalGiftSection() {
             ))}
 
             {/* Alamat Pengiriman Kado Fisik */}
-            <div className="p-5 rounded-[24px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left">
+            <div className="p-6 rounded-[24px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left">
               <div className="flex items-center gap-2 mb-2">
                 <h4 className="font-display text-base font-extrabold text-[#18181B]">
                   Kirim Kado Fisik (Alamat)
                 </h4>
               </div>
-              <p className="font-sans text-xs text-[#52525B] leading-relaxed mb-3 font-medium">
+              <p className="font-sans text-xs text-[#52525B] leading-relaxed mb-4 font-medium">
                 Sasana Pendopo Ageng, Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta 57144 (Penerima: Arya / Sekar).
               </p>
               <button
@@ -131,7 +131,7 @@ export default function DigitalGiftSection() {
                   setCopiedBank("alamat");
                   setTimeout(() => setCopiedBank(null), 2500);
                 }}
-                className={`w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border-2 border-[#18181B] transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] ${
+                className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border-2 border-[#18181B] transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] ${
                   copiedBank === "alamat"
                     ? "bg-[#2EE59D] text-[#18181B]"
                     : "bg-[#FFFDF5] text-[#18181B] hover:bg-[#FFE600]"

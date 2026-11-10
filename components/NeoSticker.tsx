@@ -29,13 +29,13 @@ export default function NeoSticker({
 }: NeoStickerProps) {
   const sizeClasses = {
     sm: "px-2 py-0.5 text-[10px]",
-    md: "px-3 py-1 text-xs",
-    lg: "px-4 py-1.5 text-sm",
+    md: "px-4 py-1 text-xs",
+    lg: "px-4 py-2 text-sm",
   }[size];
 
   return (
     <div
-      className={`inline-flex items-center gap-1.5 font-bold uppercase tracking-wider rounded-full border-2 border-[#18181B] shadow-[2.5px_2.5px_0px_#18181b] select-none transition-transform hover:scale-105 ${colorMap[color]} ${sizeClasses} ${rotate} ${className}`}
+      className={`inline-flex items-center gap-1 font-bold uppercase tracking-wider rounded-full border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] select-none transition-transform hover:scale-105 ${colorMap[color]} ${sizeClasses} ${rotate} ${className}`}
     >
       {icon && <span>{icon}</span>}
       {label && <span>{label}</span>}

@@ -113,7 +113,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
     <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center p-4 relative overflow-hidden font-sans">
       <div className="absolute inset-0 neo-bg-pattern opacity-15 pointer-events-none" />
 
-      <div className="w-full max-w-md bg-white rounded-[28px] sm:rounded-[32px] border-[3px] border-[#18181B] shadow-[6px_6px_0px_#FFE600] sm:shadow-[8px_8px_0px_#FFE600] p-5 sm:p-8 relative z-10">
+      <div className="w-full max-w-md bg-white rounded-[28px] sm:rounded-[32px] border-[3px] border-[#18181B] shadow-[6px_6px_0px_#FFE600] sm:shadow-[8px_8px_0px_#FFE600] p-6 sm:p-8 relative z-10">
         <div className="text-center mb-6">
           <div className="mb-2">
             <NeoSticker
@@ -133,7 +133,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         </div>
 
         {/* Tab Selection */}
-        <div className="flex rounded-2xl bg-[#FFFDF5] p-1 border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] mb-5">
+        <div className="flex rounded-2xl bg-[#FFFDF5] p-1 border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] mb-6">
           <button
             type="button"
             onClick={() => {
@@ -165,13 +165,13 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold animate-in fade-in">
+          <div className="mb-4 p-4 rounded-xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold animate-in fade-in">
             {errorMsg}
           </div>
         )}
 
         {infoMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-[#2EE59D]/30 border-2 border-[#18181B] text-xs text-[#18181B] font-bold animate-in fade-in">
+          <div className="mb-4 p-4 rounded-xl bg-[#2EE59D]/30 border-2 border-[#18181B] text-xs text-[#18181B] font-bold animate-in fade-in">
             {infoMsg}
           </div>
         )}
@@ -189,9 +189,9 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="Masukkan sandi akses..."
-                className="w-full py-2.5 px-3.5 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
-              <div className="mt-3 p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-[11px] text-[#18181B] space-y-1.5 font-bold">
+              <div className="mt-4 p-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-[11px] text-[#18181B] space-y-2 font-bold">
                 <div className="flex items-center justify-between">
                   <span>Super Admin (Dev):</span>
                   <code className="px-2 py-0.5 rounded-md bg-[#FFE600] border border-[#18181B]">dev2026</code>
@@ -225,7 +225,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@email.com"
-                className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
             </div>
 
@@ -239,7 +239,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
             </div>
 
@@ -255,7 +255,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 : "Masuk dengan Supabase"}
             </button>
 
-            <div className="text-center pt-1">
+            <div className="text-center pt-2">
               <button
                 type="button"
                 onClick={() => {

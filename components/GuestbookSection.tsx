@@ -154,7 +154,7 @@ export default function GuestbookSection({
                 value={nama}
                 onChange={(e) => setNama(e.target.value)}
                 placeholder="Tuliskan nama Anda..."
-                className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
               />
             </div>
 
@@ -168,18 +168,18 @@ export default function GuestbookSection({
                 value={isiUcapan}
                 onChange={(e) => setIsiUcapan(e.target.value)}
                 placeholder="Berikan ucapan selamat & doa untuk Arya & Sekar..."
-                className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-medium text-xs outline-none transition-colors resize-none"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-medium text-xs outline-none transition-colors resize-none"
               />
             </div>
 
             {errorMsg && (
-              <div className="p-3 rounded-xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold">
+              <div className="p-4 rounded-xl bg-rose-100 border-2 border-[#18181B] text-xs text-rose-900 font-bold">
                 {errorMsg}
               </div>
             )}
 
             {successNotice && (
-              <div className="p-3 rounded-xl bg-[#2EE59D]/40 border-2 border-[#18181B] text-xs text-[#18181B] font-bold">
+              <div className="p-4 rounded-xl bg-[#2EE59D]/40 border-2 border-[#18181B] text-xs text-[#18181B] font-bold">
                 Terima kasih, pesan dan doa Anda telah berhasil terkirim.
               </div>
             )}
@@ -199,12 +199,12 @@ export default function GuestbookSection({
         </div>
 
         {/* Message List: Endless Vertical Running Marquee */}
-        <div className="fade-up-element text-left px-1">
-          <div className="flex items-center justify-between mb-3 pb-2 border-b-2 border-[#18181B]">
+        <div className="fade-up-element text-left px-2">
+          <div className="flex items-center justify-between mb-4 pb-2 border-b-2 border-[#18181B]">
             <span className="font-display text-base font-extrabold text-[#18181B]">
               Kumpulan Doa &amp; Ucapan ({messages.length})
             </span>
-            <span className="px-2.5 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold text-[10px] border border-[#18181B]">
+            <span className="px-2 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold text-[10px] border border-[#18181B]">
               Realtime
             </span>
           </div>
@@ -221,31 +221,31 @@ export default function GuestbookSection({
               </p>
             </div>
           ) : (
-            <div className="relative h-[420px] overflow-hidden rounded-[28px] bg-[#FFFDF5] p-3 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] select-none">
+            <div className="relative h-[420px] overflow-hidden rounded-[28px] bg-[#FFFDF5] p-4 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] select-none">
               {/* Soft Gradient Fade Overlays (Top & Bottom) */}
               <div className="absolute top-0 inset-x-0 h-8 bg-gradient-to-b from-[#FFFDF5] to-transparent z-10 pointer-events-none" />
               <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-[#FFFDF5] to-transparent z-10 pointer-events-none" />
 
               {/* Running Track */}
               <div
-                className="flex flex-col gap-3 animate-marquee-down"
+                className="flex flex-col gap-4 animate-marquee-down"
                 style={{
                   animationDuration: `${marqueeDuration}s`,
                 }}
               >
                 {/* Track Set 1 */}
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-4">
                   {baseList.map((item, idx) => {
                     const initial = (item.nama || "?").trim().charAt(0).toUpperCase();
                     const color = avatarColors[idx % avatarColors.length];
                     return (
                       <div
                         key={`m1-${item.id_ucapan}-${idx}`}
-                        className="p-3.5 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] text-left"
+                        className="p-4 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] text-left"
                       >
-                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <div className="flex items-center justify-between gap-2 mb-2">
                           <div className="flex items-center gap-2">
-                            <span className={`w-7 h-7 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black`}>
+                            <span className={`w-8 h-8 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black`}>
                               {initial}
                             </span>
                             <h4 className="font-display text-sm text-[#18181B] font-bold leading-tight">
@@ -256,7 +256,7 @@ export default function GuestbookSection({
                             {formatDate(item.tgl_kirim)}
                           </span>
                         </div>
-                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-9">
+                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-10">
                           {item.isi_ucapan}
                         </p>
                       </div>
@@ -265,18 +265,18 @@ export default function GuestbookSection({
                 </div>
 
                 {/* Track Set 2 (Clone for loop) */}
-                <div className="flex flex-col gap-3" aria-hidden="true">
+                <div className="flex flex-col gap-4" aria-hidden="true">
                   {baseList.map((item, idx) => {
                     const initial = (item.nama || "?").trim().charAt(0).toUpperCase();
                     const color = avatarColors[idx % avatarColors.length];
                     return (
                       <div
                         key={`m2-${item.id_ucapan}-${idx}`}
-                        className="p-3.5 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] text-left"
+                        className="p-4 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] text-left"
                       >
-                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <div className="flex items-center justify-between gap-2 mb-2">
                           <div className="flex items-center gap-2">
-                            <span className={`w-7 h-7 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black`}>
+                            <span className={`w-8 h-8 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black`}>
                               {initial}
                             </span>
                             <h4 className="font-display text-sm text-[#18181B] font-bold leading-tight">
@@ -287,7 +287,7 @@ export default function GuestbookSection({
                             {formatDate(item.tgl_kirim)}
                           </span>
                         </div>
-                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-9">
+                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-10">
                           {item.isi_ucapan}
                         </p>
                       </div>
