@@ -15,7 +15,7 @@ export default function BotanicalDivider({
 
   return (
     <div
-      className={`flex items-center justify-center my-5 select-none pointer-events-none opacity-80 ${className}`}
+      className={`flex items-center justify-center my-4 select-none pointer-events-none opacity-80 ${className}`}
       aria-hidden="true"
     >
       <svg

@@ -309,8 +309,8 @@ export default function AdminManagement({
 
                     return (
                       <tr key={adm.id} className="hover:bg-[#FFFDF5] transition-colors">
-                        <td className="px-4 py-3.5">
-                          <div className="flex items-center gap-2.5">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
                             <span
                               className={`w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-black border-2 border-[#18181B] ${
                                 isSuper ? "bg-[#FFE600]" : "bg-[#38BDF8]"
@@ -319,10 +319,10 @@ export default function AdminManagement({
                               {isSuper ? "SA" : "AA"}
                             </span>
                             <div>
-                              <div className="font-extrabold text-[#18181B] flex items-center gap-1.5">
+                              <div className="font-extrabold text-[#18181B] flex items-center gap-2">
                                 <span>{adm.nama}</span>
                                 {isCurrent && (
-                                  <span className="px-1.5 py-0.5 rounded bg-[#18181B] text-white text-[9px] font-bold">
+                                  <span className="px-2 py-0.5 rounded bg-[#18181B] text-white text-[9px] font-bold">
                                     Anda
                                   </span>
                                 )}
@@ -334,13 +334,13 @@ export default function AdminManagement({
                           </div>
                         </td>
 
-                        <td className="px-4 py-3.5 font-mono text-[11px] font-bold text-[#18181B]">
+                        <td className="px-4 py-3 font-mono text-[11px] font-bold text-[#18181B]">
                           {adm.email}
                         </td>
 
-                        <td className="px-4 py-3.5">
+                        <td className="px-4 py-3">
                           <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold border-2 border-[#18181B] ${
+                            className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold border-2 border-[#18181B] ${
                               isSuper ? "bg-[#FFE600] text-[#18181B]" : "bg-[#38BDF8] text-[#18181B]"
                             }`}
                           >
@@ -348,11 +348,11 @@ export default function AdminManagement({
                           </span>
                         </td>
 
-                        <td className="px-4 py-3.5 text-right space-x-1.5 whitespace-nowrap">
+                        <td className="px-4 py-3 text-right space-x-2 whitespace-nowrap">
                           <button
                             onClick={() => handleCopyCredentials(adm)}
                             type="button"
-                            className="px-2.5 py-1 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
+                            className="px-3 py-1 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
                           >
                             {copiedId === adm.id ? "Tersalin" : "Salin Info"}
                           </button>
@@ -361,7 +361,7 @@ export default function AdminManagement({
                             <button
                               onClick={() => handleDeleteAdmin(adm)}
                               type="button"
-                              className="px-2.5 py-1 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
+                              className="px-3 py-1 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
                             >
                               Hapus
                             </button>
@@ -381,9 +381,9 @@ export default function AdminManagement({
                 const isSuper = adm.role === "super_admin";
 
                 return (
-                  <div key={adm.id} className="p-4 space-y-3">
+                  <div key={adm.id} className="p-4 space-y-4">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex items-center gap-2 min-w-0">
                         <span
                           className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-xs font-black border-2 border-[#18181B] ${
                             isSuper ? "bg-[#FFE600]" : "bg-[#38BDF8]"
@@ -392,15 +392,15 @@ export default function AdminManagement({
                           {isSuper ? "SA" : "AA"}
                         </span>
                         <div className="truncate">
-                          <div className="font-extrabold text-sm text-[#18181B] flex items-center gap-1.5 truncate">
+                          <div className="font-extrabold text-sm text-[#18181B] flex items-center gap-2 truncate">
                             <span className="truncate">{adm.nama}</span>
                             {isCurrent && (
-                              <span className="px-1.5 py-0.5 rounded bg-[#18181B] text-white text-[9px] font-bold shrink-0">
+                              <span className="px-2 py-0.5 rounded bg-[#18181B] text-white text-[9px] font-bold shrink-0">
                                 Anda
                               </span>
                             )}
                           </div>
-                          <p className="font-mono text-xs text-[#52525B] font-bold truncate mt-0.5">
+                          <p className="font-mono text-xs text-[#52525B] font-bold truncate mt-1">
                             {adm.email}
                           </p>
                         </div>
@@ -415,11 +415,11 @@ export default function AdminManagement({
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 pt-1 border-t border-[#18181B]/10">
+                    <div className="flex items-center gap-2 pt-2 border-t border-[#18181B]/10">
                       <button
                         onClick={() => handleCopyCredentials(adm)}
                         type="button"
-                        className="flex-1 py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center cursor-pointer"
+                        className="flex-1 py-2 px-4 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center cursor-pointer"
                       >
                         {copiedId === adm.id ? "Info Tersalin" : "Salin Sandi Akses"}
                       </button>
@@ -428,7 +428,7 @@ export default function AdminManagement({
                         <button
                           onClick={() => handleDeleteAdmin(adm)}
                           type="button"
-                          className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer"
+                          className="py-2 px-4 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer"
                         >
                           Hapus
                         </button>
@@ -445,8 +445,8 @@ export default function AdminManagement({
       {/* Add Admin Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
-          <div className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-5 sm:p-6 relative max-h-[90vh] overflow-y-auto">
-            <div className="text-center mb-5">
+          <div className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-6 relative max-h-[90vh] overflow-y-auto">
+            <div className="text-center mb-6">
               <h3 className="font-display text-xl font-extrabold text-[#18181B]">
                 Tambah Administrator Baru
               </h3>
@@ -467,7 +467,7 @@ export default function AdminManagement({
                   value={newNama}
                   onChange={(e) => setNewNama(e.target.value)}
                   placeholder="Contoh: Budi Santoso"
-                  className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                  className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
               </div>
 
@@ -481,7 +481,7 @@ export default function AdminManagement({
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="admin.panitia@email.com"
-                  className="w-full py-2.5 px-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                  className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
               </div>
 
@@ -491,13 +491,13 @@ export default function AdminManagement({
                 </label>
                 <div className="grid grid-cols-2 gap-2 mt-1">
                   <label
-                    className={`p-3 rounded-2xl border-2 cursor-pointer flex flex-col gap-1 transition-all ${
+                    className={`p-4 rounded-2xl border-2 cursor-pointer flex flex-col gap-1 transition-all ${
                       newRole === "admin"
                         ? "bg-[#38BDF8]/20 border-[#18181B] text-[#18181B] shadow-[2px_2px_0px_#18181B]"
                         : "border-[#18181B]/40 text-[#71717A] hover:bg-[#FFFDF5]"
                     }`}
                   >
-                    <div className="flex items-center gap-1.5 font-extrabold text-xs">
+                    <div className="flex items-center gap-2 font-extrabold text-xs">
                       <input
                         type="radio"
                         name="roleSelect"
@@ -513,13 +513,13 @@ export default function AdminManagement({
                   </label>
 
                   <label
-                    className={`p-3 rounded-2xl border-2 cursor-pointer flex flex-col gap-1 transition-all ${
+                    className={`p-4 rounded-2xl border-2 cursor-pointer flex flex-col gap-1 transition-all ${
                       newRole === "super_admin"
                         ? "bg-[#FFE600]/30 border-[#18181B] text-[#18181B] shadow-[2px_2px_0px_#18181B]"
                         : "border-[#18181B]/40 text-[#71717A] hover:bg-[#FFFDF5]"
                     }`}
                   >
-                    <div className="flex items-center gap-1.5 font-extrabold text-xs">
+                    <div className="flex items-center gap-2 font-extrabold text-xs">
                       <input
                         type="radio"
                         name="roleSelect"
@@ -540,14 +540,14 @@ export default function AdminManagement({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2.5 rounded-xl border-2 border-[#18181B] text-xs font-bold text-[#18181B] hover:bg-[#FFFDF5] cursor-pointer"
+                  className="px-4 py-2 rounded-xl border-2 border-[#18181B] text-xs font-bold text-[#18181B] hover:bg-[#FFFDF5] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2.5 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-xs font-black text-[#18181B] shadow-[2px_2px_0px_#18181B] cursor-pointer disabled:opacity-50"
+                  className="px-6 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-xs font-black text-[#18181B] shadow-[2px_2px_0px_#18181B] cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? "Menyimpan..." : "Simpan Admin"}
                 </button>

@@ -41,3 +41,4 @@ export default function SmoothScrollProvider({
 
   return <>{children}</>;
 }
+

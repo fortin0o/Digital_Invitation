@@ -189,7 +189,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="Masukkan sandi akses..."
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
               <div className="mt-4 p-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-[11px] text-[#18181B] space-y-2 font-bold">
                 <div className="flex items-center justify-between">
@@ -225,7 +225,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@email.com"
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
             </div>
 
@@ -239,7 +239,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
             </div>
 

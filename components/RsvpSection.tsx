@@ -339,7 +339,7 @@ export default function RsvpSection({
                           setErrorMessage(null);
                         }}
                         placeholder="Ketikkan nama lengkap Anda..."
-                        className="w-full py-2.5 px-4 pr-24 bg-[#FFFDF5] rounded-xl border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
+                        className="w-full py-2 px-4 pr-24 bg-[#FFFDF5] rounded-xl border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
                       />
                       <button
                         type="button"

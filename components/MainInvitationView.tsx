@@ -169,7 +169,7 @@ export default function MainInvitationView({
                 <button
                   type="button"
                   onClick={() => scrollTo("rsvp")}
-                  className="px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-[#FF5D8F] text-[#18181B] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] transition-transform active:scale-95 cursor-pointer whitespace-nowrap"
+                  className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-[#FF5D8F] text-[#18181B] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] transition-transform active:scale-95 cursor-pointer whitespace-nowrap"
                 >
                   RSVP
                 </button>

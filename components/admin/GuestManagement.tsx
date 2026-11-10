@@ -291,22 +291,22 @@ export default function GuestManagement({
                         </td>
                         <td className="py-3 px-4">
                           {status === "hadir" && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#2EE59D] text-[#18181B] border border-[#18181B]">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-[#2EE59D] text-[#18181B] border border-[#18181B]">
                               Hadir
                             </span>
                           )}
                           {status === "ragu" && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FFE600] text-[#18181B] border border-[#18181B]">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FFE600] text-[#18181B] border border-[#18181B]">
                               Masih Ragu
                             </span>
                           )}
                           {status === "tidak_hadir" && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FF5D8F] text-[#18181B] border border-[#18181B]">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-[#FF5D8F] text-[#18181B] border border-[#18181B]">
                               Tidak Hadir
                             </span>
                           )}
                           {!status && (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#F4F4F5] text-[#71717A] border border-[#18181B]">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#F4F4F5] text-[#71717A] border border-[#18181B]">
                               Belum Konfirmasi
                             </span>
                           )}
@@ -315,7 +315,7 @@ export default function GuestManagement({
                           {status === "hadir" ? `${tamu.rsvp?.jumlah_hadir || 1} orang` : "-"}
                         </td>
                         <td className="py-3 px-4 text-right">
-                          <div className="inline-flex items-center gap-1.5">
+                          <div className="inline-flex items-center gap-2">
                             <button
                               onClick={() => setQrModalGuest(tamu)}
                               type="button"
@@ -327,14 +327,14 @@ export default function GuestManagement({
                             <button
                               onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
                               type="button"
-                              className="px-2.5 py-1 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
+                              className="px-3 py-1 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
                             >
                               Salin Link
                             </button>
                             <button
                               onClick={() => openWhatsApp(tamu)}
                               type="button"
-                              className="px-2.5 py-1 rounded-lg border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-[11px] font-extrabold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
+                              className="px-3 py-1 rounded-lg border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-[11px] font-extrabold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
                             >
                               WhatsApp
                             </button>
@@ -368,7 +368,7 @@ export default function GuestManagement({
                         <h4 className="text-sm font-extrabold text-[#18181B] truncate">
                           {tamu.nama_tamu}
                         </h4>
-                        <p className="font-mono text-xs text-[#71717A] mt-0.5 font-bold">
+                        <p className="font-mono text-xs text-[#71717A] mt-1 font-bold">
                           Kode: {tamu.kode} • Kuota: {tamu.kuota} org
                         </p>
                       </div>
@@ -398,32 +398,32 @@ export default function GuestManagement({
                     </div>
 
                     {/* Touch-optimized 2x2 action buttons */}
-                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-[#18181B]/10">
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#18181B]/10">
                       <button
                         onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
                         type="button"
-                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
                         <span>Salin Link</span>
                       </button>
                       <button
                         onClick={() => openWhatsApp(tamu)}
                         type="button"
-                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
                         <span>WhatsApp</span>
                       </button>
                       <button
                         onClick={() => setQrModalGuest(tamu)}
                         type="button"
-                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
                         <span>Tiket QR</span>
                       </button>
                       <button
                         onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
                         type="button"
-                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
                         <span>Hapus</span>
                       </button>
@@ -458,7 +458,7 @@ export default function GuestManagement({
                   value={newNama}
                   onChange={(e) => setNewNama(e.target.value)}
                   placeholder="Contoh: Muhammad Rizki"
-                  className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                  className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
               </div>
 
@@ -473,7 +473,7 @@ export default function GuestManagement({
                   required
                   value={newKuota}
                   onChange={(e) => setNewKuota(Number(e.target.value))}
-                  className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                  className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
               </div>
 
@@ -481,14 +481,14 @@ export default function GuestManagement({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 py-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] text-[#18181B] text-xs font-bold cursor-pointer"
+                  className="flex-1 py-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] text-[#18181B] text-xs font-bold cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 py-2.5 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer disabled:opacity-50"
+                  className="flex-1 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? "Menyimpan..." : "Simpan Tamu"}
                 </button>
@@ -510,7 +510,7 @@ export default function GuestManagement({
               ✕
             </button>
 
-            <span className="text-[10px] uppercase tracking-wider text-[#18181B] font-extrabold bg-[#FFE600] px-2.5 py-0.5 rounded-full border border-[#18181B]">
+            <span className="text-[10px] uppercase tracking-wider text-[#18181B] font-extrabold bg-[#FFE600] px-2 py-0.5 rounded-full border border-[#18181B]">
               TIKET MASUK DIGITAL
             </span>
             <h3 className="font-display text-lg font-extrabold text-[#18181B] mt-2 mb-4">

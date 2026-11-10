@@ -154,7 +154,7 @@ export default function GuestbookSection({
                 value={nama}
                 onChange={(e) => setNama(e.target.value)}
                 placeholder="Tuliskan nama Anda..."
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
+                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
               />
             </div>
 
@@ -168,7 +168,7 @@ export default function GuestbookSection({
                 value={isiUcapan}
                 onChange={(e) => setIsiUcapan(e.target.value)}
                 placeholder="Berikan ucapan selamat & doa untuk Arya & Sekar..."
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-medium text-xs outline-none transition-colors resize-none"
+                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-medium text-xs outline-none transition-colors resize-none"
               />
             </div>
 

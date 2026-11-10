@@ -93,7 +93,7 @@ export default function AdminHeader({
             <button
               onClick={onLogout}
               type="button"
-              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 border-2 border-[#18181B] text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 border-2 border-[#18181B] text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
               title="Keluar dari Panel Admin"
             >
               <svg className="w-3.5 h-3.5 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
