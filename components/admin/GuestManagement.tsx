@@ -112,7 +112,7 @@ export default function GuestManagement({
 
   const openWhatsApp = (tamu: GuestItem) => {
     const url = getInvitationUrl(tamu.kode);
-    const message = `Halo ${tamu.nama_tamu}! 🎉\n\nTanpa mengurangi rasa hormat, kami bermaksud mengundangmu untuk hadir dan merayakan hari bahagia kami: The Wedding of Arya & Sekar.\n\nBerikut tautan undangan spesial untukmu:\n${url}\n\nMerupakan suatu kebahagiaan bagi kami apabila kamu dapat hadir. Terima kasih banyak!\n- Arya & Sekar 💕`;
+    const message = `Halo ${tamu.nama_tamu}!\n\nTanpa mengurangi rasa hormat, kami bermaksud mengundang Anda untuk hadir dan merayakan hari bahagia kami: The Wedding of Arya & Sekar.\n\nBerikut tautan undangan spesial Anda:\n${url}\n\nMerupakan suatu kebahagiaan bagi kami apabila Anda berkenan hadir. Terima kasih banyak.\n- Arya & Sekar`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
   };
 
@@ -210,7 +210,7 @@ export default function GuestManagement({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="🔍 Cari nama tamu atau kode..."
+              placeholder="Cari nama tamu atau kode..."
               className="w-full px-3 py-2 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
             />
           </div>
@@ -237,7 +237,6 @@ export default function GuestManagement({
             className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
             title="Unduh Laporan Excel (CSV)"
           >
-            <span>📊</span>
             <span>Ekspor Excel</span>
           </button>
 
@@ -247,8 +246,7 @@ export default function GuestManagement({
             type="button"
             className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
           >
-            <span>+</span>
-            <span>Tambah Tamu</span>
+            <span>+ Tambah Tamu</span>
           </button>
         </div>
       </div>
@@ -404,33 +402,29 @@ export default function GuestManagement({
                       <button
                         onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
                         type="button"
-                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
-                        <span>📋</span>
                         <span>Salin Link</span>
                       </button>
                       <button
                         onClick={() => openWhatsApp(tamu)}
                         type="button"
-                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
-                        <span>💬</span>
                         <span>WhatsApp</span>
                       </button>
                       <button
                         onClick={() => setQrModalGuest(tamu)}
                         type="button"
-                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
-                        <span>🎟️</span>
                         <span>Tiket QR</span>
                       </button>
                       <button
                         onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
                         type="button"
-                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="py-2 px-2.5 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
-                        <span>🗑️</span>
                         <span>Hapus</span>
                       </button>
                     </div>

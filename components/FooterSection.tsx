@@ -10,7 +10,6 @@ export default function FooterSection() {
         <div className="fade-up-element px-6 py-8 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] mb-6">
           <div className="mb-2">
             <NeoSticker
-              icon="💖"
               label="THANK YOU"
               color="pink"
               rotate="-rotate-2"
@@ -29,7 +28,7 @@ export default function FooterSection() {
           <NeoDivider className="!my-3" />
 
           <p className="font-sans text-xs text-[#71717A] font-semibold mt-3">
-            Sampai jumpa di hari perayaan kami! 🎉
+            Sampai jumpa di hari perayaan kami.
           </p>
         </div>
 
@@ -42,7 +41,6 @@ export default function FooterSection() {
             href="/admin"
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold text-[#18181B] transition-all"
           >
-            <span>🔐</span>
             <span>Panel Admin</span>
           </Link>
         </div>

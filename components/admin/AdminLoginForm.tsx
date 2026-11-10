@@ -117,7 +117,6 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         <div className="text-center mb-6">
           <div className="mb-2">
             <NeoSticker
-              icon="🔐"
               label="ADMIN DASHBOARD"
               color="yellow"
               rotate="-rotate-2"
@@ -147,7 +146,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 : "text-[#71717A] hover:text-[#18181B]"
             }`}
           >
-            Akses Sandi Cepat ⚡
+            Akses Sandi Cepat
           </button>
           <button
             type="button"
@@ -194,11 +193,11 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
               />
               <div className="mt-3 p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-[11px] text-[#18181B] space-y-1.5 font-bold">
                 <div className="flex items-center justify-between">
-                  <span>👑 Super Admin (Dev):</span>
+                  <span>Super Admin (Dev):</span>
                   <code className="px-2 py-0.5 rounded-md bg-[#FFE600] border border-[#18181B]">dev2026</code>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>👤 Admin Acara:</span>
+                  <span>Admin Acara:</span>
                   <code className="px-2 py-0.5 rounded-md bg-white border border-[#18181B]">admin123</code>
                 </div>
               </div>
@@ -208,7 +207,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
               type="submit"
               className="w-full py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold tracking-wider transition-all shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer"
             >
-              Masuk Panel Admin 🚀
+              Masuk Panel Admin
             </button>
           </form>
         )}

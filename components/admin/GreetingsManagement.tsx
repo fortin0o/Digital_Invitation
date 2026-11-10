@@ -81,7 +81,7 @@ export default function GreetingsManagement({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="🔍 Cari pengirim atau pesan..."
+              placeholder="Cari pengirim atau pesan..."
               className="w-full px-3 py-1.5 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
             />
           </div>

@@ -19,11 +19,11 @@ export default function AdminHeader({
   setActiveTab,
 }: AdminHeaderProps) {
   const tabs = [
-    { id: "overview", label: "📊 Ringkasan RSVP" },
-    { id: "tamu", label: "👥 Kelola Tamu Undangan" },
-    { id: "ucapan", label: "💬 Buku Tamu & Doa" },
+    { id: "overview", label: "Ringkasan RSVP" },
+    { id: "tamu", label: "Kelola Tamu Undangan" },
+    { id: "ucapan", label: "Buku Tamu & Doa" },
     ...(userRole === "super_admin"
-      ? [{ id: "admin-users", label: "👑 Kelola Admin" }]
+      ? [{ id: "admin-users", label: "Kelola Admin" }]
       : []),
   ];
 
@@ -49,7 +49,7 @@ export default function AdminHeader({
                       : "bg-[#38BDF8] text-[#18181B]"
                   }`}
                 >
-                  {userRole === "super_admin" ? "👑 Super Admin" : "👤 Admin"}
+                  {userRole === "super_admin" ? "Super Admin" : "Admin"}
                 </span>
               </div>
               <p className="text-[10px] sm:text-[11px] text-[#71717A] mt-0.5 font-bold truncate">
@@ -68,7 +68,7 @@ export default function AdminHeader({
                   : "bg-[#38BDF8] text-[#18181B]"
               }`}
             >
-              {userRole === "super_admin" ? "👑 Super" : "👤 Admin"}
+              {userRole === "super_admin" ? "Super" : "Admin"}
             </span>
 
             {/* User email badge for tablet & desktop */}

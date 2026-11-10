@@ -204,15 +204,9 @@ export default function AdminPage() {
                     }`}
                   >
                     {reportCopied ? (
-                      <>
-                        <span>✓</span>
-                        <span>Laporan Berhasil Tersalin!</span>
-                      </>
+                      <span>Laporan Berhasil Tersalin</span>
                     ) : (
-                      <>
-                        <span>📋</span>
-                        <span>Salin Format Laporan</span>
-                      </>
+                      <span>Salin Format Laporan</span>
                     )}
                   </button>
                 </div>

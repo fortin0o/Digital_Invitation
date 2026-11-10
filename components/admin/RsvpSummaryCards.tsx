@@ -26,7 +26,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
         {/* Total Tamu */}
         <div className="p-3.5 sm:p-5 rounded-[22px] bg-[#FFE600] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
           <p className="text-[10px] sm:text-xs uppercase tracking-wider text-[#18181B] font-extrabold truncate">
-            👥 Total Undangan
+            Total Undangan
           </p>
           <div className="flex items-baseline gap-1.5 mt-2">
             <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#18181B] leading-none">
@@ -40,7 +40,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
         <div className="p-3.5 sm:p-5 rounded-[22px] bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <p className="text-[10px] sm:text-xs uppercase tracking-wider text-[#18181B] font-extrabold truncate">
-              🎉 Hadir
+              Konfirmasi Hadir
             </p>
             <span className="w-2 h-2 rounded-full bg-[#18181B] shrink-0" />
           </div>
@@ -61,7 +61,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
         <div className="p-3.5 sm:p-5 rounded-[22px] bg-[#38BDF8] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <p className="text-[10px] sm:text-xs uppercase tracking-wider text-[#18181B] font-extrabold truncate">
-              ⏳ Belum Respon
+              Belum Respon
             </p>
             <span className="w-2 h-2 rounded-full bg-[#18181B] shrink-0" />
           </div>
@@ -77,7 +77,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
         <div className="p-3.5 sm:p-5 rounded-[22px] bg-[#FF5D8F] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <p className="text-[10px] sm:text-xs uppercase tracking-wider text-[#18181B] font-extrabold truncate">
-              🤔 Ragu / Absen
+              Ragu / Absen
             </p>
             <span className="w-2 h-2 rounded-full bg-[#18181B] shrink-0" />
           </div>

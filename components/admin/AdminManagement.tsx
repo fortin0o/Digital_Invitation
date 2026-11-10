@@ -205,7 +205,7 @@ export default function AdminManagement({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-[11px] font-extrabold mb-2 shadow-[2px_2px_0px_#18181B]">
               <span className="w-2 h-2 rounded-full bg-[#18181B]" />
-              Role Anda: {currentUserRole === "super_admin" ? "👑 Super Admin" : "👤 Admin Acara"}
+              Role Anda: {currentUserRole === "super_admin" ? "Super Admin" : "Admin Acara"}
             </div>
             <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#18181B]">
               Manajemen Administrator &amp; Peran
@@ -230,8 +230,8 @@ export default function AdminManagement({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-4 rounded-[20px] bg-[#FFE600]/25 border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B]">
           <div className="flex items-center gap-2.5 mb-2">
-            <span className="w-8 h-8 rounded-xl bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] flex items-center justify-center text-sm font-bold shadow-[2px_2px_0px_#18181B]">
-              👑
+            <span className="w-7 h-7 rounded-xl bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] flex items-center justify-center text-xs font-black shadow-[2px_2px_0px_#18181B]">
+              SA
             </span>
             <div>
               <h4 className="text-xs font-black text-[#18181B]">Super Admin (Developer / Master)</h4>
@@ -247,8 +247,8 @@ export default function AdminManagement({
 
         <div className="p-4 rounded-[20px] bg-[#38BDF8]/20 border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B]">
           <div className="flex items-center gap-2.5 mb-2">
-            <span className="w-8 h-8 rounded-xl bg-[#38BDF8] border-2 border-[#18181B] text-[#18181B] flex items-center justify-center text-sm font-bold shadow-[2px_2px_0px_#18181B]">
-              👤
+            <span className="w-7 h-7 rounded-xl bg-[#38BDF8] border-2 border-[#18181B] text-[#18181B] flex items-center justify-center text-xs font-black shadow-[2px_2px_0px_#18181B]">
+              AA
             </span>
             <div>
               <h4 className="text-xs font-black text-[#18181B]">Admin Acara (Panitia)</h4>
@@ -277,10 +277,10 @@ export default function AdminManagement({
           <button
             onClick={fetchAdmins}
             type="button"
-            className="p-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold cursor-pointer"
+            className="px-3 py-1.5 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold cursor-pointer"
             title="Muat Ulang"
           >
-            🔄
+            Muat Ulang
           </button>
         </div>
 
@@ -312,11 +312,11 @@ export default function AdminManagement({
                         <td className="px-4 py-3.5">
                           <div className="flex items-center gap-2.5">
                             <span
-                              className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-bold border-2 border-[#18181B] ${
+                              className={`w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-black border-2 border-[#18181B] ${
                                 isSuper ? "bg-[#FFE600]" : "bg-[#38BDF8]"
                               }`}
                             >
-                              {isSuper ? "👑" : "👤"}
+                              {isSuper ? "SA" : "AA"}
                             </span>
                             <div>
                               <div className="font-extrabold text-[#18181B] flex items-center gap-1.5">
@@ -344,7 +344,7 @@ export default function AdminManagement({
                               isSuper ? "bg-[#FFE600] text-[#18181B]" : "bg-[#38BDF8] text-[#18181B]"
                             }`}
                           >
-                            {isSuper ? "👑 Super Admin" : "👤 Admin Acara"}
+                            {isSuper ? "Super Admin" : "Admin Acara"}
                           </span>
                         </td>
 
@@ -354,7 +354,7 @@ export default function AdminManagement({
                             type="button"
                             className="px-2.5 py-1 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
                           >
-                            {copiedId === adm.id ? "Tersalin! ✓" : "Salin Info"}
+                            {copiedId === adm.id ? "Tersalin" : "Salin Info"}
                           </button>
 
                           {!isCurrent && (
@@ -385,11 +385,11 @@ export default function AdminManagement({
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
                         <span
-                          className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-sm font-bold border-2 border-[#18181B] ${
+                          className={`w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-xs font-black border-2 border-[#18181B] ${
                             isSuper ? "bg-[#FFE600]" : "bg-[#38BDF8]"
                           }`}
                         >
-                          {isSuper ? "👑" : "👤"}
+                          {isSuper ? "SA" : "AA"}
                         </span>
                         <div className="truncate">
                           <div className="font-extrabold text-sm text-[#18181B] flex items-center gap-1.5 truncate">
@@ -421,7 +421,7 @@ export default function AdminManagement({
                         type="button"
                         className="flex-1 py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center cursor-pointer"
                       >
-                        {copiedId === adm.id ? "Info Tersalin! ✓" : "📋 Salin Sandi Akses"}
+                        {copiedId === adm.id ? "Info Tersalin" : "Salin Sandi Akses"}
                       </button>
 
                       {!isCurrent && (
@@ -505,7 +505,7 @@ export default function AdminManagement({
                         checked={newRole === "admin"}
                         onChange={() => setNewRole("admin")}
                       />
-                      <span>👤 Admin Acara</span>
+                      <span>Admin Acara</span>
                     </div>
                     <span className="text-[10px] text-[#52525B]">
                       Hanya kelola tamu, RSVP, dan buku ucapan.
@@ -527,7 +527,7 @@ export default function AdminManagement({
                         checked={newRole === "super_admin"}
                         onChange={() => setNewRole("super_admin")}
                       />
-                      <span>👑 Super Admin</span>
+                      <span>Super Admin</span>
                     </div>
                     <span className="text-[10px] text-[#52525B]">
                       Developer. Kendali penuh &amp; kelola admin.
