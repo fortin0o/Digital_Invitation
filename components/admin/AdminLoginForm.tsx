@@ -3,15 +3,22 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import {
+  AdminRole,
+  PASSCODE_ROLE_KEY,
+  PASSCODE_USER_KEY,
+  clearLocalPasscodeSession,
+  resolveAdminRole,
+} from "@/lib/adminAuth";
 import NeoSticker from "../NeoSticker";
 import NeoDivider from "../NeoDivider";
 
 interface AdminLoginFormProps {
-  onLoginSuccess: (email?: string, role?: "super_admin" | "admin") => void;
+  onLoginSuccess: (email?: string, role?: AdminRole, viaSupabaseAuth?: boolean) => void;
 }
 
 export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) {
-  const [authMode, setAuthMode] = useState<"passcode" | "auth">("passcode");
+  const [authMode, setAuthMode] = useState<"passcode" | "auth">("auth");
   const [passcode, setPasscode] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,13 +33,13 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
 
     const code = passcode.trim();
     if (code === "dev2026" || code === "superadmin123" || code === "developer") {
-      localStorage.setItem("admin_auth_user", "Developer (Super Admin)");
-      localStorage.setItem("admin_auth_role", "super_admin");
-      onLoginSuccess("Developer (Super Admin)", "super_admin");
+      localStorage.setItem(PASSCODE_USER_KEY, "Developer (Super Admin)");
+      localStorage.setItem(PASSCODE_ROLE_KEY, "super_admin");
+      onLoginSuccess("Developer (Super Admin)", "super_admin", false);
     } else if (code === "admin123" || code === "nikah2026") {
-      localStorage.setItem("admin_auth_user", "Admin Acara");
-      localStorage.setItem("admin_auth_role", "admin");
-      onLoginSuccess("Admin Acara", "admin");
+      localStorage.setItem(PASSCODE_USER_KEY, "Admin Acara");
+      localStorage.setItem(PASSCODE_ROLE_KEY, "admin");
+      onLoginSuccess("Admin Acara", "admin", false);
     } else {
       setErrorMsg("Kode sandi salah. Gunakan sandi 'dev2026' (Super Admin) atau 'admin123' (Admin Acara).");
     }
@@ -55,16 +62,11 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
 
         if (data.session) {
           const userEmailClean = data.user?.email || email.trim();
-          const role: "super_admin" | "admin" =
-            userEmailClean.toLowerCase().includes("dev") || userEmailClean.toLowerCase().includes("superadmin")
-              ? "super_admin"
-              : "admin";
-
-          localStorage.setItem("admin_auth_user", userEmailClean);
-          localStorage.setItem("admin_auth_role", role);
-          onLoginSuccess(userEmailClean, role);
+          const role = await resolveAdminRole(userEmailClean);
+          clearLocalPasscodeSession();
+          onLoginSuccess(userEmailClean, role, true);
         } else {
-          setInfoMsg("Akun berhasil didaftarkan! Cek email untuk verifikasi atau gunakan Akses Sandi Cepat di tab samping.");
+          setInfoMsg("Akun berhasil didaftarkan! Cek email Anda untuk verifikasi sebelum masuk.");
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -76,29 +78,9 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
 
         if (data.session) {
           const userEmailClean = data.user?.email || email.trim();
-          let role: "super_admin" | "admin" = "admin";
-
-          try {
-            const { data: adminRecord } = await supabase
-              .from("admin_users")
-              .select("role")
-              .eq("email", userEmailClean.toLowerCase())
-              .maybeSingle();
-
-            if (adminRecord?.role === "super_admin") {
-              role = "super_admin";
-            } else if (!adminRecord && (userEmailClean.toLowerCase().includes("dev") || userEmailClean.toLowerCase().includes("superadmin"))) {
-              role = "super_admin";
-            }
-          } catch {
-            if (userEmailClean.toLowerCase().includes("dev") || userEmailClean.toLowerCase().includes("superadmin")) {
-              role = "super_admin";
-            }
-          }
-
-          localStorage.setItem("admin_auth_user", userEmailClean);
-          localStorage.setItem("admin_auth_role", role);
-          onLoginSuccess(userEmailClean, role);
+          const role = await resolveAdminRole(userEmailClean);
+          clearLocalPasscodeSession();
+          onLoginSuccess(userEmailClean, role, true);
         }
       }
     } catch (err: unknown) {
@@ -137,20 +119,6 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
           <button
             type="button"
             onClick={() => {
-              setAuthMode("passcode");
-              setErrorMsg(null);
-            }}
-            className={`flex-1 py-2 rounded-xl text-xs font-extrabold tracking-wide transition-all cursor-pointer ${
-              authMode === "passcode"
-                ? "bg-[#FFE600] text-[#18181B] shadow-[1.5px_1.5px_0px_#18181B] border border-[#18181B]"
-                : "text-[#71717A] hover:text-[#18181B]"
-            }`}
-          >
-            Akses Sandi Cepat
-          </button>
-          <button
-            type="button"
-            onClick={() => {
               setAuthMode("auth");
               setErrorMsg(null);
             }}
@@ -161,6 +129,20 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
             }`}
           >
             Supabase Auth
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setAuthMode("passcode");
+              setErrorMsg(null);
+            }}
+            className={`flex-1 py-2 rounded-xl text-xs font-extrabold tracking-wide transition-all cursor-pointer ${
+              authMode === "passcode"
+                ? "bg-[#FFE600] text-[#18181B] shadow-[1.5px_1.5px_0px_#18181B] border border-[#18181B]"
+                : "text-[#71717A] hover:text-[#18181B]"
+            }`}
+          >
+            Sandi Cepat (Pratinjau)
           </button>
         </div>
 
@@ -179,6 +161,9 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
         {/* Passcode Mode */}
         {authMode === "passcode" && (
           <form onSubmit={handlePasscodeLogin} className="space-y-4">
+            <div className="p-4 rounded-xl bg-amber-100 border-2 border-[#18181B] text-[11px] text-[#18181B] font-bold leading-relaxed">
+              Mode Pratinjau (Read-Only): Akses sandi cepat masuk sebagai sesi anonim. Melihat &amp; ekspor data tetap bisa, namun tambah/hapus data diblokir oleh RLS. Gunakan tab Supabase Auth untuk akses tulis penuh.
+            </div>
             <div>
               <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
                 Kode Sandi Akses
@@ -207,7 +192,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
               type="submit"
               className="w-full py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold tracking-wider transition-all shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer"
             >
-              Masuk Panel Admin
+              Masuk Mode Pratinjau
             </button>
           </form>
         )}

@@ -2,6 +2,13 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
+import {
+  AdminRole,
+  PASSCODE_ROLE_KEY,
+  PASSCODE_USER_KEY,
+  clearLocalPasscodeSession,
+  resolveAdminRole,
+} from "@/lib/adminAuth";
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminLoginForm from "@/components/admin/AdminLoginForm";
 import RsvpSummaryCards from "@/components/admin/RsvpSummaryCards";
@@ -46,8 +53,9 @@ async function queryDashboardData() {
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [hasSupabaseSession, setHasSupabaseSession] = useState<boolean>(false);
   const [userEmail, setUserEmail] = useState<string>("Admin");
-  const [userRole, setUserRole] = useState<"super_admin" | "admin">("admin");
+  const [userRole, setUserRole] = useState<AdminRole>("admin");
   const [activeTab, setActiveTab] = useState<string>("overview");
 
   const [loading, setLoading] = useState(true);
@@ -58,57 +66,65 @@ export default function AdminPage() {
   const [greetings, setGreetings] = useState<UcapanItem[]>([]);
   const [reportCopied, setReportCopied] = useState(false);
 
-  // Check auth session
+  // Check auth session (prioritize real Supabase Auth session so RLS state is accurate)
   useEffect(() => {
-    const checkAuth = async () => {
-      // 1. Check local passcode session
-      const passcodeUser = localStorage.getItem("admin_auth_user");
-      const passcodeRole = (localStorage.getItem("admin_auth_role") as "super_admin" | "admin") || "admin";
-      if (passcodeUser) {
-        setIsAuthenticated(true);
-        setUserEmail(passcodeUser);
-        setUserRole(passcodeRole);
-        return;
-      }
+    let active = true;
 
-      // 2. Check Supabase auth session
+    const checkAuth = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+
+      if (!active) return;
+
       if (session) {
-        setIsAuthenticated(true);
+        clearLocalPasscodeSession();
         const email = session.user.email || "Admin";
+        const role = await resolveAdminRole(email);
+        if (!active) return;
+        setIsAuthenticated(true);
+        setHasSupabaseSession(true);
         setUserEmail(email);
-
-        let role: "super_admin" | "admin" = "admin";
-        try {
-          const { data: adminRecord } = await supabase
-            .from("admin_users")
-            .select("role")
-            .eq("email", email.toLowerCase())
-            .maybeSingle();
-
-          if (adminRecord?.role === "super_admin") {
-            role = "super_admin";
-          } else if (!adminRecord && (email.toLowerCase().includes("dev") || email.toLowerCase().includes("superadmin"))) {
-            role = "super_admin";
-          }
-        } catch {
-          if (email.toLowerCase().includes("dev") || email.toLowerCase().includes("superadmin")) {
-            role = "super_admin";
-          }
-        }
         setUserRole(role);
+        return;
+      }
+
+      const passcodeUser = localStorage.getItem(PASSCODE_USER_KEY);
+      const passcodeRole = (localStorage.getItem(PASSCODE_ROLE_KEY) as AdminRole) || "admin";
+      if (passcodeUser) {
+        setIsAuthenticated(true);
+        setHasSupabaseSession(false);
+        setUserEmail(passcodeUser);
+        setUserRole(passcodeRole);
       }
     };
-    checkAuth();
+
+    void checkAuth();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!active) return;
+      if (event === "SIGNED_OUT" && !localStorage.getItem(PASSCODE_USER_KEY)) {
+        setIsAuthenticated(false);
+        setHasSupabaseSession(false);
+        setUserRole("admin");
+      } else if (session) {
+        setHasSupabaseSession(true);
+      }
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleLogout = async () => {
-    localStorage.removeItem("admin_auth_user");
-    localStorage.removeItem("admin_auth_role");
+    clearLocalPasscodeSession();
     await supabase.auth.signOut();
     setIsAuthenticated(false);
+    setHasSupabaseSession(false);
     setUserRole("admin");
     setActiveTab("overview");
     setLoading(true);
@@ -221,10 +237,11 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <AdminLoginForm
-        onLoginSuccess={(email, role) => {
+        onLoginSuccess={(email, role, viaSupabaseAuth) => {
           setLoading(true);
           setFetchError(null);
           setIsAuthenticated(true);
+          setHasSupabaseSession(Boolean(viaSupabaseAuth));
           if (email) setUserEmail(email);
           if (role) setUserRole(role);
         }}
@@ -243,6 +260,26 @@ export default function AdminPage() {
       />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+        {!hasSupabaseSession && (
+          <div className="p-4 sm:p-6 rounded-[24px] bg-amber-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <p className="font-display text-sm sm:text-base font-extrabold text-[#18181B]">
+                Mode Pratinjau (Sesi Anonim / Sandi Cepat)
+              </p>
+              <p className="text-xs text-[#52525B] font-bold leading-relaxed">
+                Anda dapat melihat data dan mengekspor laporan, namun aksi tambah/hapus diblokir oleh Row Level Security (RLS). Masuk melalui tab <strong className="text-[#18181B]">Supabase Auth</strong> untuk akses tulis penuh.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="w-full sm:w-auto px-6 py-2 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] cursor-pointer whitespace-nowrap"
+            >
+              Masuk via Supabase Auth
+            </button>
+          </div>
+        )}
+
         {fetchError && (
           <div className="p-4 sm:p-6 rounded-[24px] bg-rose-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
@@ -327,6 +364,7 @@ export default function AdminPage() {
                     slug={undanganSlug}
                     previewLimit={5}
                     onViewAll={() => setActiveTab("tamu")}
+                    hasSupabaseSession={hasSupabaseSession}
                   />
                 </div>
               </div>
@@ -339,6 +377,7 @@ export default function AdminPage() {
                   onRefresh={handleSilentRefresh}
                   idUndangan={idUndangan}
                   slug={undanganSlug}
+                  hasSupabaseSession={hasSupabaseSession}
                 />
               </div>
             )}
@@ -348,6 +387,7 @@ export default function AdminPage() {
                 <GreetingsManagement
                   greetings={greetings}
                   onRefresh={handleSilentRefresh}
+                  hasSupabaseSession={hasSupabaseSession}
                 />
               </div>
             )}
@@ -357,6 +397,7 @@ export default function AdminPage() {
                 <AdminManagement
                   currentUserEmail={userEmail}
                   currentUserRole={userRole}
+                  hasSupabaseSession={hasSupabaseSession}
                 />
               </div>
             )}

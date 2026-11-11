@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { formatWriteErrorMessage } from "@/lib/adminAuth";
 
 export interface UcapanItem {
   id_ucapan: string;
@@ -14,14 +15,22 @@ export interface UcapanItem {
 interface GreetingsManagementProps {
   greetings: UcapanItem[];
   onRefresh: () => void;
+  hasSupabaseSession?: boolean;
 }
 
 export default function GreetingsManagement({
   greetings,
   onRefresh,
+  hasSupabaseSession = true,
 }: GreetingsManagementProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   const filteredGreetings = greetings.filter(
     (item) =>
@@ -34,10 +43,24 @@ export default function GreetingsManagement({
 
     setDeletingId(idUcapan);
     try {
-      const { error } = await supabase.from("ucapan").delete().eq("id_ucapan", idUcapan);
+      const { data: deletedRows, error } = await supabase
+        .from("ucapan")
+        .delete()
+        .eq("id_ucapan", idUcapan)
+        .select("id_ucapan");
+
       if (error) {
-        alert("Gagal menghapus ucapan: " + error.message);
+        alert(formatWriteErrorMessage("menghapus ucapan", error, hasSupabaseSession));
+      } else if (!deletedRows || deletedRows.length === 0) {
+        alert(
+          `Gagal menghapus ucapan: tidak ada baris yang terhapus di database. ${
+            hasSupabaseSession
+              ? "Ucapan mungkin sudah terhapus atau diblokir oleh kebijakan RLS."
+              : "Anda masuk dengan Sandi Cepat (Pratinjau / anonim) — silakan masuk lewat tab Supabase Auth untuk menghapus ucapan."
+          }`
+        );
       } else {
+        showToast("Ucapan berhasil dihapus.");
         onRefresh();
       }
     } catch (err: unknown) {
@@ -65,6 +88,11 @@ export default function GreetingsManagement({
 
   return (
     <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] p-6 space-y-4 font-sans">
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 px-4 py-2 rounded-2xl bg-[#18181B] text-white text-xs font-bold shadow-[4px_4px_0px_#FFE600] animate-in fade-in border-2 border-white">
+          {toastMessage}
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b-2 border-[#18181B] gap-4">
         <div>
           <h2 className="font-display text-lg sm:text-xl font-extrabold text-[#18181B]">

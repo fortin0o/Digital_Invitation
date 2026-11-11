@@ -2,16 +2,23 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
+import {
+  AdminRole,
+  formatWriteErrorMessage,
+  isMissingTableError,
+} from "@/lib/adminAuth";
 import NeoDivider from "../NeoDivider";
 
 export interface AdminUserItem {
   id: string;
   email: string;
   nama: string;
-  role: "super_admin" | "admin";
+  role: AdminRole;
   created_at?: string;
   is_local?: boolean;
 }
+
+type AdminDbStatus = "connected" | "missing_table" | "error";
 
 const DEFAULT_ADMINS: AdminUserItem[] = [
   {
@@ -24,7 +31,7 @@ const DEFAULT_ADMINS: AdminUserItem[] = [
   },
   {
     id: "admin-acara-1",
-    email: "mempelai@wedding.id",
+    email: "mempelai@pawiwahan.id",
     nama: "Panitia Arya & Sekar",
     role: "admin",
     created_at: new Date().toISOString(),
@@ -32,22 +39,86 @@ const DEFAULT_ADMINS: AdminUserItem[] = [
   },
 ];
 
+function getLocalFallbackAdmins(): AdminUserItem[] {
+  if (typeof window === "undefined") return DEFAULT_ADMINS;
+  const saved = localStorage.getItem("app_admin_list");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed as AdminUserItem[];
+      }
+    } catch {
+      // ignore invalid JSON and reset below
+    }
+  }
+  localStorage.setItem("app_admin_list", JSON.stringify(DEFAULT_ADMINS));
+  return DEFAULT_ADMINS;
+}
+
+async function queryAdminUsers(): Promise<{
+  admins: AdminUserItem[];
+  dbStatus: AdminDbStatus;
+  dbMessage: string | null;
+}> {
+  try {
+    const { data, error } = await supabase
+      .from("admin_users")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error) {
+      return {
+        admins: (data as AdminUserItem[]) || [],
+        dbStatus: "connected",
+        dbMessage: null,
+      };
+    }
+
+    if (isMissingTableError(error)) {
+      return {
+        admins: getLocalFallbackAdmins(),
+        dbStatus: "missing_table",
+        dbMessage:
+          "Tabel public.admin_users belum ada di Supabase (PGRST205). Jalankan skrip supabase_admin_roles.sql di SQL Editor Supabase agar daftar admin tersinkron ke database.",
+      };
+    }
+
+    return {
+      admins: getLocalFallbackAdmins(),
+      dbStatus: "error",
+      dbMessage: error.message || "Gagal membaca tabel admin_users.",
+    };
+  } catch (err) {
+    return {
+      admins: getLocalFallbackAdmins(),
+      dbStatus: "error",
+      dbMessage: err instanceof Error ? err.message : "Gagal menghubungi server.",
+    };
+  }
+}
+
 interface AdminManagementProps {
   currentUserEmail: string;
-  currentUserRole: "super_admin" | "admin";
+  currentUserRole: AdminRole;
+  hasSupabaseSession?: boolean;
 }
 
 export default function AdminManagement({
   currentUserEmail,
   currentUserRole,
+  hasSupabaseSession = true,
 }: AdminManagementProps) {
   const [admins, setAdmins] = useState<AdminUserItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dbStatus, setDbStatus] = useState<AdminDbStatus>("connected");
+  const [dbMessage, setDbMessage] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newNama, setNewNama] = useState("");
   const [newEmail, setNewEmail] = useState("");
-  const [newRole, setNewRole] = useState<"super_admin" | "admin">("admin");
+  const [newRole, setNewRole] = useState<AdminRole>("admin");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -56,96 +127,89 @@ export default function AdminManagement({
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  const fetchAdmins = useCallback(async () => {
+  const refreshAdmins = useCallback(async () => {
     setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from("admin_users")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (!error && data && data.length > 0) {
-        setAdmins(data as AdminUserItem[]);
-      } else {
-        const saved = localStorage.getItem("app_admin_list");
-        if (saved) {
-          try {
-            setAdmins(JSON.parse(saved));
-          } catch {
-            setAdmins(DEFAULT_ADMINS);
-          }
-        } else {
-          setAdmins(DEFAULT_ADMINS);
-          localStorage.setItem("app_admin_list", JSON.stringify(DEFAULT_ADMINS));
-        }
-      }
-    } catch {
-      const saved = localStorage.getItem("app_admin_list");
-      if (saved) {
-        try {
-          setAdmins(JSON.parse(saved));
-        } catch {
-          setAdmins(DEFAULT_ADMINS);
-        }
-      } else {
-        setAdmins(DEFAULT_ADMINS);
-      }
-    } finally {
-      setLoading(false);
-    }
+    const result = await queryAdminUsers();
+    setAdmins(result.admins);
+    setDbStatus(result.dbStatus);
+    setDbMessage(result.dbMessage);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
-    fetchAdmins();
-  }, [fetchAdmins]);
+    let active = true;
+    (async () => {
+      const result = await queryAdminUsers();
+      if (!active) return;
+      setAdmins(result.admins);
+      setDbStatus(result.dbStatus);
+      setDbMessage(result.dbMessage);
+      setLoading(false);
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleAddAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNama.trim() || !newEmail.trim()) return;
 
     setIsSubmitting(true);
-    const newAdminObj: AdminUserItem = {
-      id: "adm-" + Date.now(),
-      email: newEmail.trim().toLowerCase(),
-      nama: newNama.trim(),
-      role: newRole,
-      created_at: new Date().toISOString(),
-    };
+    const cleanEmail = newEmail.trim().toLowerCase();
+    const cleanNama = newNama.trim();
 
     try {
-      const { error } = await supabase.from("admin_users").insert({
-        email: newAdminObj.email,
-        nama: newAdminObj.nama,
-        role: newAdminObj.role,
-      });
+      const { error } = await supabase
+        .from("admin_users")
+        .insert({
+          email: cleanEmail,
+          nama: cleanNama,
+          role: newRole,
+        })
+        .select("id");
 
-      if (error) {
+      if (!error) {
+        await refreshAdmins();
+        showToast("Admin baru berhasil disimpan ke database!");
+        setNewNama("");
+        setNewEmail("");
+        setNewRole("admin");
+        setShowAddModal(false);
+        return;
+      }
+
+      if (isMissingTableError(error)) {
+        const newAdminObj: AdminUserItem = {
+          id: "adm-" + Date.now(),
+          email: cleanEmail,
+          nama: cleanNama,
+          role: newRole,
+          created_at: new Date().toISOString(),
+          is_local: true,
+        };
         const updatedList = [newAdminObj, ...admins];
         setAdmins(updatedList);
         localStorage.setItem("app_admin_list", JSON.stringify(updatedList));
-        showToast("Admin baru berhasil ditambahkan (Tersimpan Lokal)");
-      } else {
-        await fetchAdmins();
-        showToast("Admin baru berhasil ditambahkan!");
+        setDbStatus("missing_table");
+        showToast("Tabel admin_users belum ada — tersimpan di pratinjau lokal browser.");
+        setNewNama("");
+        setNewEmail("");
+        setNewRole("admin");
+        setShowAddModal(false);
+        return;
       }
 
-      setNewNama("");
-      setNewEmail("");
-      setNewRole("admin");
-      setShowAddModal(false);
-    } catch {
-      const updatedList = [newAdminObj, ...admins];
-      setAdmins(updatedList);
-      localStorage.setItem("app_admin_list", JSON.stringify(updatedList));
-      showToast("Admin baru berhasil ditambahkan!");
-      setShowAddModal(false);
+      alert(formatWriteErrorMessage("menambah admin", error, hasSupabaseSession));
+    } catch (err) {
+      alert("Error: " + (err instanceof Error ? err.message : "Gagal menyimpan admin."));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDeleteAdmin = async (admin: AdminUserItem) => {
-    if (admin.email === currentUserEmail) {
+    if (admin.email.toLowerCase() === currentUserEmail.toLowerCase()) {
       alert("Anda tidak dapat menghapus akun Anda sendiri!");
       return;
     }
@@ -159,25 +223,40 @@ export default function AdminManagement({
       return;
     }
 
-    try {
-      const { error } = await supabase
-        .from("admin_users")
-        .delete()
-        .eq("email", admin.email);
-
-      if (error) {
-        const updatedList = admins.filter((a) => a.id !== admin.id && a.email !== admin.email);
-        setAdmins(updatedList);
-        localStorage.setItem("app_admin_list", JSON.stringify(updatedList));
-      } else {
-        await fetchAdmins();
-      }
-      showToast("Admin berhasil dihapus.");
-    } catch {
-      const updatedList = admins.filter((a) => a.id !== admin.id);
+    if (dbStatus !== "connected" || admin.is_local) {
+      const updatedList = admins.filter((a) => a.id !== admin.id && a.email !== admin.email);
       setAdmins(updatedList);
       localStorage.setItem("app_admin_list", JSON.stringify(updatedList));
-      showToast("Admin berhasil dihapus.");
+      showToast("Admin dihapus dari daftar pratinjau lokal.");
+      return;
+    }
+
+    setDeletingId(admin.id);
+    try {
+      const { data: deletedRows, error } = await supabase
+        .from("admin_users")
+        .delete()
+        .eq("email", admin.email)
+        .select("id, email");
+
+      if (error) {
+        alert(formatWriteErrorMessage("menghapus admin", error, hasSupabaseSession));
+      } else if (!deletedRows || deletedRows.length === 0) {
+        alert(
+          `Gagal menghapus admin "${admin.email}": tidak ada baris yang terhapus di database. ${
+            hasSupabaseSession
+              ? "Data mungkin sudah terhapus atau diblokir oleh kebijakan RLS."
+              : "Anda masuk dengan Sandi Cepat (Pratinjau / anonim) — silakan masuk lewat tab Supabase Auth."
+          }`
+        );
+      } else {
+        await refreshAdmins();
+        showToast("Admin berhasil dihapus dari database.");
+      }
+    } catch (err) {
+      alert("Error: " + (err instanceof Error ? err.message : "Gagal menghapus admin."));
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -194,8 +273,29 @@ export default function AdminManagement({
     <div className="space-y-6 font-sans">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#18181B] text-white px-4 py-2.5 rounded-2xl shadow-[4px_4px_0px_#FFE600] text-xs font-bold border-2 border-white animate-in fade-in">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#18181B] text-white px-4 py-2 rounded-2xl shadow-[4px_4px_0px_#FFE600] text-xs font-bold border-2 border-white animate-in fade-in">
           {toastMessage}
+        </div>
+      )}
+
+      {/* Database Provisioning Status Banner */}
+      {dbStatus !== "connected" && dbMessage && (
+        <div className="p-4 sm:p-6 rounded-[24px] bg-amber-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <p className="font-display text-sm font-extrabold text-[#18181B]">
+              Mode Fallback Lokal (admin_users belum aktif di Supabase)
+            </p>
+            <p className="text-xs text-[#52525B] font-bold leading-relaxed">
+              {dbMessage}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void refreshAdmins()}
+            className="px-4 py-2 rounded-xl bg-white hover:bg-[#FFE600] border-2 border-[#18181B] text-xs font-extrabold text-[#18181B] shadow-[2px_2px_0px_#18181B] cursor-pointer whitespace-nowrap"
+          >
+            Cek Ulang DB
+          </button>
         </div>
       )}
 
@@ -275,7 +375,7 @@ export default function AdminManagement({
             </p>
           </div>
           <button
-            onClick={fetchAdmins}
+            onClick={() => void refreshAdmins()}
             type="button"
             className="px-4 py-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold cursor-pointer"
             title="Muat Ulang"
@@ -288,6 +388,15 @@ export default function AdminManagement({
           <div className="py-12 text-center text-xs text-[#71717A]">
             <div className="inline-block w-6 h-6 border-3 border-[#18181B] border-t-[#FFE600] rounded-full animate-spin mb-2" />
             <p className="font-bold">Memuat daftar admin...</p>
+          </div>
+        ) : admins.length === 0 ? (
+          <div className="py-12 px-4 text-center">
+            <p className="font-display text-base font-extrabold text-[#18181B]">
+              Belum ada administrator terdaftar
+            </p>
+            <p className="text-xs text-[#71717A] mt-1 font-medium">
+              Tambahkan admin baru agar panitia dapat mengakses panel ini.
+            </p>
           </div>
         ) : (
           <>
@@ -304,7 +413,7 @@ export default function AdminManagement({
                 </thead>
                 <tbody className="divide-y divide-[#18181B]/15">
                   {admins.map((adm) => {
-                    const isCurrent = adm.email === currentUserEmail;
+                    const isCurrent = adm.email.toLowerCase() === currentUserEmail.toLowerCase();
                     const isSuper = adm.role === "super_admin";
 
                     return (
@@ -360,10 +469,11 @@ export default function AdminManagement({
                           {!isCurrent && (
                             <button
                               onClick={() => handleDeleteAdmin(adm)}
+                              disabled={deletingId === adm.id}
                               type="button"
-                              className="px-3 py-1 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
+                              className="px-3 py-1 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold transition-colors cursor-pointer shadow-[1.5px_1.5px_0px_#18181B] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              Hapus
+                              {deletingId === adm.id ? "Menghapus..." : "Hapus"}
                             </button>
                           )}
                         </td>
@@ -377,7 +487,7 @@ export default function AdminManagement({
             {/* Mobile Cards View */}
             <div className="block md:hidden divide-y divide-[#18181B]/15">
               {admins.map((adm) => {
-                const isCurrent = adm.email === currentUserEmail;
+                const isCurrent = adm.email.toLowerCase() === currentUserEmail.toLowerCase();
                 const isSuper = adm.role === "super_admin";
 
                 return (
@@ -427,10 +537,11 @@ export default function AdminManagement({
                       {!isCurrent && (
                         <button
                           onClick={() => handleDeleteAdmin(adm)}
+                          disabled={deletingId === adm.id}
                           type="button"
-                          className="py-2 px-4 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer"
+                          className="py-2 px-4 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          Hapus
+                          {deletingId === adm.id ? "Menghapus..." : "Hapus"}
                         </button>
                       )}
                     </div>

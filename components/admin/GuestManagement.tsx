@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { formatWriteErrorMessage } from "@/lib/adminAuth";
 
 export interface GuestItem {
   id_tamu: string;
@@ -24,6 +25,7 @@ interface GuestManagementProps {
   slug?: string;
   previewLimit?: number;
   onViewAll?: () => void;
+  hasSupabaseSession?: boolean;
 }
 
 export default function GuestManagement({
@@ -33,6 +35,7 @@ export default function GuestManagement({
   slug = "rina-dan-budi",
   previewLimit,
   onViewAll,
+  hasSupabaseSession = true,
 }: GuestManagementProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -42,6 +45,7 @@ export default function GuestManagement({
   const [newNama, setNewNama] = useState("");
   const [newKuota, setNewKuota] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [qrModalGuest, setQrModalGuest] = useState<GuestItem | null>(null);
 
@@ -61,17 +65,22 @@ export default function GuestManagement({
     setIsSubmitting(true);
     try {
       const code = generateUniqueCode();
-      const { error } = await supabase.from("tamu").insert({
-        id_undangan: idUndangan,
-        nama_tamu: newNama.trim(),
-        kode: code,
-        kuota: Number(newKuota) || 1,
-      });
+      const { data: insertedRows, error } = await supabase
+        .from("tamu")
+        .insert({
+          id_undangan: idUndangan,
+          nama_tamu: newNama.trim(),
+          kode: code,
+          kuota: Number(newKuota) || 1,
+        })
+        .select("id_tamu");
 
       if (error) {
-        alert("Gagal menambahkan tamu: " + error.message);
+        alert(formatWriteErrorMessage("menambahkan tamu", error, hasSupabaseSession));
+      } else if (!insertedRows || insertedRows.length === 0) {
+        alert("Gagal menambahkan tamu: database tidak mengembalikan baris baru.");
       } else {
-        showToast(`Tamu "${newNama}" berhasil ditambahkan!`);
+        showToast(`Tamu "${newNama.trim()}" berhasil ditambahkan!`);
         setNewNama("");
         setNewKuota(1);
         setShowAddModal(false);
@@ -88,12 +97,30 @@ export default function GuestManagement({
   const handleDeleteGuest = async (idTamu: string, nama: string) => {
     if (!confirm(`Hapus tamu "${nama}" dari daftar undangan?`)) return;
 
+    setDeletingId(idTamu);
     try {
-      await supabase.from("rsvp").delete().eq("id_tamu", idTamu);
-      const { error } = await supabase.from("tamu").delete().eq("id_tamu", idTamu);
+      const { error: rsvpError } = await supabase.from("rsvp").delete().eq("id_tamu", idTamu);
+      if (rsvpError) {
+        alert(formatWriteErrorMessage("menghapus RSVP tamu", rsvpError, hasSupabaseSession));
+        return;
+      }
+
+      const { data: deletedRows, error } = await supabase
+        .from("tamu")
+        .delete()
+        .eq("id_tamu", idTamu)
+        .select("id_tamu");
 
       if (error) {
-        alert("Gagal menghapus: " + error.message);
+        alert(formatWriteErrorMessage("menghapus tamu", error, hasSupabaseSession));
+      } else if (!deletedRows || deletedRows.length === 0) {
+        alert(
+          `Gagal menghapus tamu "${nama}": tidak ada baris yang terhapus di database. ${
+            hasSupabaseSession
+              ? "Data mungkin sudah terhapus atau diblokir oleh kebijakan RLS."
+              : "Anda masuk dengan Sandi Cepat (Pratinjau / anonim) — silakan masuk lewat tab Supabase Auth untuk menghapus data."
+          }`
+        );
       } else {
         showToast(`Tamu "${nama}" berhasil dihapus.`);
         onRefresh();
@@ -101,6 +128,8 @@ export default function GuestManagement({
     } catch (err: unknown) {
       const error = err as Error;
       alert("Error: " + error.message);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -393,8 +422,9 @@ export default function GuestManagement({
                             </button>
                             <button
                               onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
+                              disabled={deletingId === tamu.id_tamu}
                               type="button"
-                              className="p-1 rounded-lg border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 cursor-pointer shadow-[1.5px_1.5px_0px_#18181B]"
+                              className="p-1 rounded-lg border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 cursor-pointer shadow-[1.5px_1.5px_0px_#18181B] disabled:opacity-50 disabled:cursor-not-allowed"
                               title="Hapus Tamu"
                             >
                               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -475,10 +505,11 @@ export default function GuestManagement({
                       </button>
                       <button
                         onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
+                        disabled={deletingId === tamu.id_tamu}
                         type="button"
-                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <span>Hapus</span>
+                        <span>{deletingId === tamu.id_tamu ? "Menghapus..." : "Hapus"}</span>
                       </button>
                     </div>
                   </div>
