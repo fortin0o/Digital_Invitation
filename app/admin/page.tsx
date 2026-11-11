@@ -321,10 +321,12 @@ export default function AdminPage() {
                     </button>
                   </div>
                   <GuestManagement
-                    guests={guests.slice(0, 5)}
+                    guests={guests}
                     onRefresh={handleSilentRefresh}
                     idUndangan={idUndangan}
                     slug={undanganSlug}
+                    previewLimit={5}
+                    onViewAll={() => setActiveTab("tamu")}
                   />
                 </div>
               </div>

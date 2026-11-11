@@ -22,6 +22,8 @@ interface GuestManagementProps {
   onRefresh: () => void;
   idUndangan: string;
   slug?: string;
+  previewLimit?: number;
+  onViewAll?: () => void;
 }
 
 export default function GuestManagement({
@@ -29,6 +31,8 @@ export default function GuestManagement({
   onRefresh,
   idUndangan,
   slug = "rina-dan-budi",
+  previewLimit,
+  onViewAll,
 }: GuestManagementProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -204,12 +208,20 @@ export default function GuestManagement({
     });
   }, [guests, search, statusFilter]);
 
+  const isFiltering = Boolean(search.trim()) || statusFilter !== "all";
+  const isPreviewMode = Boolean(previewLimit && previewLimit > 0 && !isFiltering);
+
   const totalPages = Math.max(1, Math.ceil(filteredGuests.length / pageSize));
   const safePage = Math.min(currentPage, totalPages);
   const startIdx = (safePage - 1) * pageSize;
   const paginatedGuests = React.useMemo(
     () => filteredGuests.slice(startIdx, startIdx + pageSize),
     [filteredGuests, startIdx, pageSize]
+  );
+
+  const displayedGuests = React.useMemo(
+    () => (isPreviewMode && previewLimit ? filteredGuests.slice(0, previewLimit) : paginatedGuests),
+    [isPreviewMode, previewLimit, filteredGuests, paginatedGuests]
   );
 
   const visiblePages = React.useMemo(() => {
@@ -317,7 +329,7 @@ export default function GuestManagement({
                   </tr>
                 </thead>
                 <tbody className="divide-y border-[#18181B]/15 text-[#18181B]">
-                  {paginatedGuests.map((tamu) => {
+                  {displayedGuests.map((tamu) => {
                     const status = tamu.rsvp?.status;
                     return (
                       <tr key={tamu.id_tamu} className="hover:bg-[#FFFDF5] transition-colors">
@@ -400,7 +412,7 @@ export default function GuestManagement({
 
             {/* Mobile Cards View: Touch-friendly 2x2 action buttons */}
             <div className="block md:hidden divide-y divide-[#18181B]/15">
-              {paginatedGuests.map((tamu) => {
+              {displayedGuests.map((tamu) => {
                 const status = tamu.rsvp?.status;
                 return (
                   <div key={tamu.id_tamu} className="p-4 space-y-3">
@@ -474,7 +486,24 @@ export default function GuestManagement({
               })}
             </div>
 
-            {(guests.length > 10 || totalPages > 1) && (
+            {isPreviewMode && filteredGuests.length > displayedGuests.length && (
+              <div className="border-t-2 border-[#18181B] bg-[#FFFDF5] p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p className="text-xs font-bold text-[#18181B] text-center sm:text-left">
+                  Menampilkan {displayedGuests.length} dari {filteredGuests.length} tamu. Gunakan pencarian atau filter untuk mencari semua tamu.
+                </p>
+                {onViewAll && (
+                  <button
+                    type="button"
+                    onClick={onViewAll}
+                    className="h-8 px-4 rounded-xl border-2 border-[#18181B] bg-[#FFE600] hover:bg-[#FFD700] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer whitespace-nowrap"
+                  >
+                    Lihat Semua Tamu ({filteredGuests.length}) &rarr;
+                  </button>
+                )}
+              </div>
+            )}
+
+            {!isPreviewMode && (guests.length > 10 || totalPages > 1) && (
               <div className="border-t-2 border-[#18181B] bg-[#FFFDF5] p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs font-bold text-[#18181B]">
                   <span>
