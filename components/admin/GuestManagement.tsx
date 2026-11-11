@@ -32,6 +32,8 @@ export default function GuestManagement({
 }: GuestManagementProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newNama, setNewNama] = useState("");
   const [newKuota, setNewKuota] = useState(1);
@@ -175,21 +177,54 @@ export default function GuestManagement({
     showToast("Data tamu & RSVP berhasil diekspor ke Excel!");
   };
 
-  const filteredGuests = guests.filter((g) => {
-    const matchSearch =
-      g.nama_tamu.toLowerCase().includes(search.toLowerCase()) ||
-      g.kode.toLowerCase().includes(search.toLowerCase());
+  const statusCounts = React.useMemo(() => {
+    const counts = { hadir: 0, ragu: 0, tidak_hadir: 0, belum: 0 };
+    for (const g of guests) {
+      const status = g.rsvp?.status;
+      if (status === "hadir") counts.hadir += 1;
+      else if (status === "ragu") counts.ragu += 1;
+      else if (status === "tidak_hadir") counts.tidak_hadir += 1;
+      else counts.belum += 1;
+    }
+    return counts;
+  }, [guests]);
 
-    if (!matchSearch) return false;
+  const filteredGuests = React.useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return guests.filter((g) => {
+      const matchSearch =
+        !q ||
+        g.nama_tamu.toLowerCase().includes(q) ||
+        g.kode.toLowerCase().includes(q);
 
-    if (statusFilter === "all") return true;
-    if (statusFilter === "hadir") return g.rsvp?.status === "hadir";
-    if (statusFilter === "ragu") return g.rsvp?.status === "ragu";
-    if (statusFilter === "tidak_hadir") return g.rsvp?.status === "tidak_hadir";
-    if (statusFilter === "belum") return !g.rsvp?.status;
+      if (!matchSearch) return false;
+      if (statusFilter === "all") return true;
+      if (statusFilter === "belum") return !g.rsvp?.status;
+      return g.rsvp?.status === statusFilter;
+    });
+  }, [guests, search, statusFilter]);
 
-    return true;
-  });
+  const totalPages = Math.max(1, Math.ceil(filteredGuests.length / pageSize));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIdx = (safePage - 1) * pageSize;
+  const paginatedGuests = React.useMemo(
+    () => filteredGuests.slice(startIdx, startIdx + pageSize),
+    [filteredGuests, startIdx, pageSize]
+  );
+
+  const visiblePages = React.useMemo(() => {
+    if (totalPages <= 5) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const pages: Array<number | "ellipsis-left" | "ellipsis-right"> = [1];
+    const windowStart = Math.max(2, safePage - 1);
+    const windowEnd = Math.min(totalPages - 1, safePage + 1);
+    if (windowStart > 2) pages.push("ellipsis-left");
+    for (let p = windowStart; p <= windowEnd; p += 1) pages.push(p);
+    if (windowEnd < totalPages - 1) pages.push("ellipsis-right");
+    pages.push(totalPages);
+    return pages;
+  }, [safePage, totalPages]);
 
   return (
     <div className="space-y-6 font-sans">
@@ -209,7 +244,10 @@ export default function GuestManagement({
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
               placeholder="Cari nama tamu atau kode..."
               className="w-full px-4 py-2 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none focus:bg-white"
             />
@@ -218,14 +256,17 @@ export default function GuestManagement({
           {/* Clean Status Filter */}
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setCurrentPage(1);
+            }}
             className="py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs text-[#18181B] font-bold outline-none cursor-pointer"
           >
             <option value="all">Semua Tamu ({guests.length})</option>
-            <option value="hadir">Konfirmasi Hadir ({guests.filter((g) => g.rsvp?.status === "hadir").length})</option>
-            <option value="ragu">Masih Ragu ({guests.filter((g) => g.rsvp?.status === "ragu").length})</option>
-            <option value="tidak_hadir">Tidak Hadir ({guests.filter((g) => g.rsvp?.status === "tidak_hadir").length})</option>
-            <option value="belum">Belum Konfirmasi ({guests.filter((g) => !g.rsvp?.status).length})</option>
+            <option value="hadir">Konfirmasi Hadir ({statusCounts.hadir})</option>
+            <option value="ragu">Masih Ragu ({statusCounts.ragu})</option>
+            <option value="tidak_hadir">Tidak Hadir ({statusCounts.tidak_hadir})</option>
+            <option value="belum">Belum Konfirmasi ({statusCounts.belum})</option>
           </select>
         </div>
 
@@ -276,7 +317,7 @@ export default function GuestManagement({
                   </tr>
                 </thead>
                 <tbody className="divide-y border-[#18181B]/15 text-[#18181B]">
-                  {filteredGuests.map((tamu) => {
+                  {paginatedGuests.map((tamu) => {
                     const status = tamu.rsvp?.status;
                     return (
                       <tr key={tamu.id_tamu} className="hover:bg-[#FFFDF5] transition-colors">
@@ -359,7 +400,7 @@ export default function GuestManagement({
 
             {/* Mobile Cards View: Touch-friendly 2x2 action buttons */}
             <div className="block md:hidden divide-y divide-[#18181B]/15">
-              {filteredGuests.map((tamu) => {
+              {paginatedGuests.map((tamu) => {
                 const status = tamu.rsvp?.status;
                 return (
                   <div key={tamu.id_tamu} className="p-4 space-y-3">
@@ -432,6 +473,78 @@ export default function GuestManagement({
                 );
               })}
             </div>
+
+            {(guests.length > 10 || totalPages > 1) && (
+              <div className="border-t-2 border-[#18181B] bg-[#FFFDF5] p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs font-bold text-[#18181B]">
+                  <span>
+                    Menampilkan {startIdx + 1}&ndash;{Math.min(startIdx + pageSize, filteredGuests.length)} dari {filteredGuests.length} tamu
+                  </span>
+                  <select
+                    value={pageSize}
+                    onChange={(e) => {
+                      setPageSize(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                    aria-label="Jumlah baris per halaman"
+                    className="h-8 px-2 rounded-lg bg-white border-2 border-[#18181B] text-xs font-extrabold text-[#18181B] outline-none cursor-pointer"
+                  >
+                    <option value={20}>20 / hal</option>
+                    <option value={50}>50 / hal</option>
+                    <option value={100}>100 / hal</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    disabled={safePage <= 1}
+                    onClick={() => setCurrentPage(Math.max(1, safePage - 1))}
+                    className={`h-8 px-4 rounded-xl border-2 border-[#18181B] text-xs font-extrabold transition-all ${
+                      safePage <= 1
+                        ? "bg-white/60 text-[#18181B]/40 cursor-not-allowed"
+                        : "bg-white text-[#18181B] hover:bg-[#FFE600] shadow-[2px_2px_0px_#18181B] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer"
+                    }`}
+                  >
+                    Sebelumnya
+                  </button>
+
+                  {visiblePages.map((item) =>
+                    typeof item === "string" ? (
+                      <span key={item} className="px-1 text-xs font-extrabold text-[#18181B]/60">
+                        &hellip;
+                      </span>
+                    ) : (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => setCurrentPage(item)}
+                        className={`min-w-8 h-8 px-2 rounded-xl border-2 border-[#18181B] text-xs font-extrabold transition-all cursor-pointer ${
+                          item === safePage
+                            ? "bg-[#FFE600] text-[#18181B] shadow-[2px_2px_0px_#18181B]"
+                            : "bg-white text-[#18181B] hover:bg-[#FFFDF5]"
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    )
+                  )}
+
+                  <button
+                    type="button"
+                    disabled={safePage >= totalPages}
+                    onClick={() => setCurrentPage(Math.min(totalPages, safePage + 1))}
+                    className={`h-8 px-4 rounded-xl border-2 border-[#18181B] text-xs font-extrabold transition-all ${
+                      safePage >= totalPages
+                        ? "bg-white/60 text-[#18181B]/40 cursor-not-allowed"
+                        : "bg-white text-[#18181B] hover:bg-[#FFE600] shadow-[2px_2px_0px_#18181B] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none cursor-pointer"
+                    }`}
+                  >
+                    Berikutnya
+                  </button>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
