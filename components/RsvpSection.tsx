@@ -1,20 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
+import { getGuestByCode, RsvpStatus, TamuWithRsvp } from "@/lib/guestInvitation";
 import NeoSticker from "./NeoSticker";
 import NeoDivider from "./NeoDivider";
 
-interface TamuData {
-  id_tamu: string;
-  id_undangan: string;
-  nama_tamu: string;
-  kode: string;
-  kuota: number;
-}
-
 interface RsvpSectionProps {
-  initialTamu?: TamuData | null;
+  initialTamu?: TamuWithRsvp | null;
   guestCode?: string;
   idUndangan?: string;
 }
@@ -22,99 +15,77 @@ interface RsvpSectionProps {
 export default function RsvpSection({
   initialTamu,
   guestCode = "",
+  idUndangan = "",
 }: RsvpSectionProps) {
-  const [tamu, setTamu] = useState<TamuData | null>(initialTamu || null);
-  const [status, setStatus] = useState<"hadir" | "tidak_hadir" | "ragu">("hadir");
-  const [jumlahHadir, setJumlahHadir] = useState<number>(1);
-  const [manualName, setManualName] = useState<string>("");
+  const initialQuota = Math.max(initialTamu?.kuota || 1, 1);
+  const initialStatus: RsvpStatus = initialTamu?.rsvp_status || "hadir";
+  const initialCount =
+    initialStatus === "tidak_hadir"
+      ? 1
+      : Math.min(Math.max(initialTamu?.rsvp_jumlah_hadir || 1, 1), initialQuota);
+
+  const [tamu, setTamu] = useState<TamuWithRsvp | null>(initialTamu || null);
+  const [status, setStatus] = useState<RsvpStatus>(initialStatus);
+  const [jumlahHadir, setJumlahHadir] = useState<number>(initialCount);
+  const [manualCode, setManualCode] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [existingRsvp, setExistingRsvp] = useState<boolean>(false);
+  const [existingRsvp, setExistingRsvp] = useState<boolean>(Boolean(initialTamu?.rsvp_status));
   const [verifying, setVerifying] = useState(false);
 
-  // If initialTamu wasn't loaded on SSR, look up guest via guestCode
+  const applyGuestRecord = useCallback((guest: TamuWithRsvp) => {
+    const quota = Math.max(guest.kuota || 1, 1);
+    const nextStatus: RsvpStatus = guest.rsvp_status || "hadir";
+    const nextCount =
+      nextStatus === "tidak_hadir"
+        ? 1
+        : Math.min(Math.max(guest.rsvp_jumlah_hadir || 1, 1), quota);
+
+    setTamu(guest);
+    setStatus(nextStatus);
+    setJumlahHadir(nextCount);
+    setExistingRsvp(Boolean(guest.rsvp_status));
+  }, []);
+
+  // Fallback client lookup if initialTamu wasn't preloaded on SSR
   useEffect(() => {
-    if (!tamu && guestCode) {
-      supabase
-        .from("tamu")
-        .select("*")
-        .eq("kode", guestCode)
-        .maybeSingle()
-        .then(({ data }) => {
-          if (data) {
-            setTamu(data);
-            setJumlahHadir(Math.min(data.kuota || 1, 1));
-          }
-        });
-    }
-  }, [guestCode, tamu]);
+    if (tamu || !guestCode) return;
+    let active = true;
 
-  // Check if this guest already submitted RSVP
-  useEffect(() => {
-    if (tamu?.id_tamu) {
-      supabase
-        .from("rsvp")
-        .select("*")
-        .eq("id_tamu", tamu.id_tamu)
-        .maybeSingle()
-        .then(({ data }) => {
-          if (data) {
-            setStatus(data.status as "hadir" | "tidak_hadir" | "ragu");
-            setJumlahHadir(data.jumlah_hadir || 1);
-            setExistingRsvp(true);
-          }
-        });
-    }
-  }, [tamu]);
+    void (async () => {
+      const found = await getGuestByCode(guestCode, idUndangan);
+      if (active && found) {
+        applyGuestRecord(found);
+      }
+    })();
 
-  const maxQuota = tamu?.kuota || 1;
+    return () => {
+      active = false;
+    };
+  }, [guestCode, idUndangan, tamu, applyGuestRecord]);
 
-  // Verifikasi apakah nama terdaftar di tabel tamu
-  const verifyGuestByName = async (name: string): Promise<TamuData | null> => {
-    const trimmed = name.trim();
-    if (!trimmed) return null;
-
-    const { data: exactMatch } = await supabase
-      .from("tamu")
-      .select("*")
-      .ilike("nama_tamu", trimmed)
-      .limit(1)
-      .maybeSingle();
-
-    if (exactMatch) return exactMatch as TamuData;
-
-    const { data: partialMatch } = await supabase
-      .from("tamu")
-      .select("*")
-      .ilike("nama_tamu", `%${trimmed}%`)
-      .limit(1)
-      .maybeSingle();
-
-    if (partialMatch) return partialMatch as TamuData;
-
-    return null;
-  };
+  const maxQuota = Math.max(tamu?.kuota || 1, 1);
 
   const handleManualCheck = async () => {
-    if (!manualName.trim()) {
-      setErrorMessage("Silakan tuliskan nama Anda terlebih dahulu.");
+    const trimmedCode = manualCode.trim();
+    if (!trimmedCode) {
+      setErrorMessage("Silakan masukkan kode undangan Anda terlebih dahulu.");
       return;
     }
     setVerifying(true);
     setErrorMessage(null);
     try {
-      const found = await verifyGuestByName(manualName);
+      const found = await getGuestByCode(trimmedCode, idUndangan);
       if (found) {
-        setTamu(found);
-        setJumlahHadir(Math.min(found.kuota || 1, 1));
+        applyGuestRecord(found);
       } else {
         setErrorMessage(
-          `Nama "${manualName.trim()}" tidak ditemukan dalam daftar undangan resmi. Silakan periksa kembali ejaan nama Anda.`
+          `Kode undangan "${trimmedCode}" tidak ditemukan dalam daftar resmi. Pastikan kode sesuai pesan undangan pribadi Anda.`
         );
       }
     } catch {
-      setErrorMessage("Terjadi kendala saat memeriksa daftar tamu. Silakan coba lagi.");
+      setErrorMessage("Terjadi kendala saat memeriksa kode undangan. Silakan coba lagi.");
     } finally {
       setVerifying(false);
     }
@@ -129,54 +100,61 @@ export default function RsvpSection({
       let currentGuest = tamu;
 
       if (!currentGuest) {
-        if (!manualName.trim()) {
-          setErrorMessage("Silakan masukkan nama Anda.");
+        const trimmedCode = manualCode.trim();
+        if (!trimmedCode) {
+          setErrorMessage("Silakan masukkan kode undangan Anda.");
           setLoading(false);
           return;
         }
 
-        const found = await verifyGuestByName(manualName);
+        const found = await getGuestByCode(trimmedCode, idUndangan);
         if (!found) {
           setErrorMessage(
-            `Mohon maaf, nama "${manualName.trim()}" tidak terdaftar dalam daftar undangan resmi. RSVP hanya dapat diisi oleh tamu yang telah didaftarkan.`
+            `Mohon maaf, kode undangan "${trimmedCode}" tidak terdaftar dalam daftar undangan resmi.`
           );
           setLoading(false);
           return;
         }
 
         currentGuest = found;
-        setTamu(found);
-        setJumlahHadir(Math.min(found.kuota || 1, 1));
       }
 
-      const { error: rsvpErr } = await supabase.from("rsvp").upsert(
-        {
-          id_tamu: currentGuest.id_tamu,
-          status: status,
-          jumlah_hadir: status === "tidak_hadir" ? 0 : Math.min(jumlahHadir, currentGuest.kuota || 2),
-          tgl_konfirmasi: new Date().toISOString(),
-        },
-        { onConflict: "id_tamu" }
-      );
+      const guestQuota = Math.max(currentGuest.kuota || 1, 1);
+      const targetCount =
+        status === "tidak_hadir" ? 0 : Math.min(Math.max(jumlahHadir, 1), guestQuota);
+
+      const { data: rpcData, error: rsvpErr } = await supabase.rpc("submit_guest_rsvp", {
+        p_kode: currentGuest.kode,
+        p_status: status,
+        p_jumlah_hadir: targetCount,
+        p_id_undangan: idUndangan || currentGuest.id_undangan || null,
+      });
 
       if (rsvpErr) {
-        if (rsvpErr.code === "42501") {
-          if (typeof window !== "undefined") {
-            localStorage.setItem(
-              `rsvp_${currentGuest.id_tamu}`,
-              JSON.stringify({ status, jumlah_hadir: status === "tidak_hadir" ? 0 : jumlahHadir })
-            );
-          }
-        } else {
-          throw rsvpErr;
-        }
+        throw rsvpErr;
       }
 
+      const savedRow = (Array.isArray(rpcData) ? rpcData[0] : rpcData) as
+        | { status?: RsvpStatus; jumlah_hadir?: number; tgl_konfirmasi?: string }
+        | undefined;
+      const savedStatus: RsvpStatus = savedRow?.status || status;
+      const savedCount =
+        typeof savedRow?.jumlah_hadir === "number" ? savedRow.jumlah_hadir : targetCount;
+
+      setTamu({
+        ...currentGuest,
+        rsvp_status: savedStatus,
+        rsvp_jumlah_hadir: savedCount,
+        rsvp_tgl_konfirmasi: savedRow?.tgl_konfirmasi || new Date().toISOString(),
+      });
+      if (savedStatus !== "tidak_hadir") {
+        setJumlahHadir(Math.min(Math.max(savedCount || 1, 1), guestQuota));
+      }
       setSubmitted(true);
       setExistingRsvp(true);
     } catch (err: unknown) {
       const error = err as Error;
-      setErrorMessage(error.message || "Terjadi kendala saat mengirim RSVP.");
+      setErrorMessage(error.message || "Terjadi kendala saat mengirim RSVP ke server.");
     } finally {
       setLoading(false);
     }
@@ -293,10 +271,10 @@ export default function RsvpSection({
                 </div>
               )}
 
-              {/* Guest Name Field */}
+              {/* Guest Verification Field */}
               <div>
                 <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-2 font-bold">
-                  Nama Tamu Undangan
+                  {tamu ? "Nama Tamu Undangan" : "Verifikasi Kode Undangan"}
                 </label>
                 {tamu ? (
                   <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-between">
@@ -318,7 +296,9 @@ export default function RsvpSection({
                           type="button"
                           onClick={() => {
                             setTamu(null);
+                            setManualCode("");
                             setExistingRsvp(false);
+                            setErrorMessage(null);
                           }}
                           className="text-[10px] text-[#71717A] hover:text-[#18181B] underline font-bold cursor-pointer"
                         >
@@ -333,25 +313,25 @@ export default function RsvpSection({
                       <input
                         type="text"
                         required
-                        value={manualName}
+                        value={manualCode}
                         onChange={(e) => {
-                          setManualName(e.target.value);
+                          setManualCode(e.target.value);
                           setErrorMessage(null);
                         }}
-                        placeholder="Ketikkan nama lengkap Anda..."
-                        className="w-full py-2 px-4 pr-24 bg-[#FFFDF5] rounded-xl border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
+                        placeholder="Masukkan kode undangan (8 digit)..."
+                        className="w-full py-2 px-4 pr-24 bg-[#FFFDF5] rounded-xl border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors font-mono"
                       />
                       <button
                         type="button"
                         onClick={handleManualCheck}
-                        disabled={verifying || !manualName.trim()}
+                        disabled={verifying || !manualCode.trim()}
                         className="absolute right-2 px-3 py-1.5 rounded-lg bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] text-[11px] font-extrabold border border-[#18181B] transition-colors disabled:opacity-40 cursor-pointer"
                       >
-                        {verifying ? "Memeriksa..." : "Cek Nama"}
+                        {verifying ? "Memeriksa..." : "Cek Kode"}
                       </button>
                     </div>
                     <p className="text-[11px] text-[#71717A] mt-2 font-medium">
-                      Ketikkan nama sesuai daftar angkatan sekolah untuk verifikasi.
+                      Masukkan kode unik yang tertera pada tautan atau pesan undangan pribadi Anda.
                     </p>
                   </div>
                 )}

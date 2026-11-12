@@ -42,28 +42,40 @@ export default function GuestbookSection({
 
   const marqueeDuration = Math.max(20, baseList.length * 4);
 
-  // Load messages from Supabase
-  const loadMessages = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("ucapan")
-        .select("*")
-        .order("tgl_kirim", { ascending: false })
-        .limit(30);
-
-      if (!error && data) {
-        setMessages(data as UcapanItem[]);
-      }
-    } catch {
-      // ignore
-    } finally {
-      setFetching(false);
-    }
-  };
-
+  // Load messages from Supabase filtered by active invitation
   useEffect(() => {
-    loadMessages();
-  }, []);
+    let active = true;
+
+    async function fetchMessages() {
+      if (!idUndangan) {
+        if (active) setFetching(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("ucapan")
+          .select("*")
+          .eq("id_undangan", idUndangan)
+          .order("tgl_kirim", { ascending: false })
+          .limit(30);
+
+        if (active && !error && data) {
+          setMessages(data as UcapanItem[]);
+        }
+      } catch {
+        // ignore
+      } finally {
+        if (active) setFetching(false);
+      }
+    }
+
+    void fetchMessages();
+
+    return () => {
+      active = false;
+    };
+  }, [idUndangan]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

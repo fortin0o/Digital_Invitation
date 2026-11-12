@@ -13,28 +13,10 @@ import GuestbookSection from "./GuestbookSection";
 import FooterSection from "./FooterSection";
 import ScrollFadeProvider from "./ScrollFadeProvider";
 import NeoSticker from "./NeoSticker";
-
-interface TamuData {
-  id_tamu: string;
-  id_undangan: string;
-  nama_tamu: string;
-  kode: string;
-  kuota: number;
-}
-
-interface UndanganData {
-  id_undangan: string;
-  slug: string;
-  nama_pria: string;
-  nama_wanita: string;
-  tgl_acara: string;
-  tempat: string;
-  alamat: string;
-  link_maps?: string | null;
-}
+import { TamuWithRsvp, UndanganData } from "@/lib/guestInvitation";
 
 interface MainInvitationViewProps {
-  tamu: TamuData | null;
+  tamu: TamuWithRsvp | null;
   guestCode: string;
   undangan: UndanganData | null;
 }
