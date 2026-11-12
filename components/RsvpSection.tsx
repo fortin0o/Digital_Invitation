@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { getGuestByCode, RsvpStatus, TamuWithRsvp } from "@/lib/guestInvitation";
+import { downloadQrTicketAsPhoto } from "@/lib/qrTicketImage";
 import NeoSticker from "./NeoSticker";
 import NeoDivider from "./NeoDivider";
 
@@ -10,12 +11,14 @@ interface RsvpSectionProps {
   initialTamu?: TamuWithRsvp | null;
   guestCode?: string;
   idUndangan?: string;
+  coupleName?: string;
 }
 
 export default function RsvpSection({
   initialTamu,
   guestCode = "",
   idUndangan = "",
+  coupleName = "Arya & Sekar",
 }: RsvpSectionProps) {
   const initialQuota = Math.max(initialTamu?.kuota || 1, 1);
   const initialStatus: RsvpStatus = initialTamu?.rsvp_status || "hadir";
@@ -33,6 +36,11 @@ export default function RsvpSection({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [existingRsvp, setExistingRsvp] = useState<boolean>(Boolean(initialTamu?.rsvp_status));
   const [verifying, setVerifying] = useState(false);
+  const [savingPhoto, setSavingPhoto] = useState(false);
+  const [photoFeedback, setPhotoFeedback] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const applyGuestRecord = useCallback((guest: TamuWithRsvp) => {
     const quota = Math.max(guest.kuota || 1, 1);
@@ -150,6 +158,7 @@ export default function RsvpSection({
       if (savedStatus !== "tidak_hadir") {
         setJumlahHadir(Math.min(Math.max(savedCount || 1, 1), guestQuota));
       }
+      setPhotoFeedback(null);
       setSubmitted(true);
       setExistingRsvp(true);
     } catch (err: unknown) {
@@ -157,6 +166,33 @@ export default function RsvpSection({
       setErrorMessage(error.message || "Terjadi kendala saat mengirim RSVP ke server.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownloadQrPhoto = async () => {
+    if (!tamu || savingPhoto) return;
+    setSavingPhoto(true);
+    setPhotoFeedback(null);
+    try {
+      await downloadQrTicketAsPhoto({
+        qrData: `WEDDING-ARYA-SEKAR:${tamu.kode}:${tamu.nama_tamu}:${jumlahHadir}`,
+        guestCode: tamu.kode,
+        guestName: tamu.nama_tamu,
+        guestCount: jumlahHadir,
+        coupleName,
+      });
+      setPhotoFeedback({
+        type: "success",
+        text: "Foto tiket QR Code berhasil disimpan!",
+      });
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Gagal menyimpan foto QR Code. Silakan coba lagi atau screenshot layar ini.";
+      setPhotoFeedback({ type: "error", text: message });
+    } finally {
+      setSavingPhoto(false);
     }
   };
 
@@ -220,6 +256,7 @@ export default function RsvpSection({
                       )}&color=18181B&bgcolor=FFFFFF`}
                       alt="QR Code Tiket Masuk Resepsi"
                       className="w-36 h-36 mx-auto rounded-lg"
+                      crossOrigin="anonymous"
                       loading="lazy"
                     />
                   </div>
@@ -233,13 +270,40 @@ export default function RsvpSection({
                   <p className="font-sans text-[10px] text-[#71717A] mt-2 font-medium">
                     *Tunjukkan QR Code ini kepada penerima tamu di meja resepsi.
                   </p>
+
+                  <div className="mt-4 pt-3 border-t-2 border-dashed border-[#18181B]/30">
+                    <button
+                      type="button"
+                      onClick={handleDownloadQrPhoto}
+                      disabled={savingPhoto}
+                      className="w-full py-2.5 px-4 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2.5px_2.5px_0px_#18181B] hover:shadow-[4px_4px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-60 inline-flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
+                      </svg>
+                      <span>{savingPhoto ? "Menyiapkan Foto..." : "Simpan QR sebagai Foto"}</span>
+                    </button>
+
+                    {photoFeedback && (
+                      <p
+                        className={`mt-2 text-[11px] font-bold ${
+                          photoFeedback.type === "success" ? "text-[#0F766E]" : "text-rose-700"
+                        }`}
+                      >
+                        {photoFeedback.text}
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
 
               <div className="pt-2">
                 <button
                   type="button"
-                  onClick={() => setSubmitted(false)}
+                  onClick={() => {
+                    setSubmitted(false);
+                    setPhotoFeedback(null);
+                  }}
                   className="inline-flex px-6 py-2 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_#18181B]"
                 >
                   Ubah Konfirmasi Kehadiran
@@ -262,7 +326,10 @@ export default function RsvpSection({
                   {status === "hadir" && (
                     <button
                       type="button"
-                      onClick={() => setSubmitted(true)}
+                      onClick={() => {
+                        setPhotoFeedback(null);
+                        setSubmitted(true);
+                      }}
                       className="text-[11px] font-bold text-[#FF5D8F] underline hover:text-[#18181B] cursor-pointer block pl-6"
                     >
                       Buka Tiket Masuk QR Code &rarr;

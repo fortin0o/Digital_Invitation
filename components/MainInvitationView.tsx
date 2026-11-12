@@ -110,6 +110,11 @@ export default function MainInvitationView({
               initialTamu={tamu}
               guestCode={guestCode}
               idUndangan={undangan?.id_undangan}
+              coupleName={
+                undangan?.nama_pria && undangan?.nama_wanita
+                  ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
+                  : "Arya & Sekar"
+              }
             />
           </div>
           <div id="kado">
