@@ -52,6 +52,7 @@ async function queryDashboardData() {
 }
 
 export default function AdminPage() {
+  const [authChecking, setAuthChecking] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [hasSupabaseSession, setHasSupabaseSession] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
@@ -72,45 +73,53 @@ export default function AdminPage() {
     let active = true;
 
     const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      if (!active) return;
-
-      if (session) {
-        const email = session.user.email || "";
-        const access = await verifyAdminAccess(email);
         if (!active) return;
 
-        if (!access.authorized || !access.role) {
-          await supabase.auth.signOut();
+        if (session) {
+          const email = session.user.email || "";
+          const access = await verifyAdminAccess(email);
+          if (!active) return;
+
+          if (!access.authorized || !access.role) {
+            await supabase.auth.signOut();
+            clearLocalPasscodeSession();
+            setIsAuthenticated(false);
+            setHasSupabaseSession(false);
+            setAuthError(
+              access.reason || "Akses ditolak: akun Anda tidak terdaftar di daftar administrator."
+            );
+            return;
+          }
+
           clearLocalPasscodeSession();
-          setIsAuthenticated(false);
-          setHasSupabaseSession(false);
-          setAuthError(
-            access.reason || "Akses ditolak: akun Anda tidak terdaftar di daftar administrator."
-          );
+          setAuthError(null);
+          setIsAuthenticated(true);
+          setHasSupabaseSession(true);
+          setUserEmail(email || "Admin");
+          setUserRole(access.role);
           return;
         }
 
-        clearLocalPasscodeSession();
-        setAuthError(null);
-        setIsAuthenticated(true);
-        setHasSupabaseSession(true);
-        setUserEmail(email || "Admin");
-        setUserRole(access.role);
-        return;
-      }
-
-      const passcodeUser = localStorage.getItem(PASSCODE_USER_KEY);
-      const passcodeRole = (localStorage.getItem(PASSCODE_ROLE_KEY) as AdminRole) || "admin";
-      if (passcodeUser) {
-        setAuthError(null);
-        setIsAuthenticated(true);
-        setHasSupabaseSession(false);
-        setUserEmail(passcodeUser);
-        setUserRole(passcodeRole);
+        const passcodeUser = localStorage.getItem(PASSCODE_USER_KEY);
+        const passcodeRole = (localStorage.getItem(PASSCODE_ROLE_KEY) as AdminRole) || "admin";
+        if (passcodeUser) {
+          setAuthError(null);
+          setIsAuthenticated(true);
+          setHasSupabaseSession(false);
+          setUserEmail(passcodeUser);
+          setUserRole(passcodeRole);
+        }
+      } catch (err) {
+        console.error("Gagal memeriksa sesi admin:", err);
+      } finally {
+        if (active) {
+          setAuthChecking(false);
+        }
       }
     };
 
@@ -247,6 +256,15 @@ export default function AdminPage() {
       totalBelumKonfirmasi,
     };
   }, [guests]);
+
+  if (authChecking) {
+    return (
+      <div className="min-h-screen bg-[#FFFDF5] flex flex-col items-center justify-center p-4 font-sans">
+        <div className="inline-block w-8 h-8 border-3 border-[#18181B] border-t-[#FFE600] rounded-full animate-spin mb-4" />
+        <p className="text-xs font-bold text-[#71717A]">Memeriksa sesi admin...</p>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
