@@ -21,6 +21,7 @@ export default function AdminLoginForm({
 }: AdminLoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(initialError);
@@ -36,6 +37,15 @@ export default function AdminLoginForm({
 
     try {
       if (isRegistering) {
+        if (password.length < 6) {
+          setErrorMsg("Password baru minimal harus terdiri dari 6 karakter.");
+          return;
+        }
+        if (password !== confirmPassword) {
+          setErrorMsg("Konfirmasi password tidak cocok. Pastikan kedua kolom password sama.");
+          return;
+        }
+
         const preCheck = await verifyAdminAccess(emailClean);
         if (!preCheck.authorized || !preCheck.role) {
           setErrorMsg(
@@ -50,7 +60,15 @@ export default function AdminLoginForm({
           password: password,
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.toLowerCase().includes("already registered")) {
+            setErrorMsg(
+              "Email ini sudah pernah diaktifkan sebelumnya. Silakan kembali ke mode Masuk dan login dengan password Anda."
+            );
+            return;
+          }
+          throw error;
+        }
 
         if (data.session) {
           const userEmailClean = data.user?.email || emailClean;
@@ -64,7 +82,11 @@ export default function AdminLoginForm({
           }
           onLoginSuccess(userEmailClean, postCheck.role);
         } else {
-          setInfoMsg("Akun berhasil diaktivasi! Cek email Anda untuk verifikasi sebelum masuk.");
+          setInfoMsg(
+            "Password berhasil dibuat! Silakan cek inbox email Anda untuk klik link verifikasi, lalu masuk kembali."
+          );
+          setPassword("");
+          setConfirmPassword("");
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -72,7 +94,15 @@ export default function AdminLoginForm({
           password: password,
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.toLowerCase().includes("invalid login credentials")) {
+            setErrorMsg(
+              "Email atau password salah. Jika baru pertama kali masuk, klik tombol aktivasi password di bawah untuk membuat password Anda."
+            );
+            return;
+          }
+          throw error;
+        }
 
         if (data.session) {
           const userEmailClean = data.user?.email || emailClean;
@@ -103,18 +133,20 @@ export default function AdminLoginForm({
         <div className="text-center mb-6">
           <div className="mb-2">
             <NeoSticker
-              label="ADMIN DASHBOARD"
-              color="yellow"
+              label={isRegistering ? "AKTIVASI ADMIN BARU" : "ADMIN DASHBOARD"}
+              color={isRegistering ? "cyan" : "yellow"}
               rotate="-rotate-2"
               size="sm"
             />
           </div>
           <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-[#18181B] tracking-tight">
-            Panel Administrator
+            {isRegistering ? "Aktivasi Akun Admin" : "Panel Administrator"}
           </h1>
           <NeoDivider className="!my-2" />
-          <p className="text-xs text-[#52525B] font-semibold">
-            Masuk dengan akun administrator terdaftar untuk mengelola tamu, RSVP, dan buku tamu.
+          <p className="text-xs text-[#52525B] font-semibold leading-relaxed">
+            {isRegistering
+              ? "Masukkan email yang sudah didaftarkan Super Admin, lalu buat password pribadi Anda sendiri untuk pertama kali."
+              : "Masuk dengan akun administrator terdaftar untuk mengelola tamu, RSVP, dan buku tamu."}
           </p>
         </div>
 
@@ -133,7 +165,7 @@ export default function AdminLoginForm({
         <form onSubmit={handleSupabaseAuth} className="space-y-4">
           <div>
             <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
-              Email
+              {isRegistering ? "Email Terdaftar (dari Super Admin)" : "Email"}
             </label>
             <input
               type="email"
@@ -147,17 +179,40 @@ export default function AdminLoginForm({
 
           <div>
             <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
-              Password
+              {isRegistering ? "Buat Password Baru" : "Password"}
             </label>
             <input
               type="password"
               required
+              minLength={isRegistering ? 6 : undefined}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder={isRegistering ? "Minimal 6 karakter..." : "••••••••"}
               className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
             />
+            {isRegistering && (
+              <p className="text-[11px] text-[#71717A] font-medium mt-1">
+                Anda bebas menentukan password sendiri (minimal 6 karakter).
+              </p>
+            )}
           </div>
+
+          {isRegistering && (
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
+                Konfirmasi Password Baru
+              </label>
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Ulangi password baru..."
+                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+              />
+            </div>
+          )}
 
           <button
             type="submit"
@@ -167,7 +222,7 @@ export default function AdminLoginForm({
             {loading
               ? "Memproses..."
               : isRegistering
-              ? "Aktivasi Akun Admin"
+              ? "Simpan Password & Aktifkan Akun"
               : "Masuk"}
           </button>
 
@@ -176,14 +231,16 @@ export default function AdminLoginForm({
               type="button"
               onClick={() => {
                 setIsRegistering(!isRegistering);
+                setPassword("");
+                setConfirmPassword("");
                 setErrorMsg(null);
                 setInfoMsg(null);
               }}
               className="text-xs text-[#52525B] hover:text-[#18181B] underline font-bold cursor-pointer"
             >
               {isRegistering
-                ? "Sudah punya akun aktif? Masuk di sini"
-                : "Email sudah didaftarkan Super Admin? Aktivasi password di sini"}
+                ? "Sudah punya password aktif? Masuk di sini"
+                : "Email sudah didaftarkan Super Admin? Buat password & aktivasi di sini"}
             </button>
           </div>
         </form>

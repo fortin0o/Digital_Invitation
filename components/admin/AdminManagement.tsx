@@ -169,7 +169,7 @@ export default function AdminManagement({
 
       if (!error) {
         await refreshAdmins();
-        showToast("Admin baru berhasil disimpan ke database!");
+        showToast("Admin baru tersimpan! Klik 'Salin Info' untuk kirim panduan aktivasi password.");
         setNewNama("");
         setNewEmail("");
         setNewRole("admin");
@@ -258,7 +258,7 @@ export default function AdminManagement({
     const loginUrl = typeof window !== "undefined" ? `${window.location.origin}/admin` : "/admin";
     const creds = `AKSES ADMIN UNDANGAN DIGITAL\nNama: ${admin.nama}\nEmail: ${admin.email}\nPeran: ${
       admin.role === "super_admin" ? "Super Admin" : "Admin Acara"
-    }\nMasuk di: ${loginUrl}`;
+    }\nLink Login: ${loginUrl}\n\nCara Aktivasi Pertama Kali:\n1. Buka link login di atas.\n2. Klik "Buat password & aktivasi di sini" di bawah tombol Masuk.\n3. Masukkan email di atas lalu buat password pribadi Anda sendiri (min. 6 karakter).`;
     navigator.clipboard.writeText(creds);
     setCopiedId(admin.id);
     setTimeout(() => setCopiedId(null), 2500);
@@ -590,7 +590,7 @@ export default function AdminManagement({
                   className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
                 <p className="text-[10px] text-[#71717A] font-medium mt-1">
-                  Setelah email disimpan, admin baru dapat mengatur password melalui link aktivasi di halaman login.
+                  Gunakan email yang valid. Setelah disimpan, admin baru membuat password sendiri lewat link aktivasi di halaman login.
                 </p>
               </div>
 
