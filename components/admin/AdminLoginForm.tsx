@@ -61,9 +61,16 @@ export default function AdminLoginForm({
         });
 
         if (error) {
-          if (error.message.toLowerCase().includes("already registered")) {
+          const lowerMsg = error.message.toLowerCase();
+          if (lowerMsg.includes("already registered")) {
             setErrorMsg(
               "Email ini sudah pernah diaktifkan sebelumnya. Silakan kembali ke mode Masuk dan login dengan password Anda."
+            );
+            return;
+          }
+          if (lowerMsg.includes("rate limit")) {
+            setErrorMsg(
+              "Batas pengiriman email verifikasi Supabase sedang penuh (email rate limit exceeded). Matikan opsi 'Confirm email' di Supabase Dashboard (Authentication → Providers → Email) lalu coba lagi."
             );
             return;
           }
