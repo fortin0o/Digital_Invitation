@@ -15,13 +15,11 @@ export interface UcapanItem {
 interface GreetingsManagementProps {
   greetings: UcapanItem[];
   onRefresh: () => void;
-  hasSupabaseSession?: boolean;
 }
 
 export default function GreetingsManagement({
   greetings,
   onRefresh,
-  hasSupabaseSession = true,
 }: GreetingsManagementProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -50,14 +48,10 @@ export default function GreetingsManagement({
         .select("id_ucapan");
 
       if (error) {
-        alert(formatWriteErrorMessage("menghapus ucapan", error, hasSupabaseSession));
+        alert(formatWriteErrorMessage("menghapus ucapan", error));
       } else if (!deletedRows || deletedRows.length === 0) {
         alert(
-          `Gagal menghapus ucapan: tidak ada baris yang terhapus di database. ${
-            hasSupabaseSession
-              ? "Ucapan mungkin sudah terhapus atau diblokir oleh kebijakan RLS."
-              : "Anda masuk dengan Sandi Cepat (Pratinjau / anonim) — silakan masuk lewat tab Supabase Auth untuk menghapus ucapan."
-          }`
+          "Gagal menghapus ucapan: tidak ada baris yang terhapus di database. Ucapan mungkin sudah terhapus atau diblokir oleh kebijakan RLS."
         );
       } else {
         showToast("Ucapan berhasil dihapus.");

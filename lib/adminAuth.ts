@@ -2,9 +2,6 @@ import { supabase } from "./supabase";
 
 export type AdminRole = "super_admin" | "admin";
 
-export const PASSCODE_USER_KEY = "admin_auth_user";
-export const PASSCODE_ROLE_KEY = "admin_auth_role";
-
 interface SupabaseErrorLike {
   code?: string;
   message?: string;
@@ -32,21 +29,13 @@ export function isRlsPermissionError(err: SupabaseErrorLike | null | undefined):
 /** Format an explicit, actionable error message for failed Supabase admin write/delete actions. */
 export function formatWriteErrorMessage(
   actionLabel: string,
-  err: SupabaseErrorLike | null | undefined,
-  hasSupabaseSession = true
+  err: SupabaseErrorLike | null | undefined
 ): string {
-  if (!hasSupabaseSession || isRlsPermissionError(err)) {
+  if (isRlsPermissionError(err)) {
     const detail = err?.message ? ` (${err.message})` : "";
-    return `Gagal ${actionLabel}: ditolak oleh keamanan Row Level Security (RLS)${detail}. Pastikan Anda masuk melalui tab Supabase Auth, bukan hanya Sandi Cepat (Pratinjau).`;
+    return `Gagal ${actionLabel}: ditolak oleh keamanan Row Level Security (RLS)${detail}. Pastikan akun Anda terdaftar di admin_users dan sesi Supabase Auth masih aktif.`;
   }
   return `Gagal ${actionLabel}: ${err?.message || "terjadi kesalahan pada server."}`;
-}
-
-/** Clear local passcode preview credentials from browser storage. */
-export function clearLocalPasscodeSession(): void {
-  if (typeof window === "undefined") return;
-  localStorage.removeItem(PASSCODE_USER_KEY);
-  localStorage.removeItem(PASSCODE_ROLE_KEY);
 }
 
 export interface AdminAccessResult {

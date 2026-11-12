@@ -4,9 +4,6 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import {
   AdminRole,
-  PASSCODE_ROLE_KEY,
-  PASSCODE_USER_KEY,
-  clearLocalPasscodeSession,
   verifyAdminAccess,
 } from "@/lib/adminAuth";
 import AdminHeader from "@/components/admin/AdminHeader";
@@ -54,7 +51,6 @@ async function queryDashboardData() {
 export default function AdminPage() {
   const [authChecking, setAuthChecking] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [hasSupabaseSession, setHasSupabaseSession] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string>("Admin");
   const [userRole, setUserRole] = useState<AdminRole>("admin");
@@ -68,7 +64,7 @@ export default function AdminPage() {
   const [greetings, setGreetings] = useState<UcapanItem[]>([]);
   const [reportCopied, setReportCopied] = useState(false);
 
-  // Check auth session (prioritize verified Supabase Auth session over local preview passcode)
+  // Verify active Supabase Auth session and admin allowlist
   useEffect(() => {
     let active = true;
 
@@ -78,42 +74,25 @@ export default function AdminPage() {
           data: { session },
         } = await supabase.auth.getSession();
 
+        if (!active || !session) return;
+
+        const email = session.user.email || "";
+        const access = await verifyAdminAccess(email);
         if (!active) return;
 
-        if (session) {
-          const email = session.user.email || "";
-          const access = await verifyAdminAccess(email);
-          if (!active) return;
-
-          if (!access.authorized || !access.role) {
-            await supabase.auth.signOut();
-            clearLocalPasscodeSession();
-            setIsAuthenticated(false);
-            setHasSupabaseSession(false);
-            setAuthError(
-              access.reason || "Akses ditolak: akun Anda tidak terdaftar di daftar administrator."
-            );
-            return;
-          }
-
-          clearLocalPasscodeSession();
-          setAuthError(null);
-          setIsAuthenticated(true);
-          setHasSupabaseSession(true);
-          setUserEmail(email || "Admin");
-          setUserRole(access.role);
+        if (!access.authorized || !access.role) {
+          await supabase.auth.signOut();
+          setIsAuthenticated(false);
+          setAuthError(
+            access.reason || "Akses ditolak: akun Anda tidak terdaftar di daftar administrator."
+          );
           return;
         }
 
-        const passcodeUser = localStorage.getItem(PASSCODE_USER_KEY);
-        const passcodeRole = (localStorage.getItem(PASSCODE_ROLE_KEY) as AdminRole) || "admin";
-        if (passcodeUser) {
-          setAuthError(null);
-          setIsAuthenticated(true);
-          setHasSupabaseSession(false);
-          setUserEmail(passcodeUser);
-          setUserRole(passcodeRole);
-        }
+        setAuthError(null);
+        setIsAuthenticated(true);
+        setUserEmail(email || "Admin");
+        setUserRole(access.role);
       } catch (err) {
         console.error("Gagal memeriksa sesi admin:", err);
       } finally {
@@ -129,9 +108,8 @@ export default function AdminPage() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
       if (!active) return;
-      if (event === "SIGNED_OUT" && !localStorage.getItem(PASSCODE_USER_KEY)) {
+      if (event === "SIGNED_OUT") {
         setIsAuthenticated(false);
-        setHasSupabaseSession(false);
         setUserRole("admin");
       }
     });
@@ -143,11 +121,9 @@ export default function AdminPage() {
   }, []);
 
   const handleLogout = async () => {
-    clearLocalPasscodeSession();
     await supabase.auth.signOut();
     setAuthError(null);
     setIsAuthenticated(false);
-    setHasSupabaseSession(false);
     setUserRole("admin");
     setActiveTab("overview");
     setLoading(true);
@@ -271,12 +247,11 @@ export default function AdminPage() {
       <AdminLoginForm
         key={authError ?? "login"}
         initialError={authError}
-        onLoginSuccess={(email, role, viaSupabaseAuth) => {
+        onLoginSuccess={(email, role) => {
           setLoading(true);
           setFetchError(null);
           setAuthError(null);
           setIsAuthenticated(true);
-          setHasSupabaseSession(Boolean(viaSupabaseAuth));
           if (email) setUserEmail(email);
           if (role) setUserRole(role);
         }}
@@ -295,26 +270,6 @@ export default function AdminPage() {
       />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
-        {!hasSupabaseSession && (
-          <div className="p-4 sm:p-6 rounded-[24px] bg-amber-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <p className="font-display text-sm sm:text-base font-extrabold text-[#18181B]">
-                Mode Pratinjau (Sesi Anonim / Sandi Cepat)
-              </p>
-              <p className="text-xs text-[#52525B] font-bold leading-relaxed">
-                Anda dapat melihat data dan mengekspor laporan, namun aksi tambah/hapus diblokir oleh Row Level Security (RLS). Masuk melalui tab <strong className="text-[#18181B]">Supabase Auth</strong> untuk akses tulis penuh.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="w-full sm:w-auto px-6 py-2 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] cursor-pointer whitespace-nowrap"
-            >
-              Masuk via Supabase Auth
-            </button>
-          </div>
-        )}
-
         {fetchError && (
           <div className="p-4 sm:p-6 rounded-[24px] bg-rose-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
@@ -399,7 +354,6 @@ export default function AdminPage() {
                     slug={undanganSlug}
                     previewLimit={5}
                     onViewAll={() => setActiveTab("tamu")}
-                    hasSupabaseSession={hasSupabaseSession}
                   />
                 </div>
               </div>
@@ -412,7 +366,6 @@ export default function AdminPage() {
                   onRefresh={handleSilentRefresh}
                   idUndangan={idUndangan}
                   slug={undanganSlug}
-                  hasSupabaseSession={hasSupabaseSession}
                 />
               </div>
             )}
@@ -422,7 +375,6 @@ export default function AdminPage() {
                 <GreetingsManagement
                   greetings={greetings}
                   onRefresh={handleSilentRefresh}
-                  hasSupabaseSession={hasSupabaseSession}
                 />
               </div>
             )}
@@ -432,7 +384,6 @@ export default function AdminPage() {
                 <AdminManagement
                   currentUserEmail={userEmail}
                   currentUserRole={userRole}
-                  hasSupabaseSession={hasSupabaseSession}
                 />
               </div>
             )}

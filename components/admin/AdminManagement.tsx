@@ -23,7 +23,7 @@ type AdminDbStatus = "connected" | "missing_table" | "error";
 const DEFAULT_ADMINS: AdminUserItem[] = [
   {
     id: "dev-master-1",
-    email: "developer@smk-ukk.sch.id",
+    email: "developer@admin.id",
     nama: "Developer Tim (Super Admin)",
     role: "super_admin",
     created_at: new Date().toISOString(),
@@ -31,7 +31,7 @@ const DEFAULT_ADMINS: AdminUserItem[] = [
   },
   {
     id: "admin-acara-1",
-    email: "mempelai@pawiwahan.id",
+    email: "mempelai@admin.id",
     nama: "Panitia Arya & Sekar",
     role: "admin",
     created_at: new Date().toISOString(),
@@ -101,13 +101,11 @@ async function queryAdminUsers(): Promise<{
 interface AdminManagementProps {
   currentUserEmail: string;
   currentUserRole: AdminRole;
-  hasSupabaseSession?: boolean;
 }
 
 export default function AdminManagement({
   currentUserEmail,
   currentUserRole,
-  hasSupabaseSession = true,
 }: AdminManagementProps) {
   const [admins, setAdmins] = useState<AdminUserItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -200,7 +198,7 @@ export default function AdminManagement({
         return;
       }
 
-      alert(formatWriteErrorMessage("menambah admin", error, hasSupabaseSession));
+      alert(formatWriteErrorMessage("menambah admin", error));
     } catch (err) {
       alert("Error: " + (err instanceof Error ? err.message : "Gagal menyimpan admin."));
     } finally {
@@ -227,7 +225,7 @@ export default function AdminManagement({
       const updatedList = admins.filter((a) => a.id !== admin.id && a.email !== admin.email);
       setAdmins(updatedList);
       localStorage.setItem("app_admin_list", JSON.stringify(updatedList));
-      showToast("Admin dihapus dari daftar pratinjau lokal.");
+      showToast("Admin dihapus dari daftar lokal.");
       return;
     }
 
@@ -240,14 +238,10 @@ export default function AdminManagement({
         .select("id, email");
 
       if (error) {
-        alert(formatWriteErrorMessage("menghapus admin", error, hasSupabaseSession));
+        alert(formatWriteErrorMessage("menghapus admin", error));
       } else if (!deletedRows || deletedRows.length === 0) {
         alert(
-          `Gagal menghapus admin "${admin.email}": tidak ada baris yang terhapus di database. ${
-            hasSupabaseSession
-              ? "Data mungkin sudah terhapus atau diblokir oleh kebijakan RLS."
-              : "Anda masuk dengan Sandi Cepat (Pratinjau / anonim) — silakan masuk lewat tab Supabase Auth."
-          }`
+          `Gagal menghapus admin "${admin.email}": tidak ada baris yang terhapus di database. Data mungkin sudah terhapus atau diblokir oleh kebijakan RLS.`
         );
       } else {
         await refreshAdmins();
@@ -261,9 +255,10 @@ export default function AdminManagement({
   };
 
   const handleCopyCredentials = (admin: AdminUserItem) => {
+    const loginUrl = typeof window !== "undefined" ? `${window.location.origin}/admin` : "/admin";
     const creds = `AKSES ADMIN UNDANGAN DIGITAL\nNama: ${admin.nama}\nEmail: ${admin.email}\nPeran: ${
-      admin.role === "super_admin" ? "Super Admin (Developer)" : "Admin Acara"
-    }\nSandi Akses Cepat: ${admin.role === "super_admin" ? "dev2026" : "admin123"}`;
+      admin.role === "super_admin" ? "Super Admin" : "Admin Acara"
+    }\nMasuk di: ${loginUrl}`;
     navigator.clipboard.writeText(creds);
     setCopiedId(admin.id);
     setTimeout(() => setCopiedId(null), 2500);
@@ -531,7 +526,7 @@ export default function AdminManagement({
                         type="button"
                         className="flex-1 py-2 px-4 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center cursor-pointer"
                       >
-                        {copiedId === adm.id ? "Info Tersalin" : "Salin Sandi Akses"}
+                        {copiedId === adm.id ? "Info Tersalin" : "Salin Info"}
                       </button>
 
                       {!isCurrent && (

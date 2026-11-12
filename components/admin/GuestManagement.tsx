@@ -25,7 +25,6 @@ interface GuestManagementProps {
   slug?: string;
   previewLimit?: number;
   onViewAll?: () => void;
-  hasSupabaseSession?: boolean;
 }
 
 export default function GuestManagement({
@@ -35,7 +34,6 @@ export default function GuestManagement({
   slug = "rina-dan-budi",
   previewLimit,
   onViewAll,
-  hasSupabaseSession = true,
 }: GuestManagementProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -76,7 +74,7 @@ export default function GuestManagement({
         .select("id_tamu");
 
       if (error) {
-        alert(formatWriteErrorMessage("menambahkan tamu", error, hasSupabaseSession));
+        alert(formatWriteErrorMessage("menambahkan tamu", error));
       } else if (!insertedRows || insertedRows.length === 0) {
         alert("Gagal menambahkan tamu: database tidak mengembalikan baris baru.");
       } else {
@@ -101,7 +99,7 @@ export default function GuestManagement({
     try {
       const { error: rsvpError } = await supabase.from("rsvp").delete().eq("id_tamu", idTamu);
       if (rsvpError) {
-        alert(formatWriteErrorMessage("menghapus RSVP tamu", rsvpError, hasSupabaseSession));
+        alert(formatWriteErrorMessage("menghapus RSVP tamu", rsvpError));
         return;
       }
 
@@ -112,14 +110,10 @@ export default function GuestManagement({
         .select("id_tamu");
 
       if (error) {
-        alert(formatWriteErrorMessage("menghapus tamu", error, hasSupabaseSession));
+        alert(formatWriteErrorMessage("menghapus tamu", error));
       } else if (!deletedRows || deletedRows.length === 0) {
         alert(
-          `Gagal menghapus tamu "${nama}": tidak ada baris yang terhapus di database. ${
-            hasSupabaseSession
-              ? "Data mungkin sudah terhapus atau diblokir oleh kebijakan RLS."
-              : "Anda masuk dengan Sandi Cepat (Pratinjau / anonim) — silakan masuk lewat tab Supabase Auth untuk menghapus data."
-          }`
+          `Gagal menghapus tamu "${nama}": tidak ada baris yang terhapus di database. Data mungkin sudah terhapus atau diblokir oleh kebijakan RLS.`
         );
       } else {
         showToast(`Tamu "${nama}" berhasil dihapus.`);

@@ -5,16 +5,13 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import {
   AdminRole,
-  PASSCODE_ROLE_KEY,
-  PASSCODE_USER_KEY,
-  clearLocalPasscodeSession,
   verifyAdminAccess,
 } from "@/lib/adminAuth";
 import NeoSticker from "../NeoSticker";
 import NeoDivider from "../NeoDivider";
 
 interface AdminLoginFormProps {
-  onLoginSuccess: (email?: string, role?: AdminRole, viaSupabaseAuth?: boolean) => void;
+  onLoginSuccess: (email?: string, role?: AdminRole) => void;
   initialError?: string | null;
 }
 
@@ -22,32 +19,12 @@ export default function AdminLoginForm({
   onLoginSuccess,
   initialError = null,
 }: AdminLoginFormProps) {
-  const [authMode, setAuthMode] = useState<"passcode" | "auth">("auth");
-  const [passcode, setPasscode] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(initialError);
   const [infoMsg, setInfoMsg] = useState<string | null>(null);
-
-  const handlePasscodeLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMsg(null);
-
-    const code = passcode.trim();
-    if (code === "dev2026" || code === "superadmin123" || code === "developer") {
-      localStorage.setItem(PASSCODE_USER_KEY, "Developer (Super Admin)");
-      localStorage.setItem(PASSCODE_ROLE_KEY, "super_admin");
-      onLoginSuccess("Developer (Super Admin)", "super_admin", false);
-    } else if (code === "admin123" || code === "nikah2026") {
-      localStorage.setItem(PASSCODE_USER_KEY, "Admin Acara");
-      localStorage.setItem(PASSCODE_ROLE_KEY, "admin");
-      onLoginSuccess("Admin Acara", "admin", false);
-    } else {
-      setErrorMsg("Kode sandi salah. Gunakan sandi 'dev2026' (Super Admin) atau 'admin123' (Admin Acara).");
-    }
-  };
 
   const handleSupabaseAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,14 +57,12 @@ export default function AdminLoginForm({
           const postCheck = await verifyAdminAccess(userEmailClean);
           if (!postCheck.authorized || !postCheck.role) {
             await supabase.auth.signOut();
-            clearLocalPasscodeSession();
             setErrorMsg(
               postCheck.reason || "Akun ini tidak terdaftar sebagai administrator."
             );
             return;
           }
-          clearLocalPasscodeSession();
-          onLoginSuccess(userEmailClean, postCheck.role, true);
+          onLoginSuccess(userEmailClean, postCheck.role);
         } else {
           setInfoMsg("Akun berhasil diaktivasi! Cek email Anda untuk verifikasi sebelum masuk.");
         }
@@ -104,14 +79,12 @@ export default function AdminLoginForm({
           const access = await verifyAdminAccess(userEmailClean);
           if (!access.authorized || !access.role) {
             await supabase.auth.signOut();
-            clearLocalPasscodeSession();
             setErrorMsg(
               access.reason || "Akses ditolak: email ini tidak terdaftar sebagai administrator."
             );
             return;
           }
-          clearLocalPasscodeSession();
-          onLoginSuccess(userEmailClean, access.role, true);
+          onLoginSuccess(userEmailClean, access.role);
         }
       }
     } catch (err: unknown) {
@@ -141,40 +114,8 @@ export default function AdminLoginForm({
           </h1>
           <NeoDivider className="!my-2" />
           <p className="text-xs text-[#52525B] font-semibold">
-            Akses kelola daftar tamu, rekap RSVP, dan moderasi buku tamu.
+            Masuk dengan akun administrator terdaftar untuk mengelola tamu, RSVP, dan buku tamu.
           </p>
-        </div>
-
-        {/* Tab Selection */}
-        <div className="flex rounded-2xl bg-[#FFFDF5] p-1 border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] mb-6">
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode("auth");
-              setErrorMsg(null);
-            }}
-            className={`flex-1 py-2 rounded-xl text-xs font-extrabold tracking-wide transition-all cursor-pointer ${
-              authMode === "auth"
-                ? "bg-[#FFE600] text-[#18181B] shadow-[1.5px_1.5px_0px_#18181B] border border-[#18181B]"
-                : "text-[#71717A] hover:text-[#18181B]"
-            }`}
-          >
-            Supabase Auth
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode("passcode");
-              setErrorMsg(null);
-            }}
-            className={`flex-1 py-2 rounded-xl text-xs font-extrabold tracking-wide transition-all cursor-pointer ${
-              authMode === "passcode"
-                ? "bg-[#FFE600] text-[#18181B] shadow-[1.5px_1.5px_0px_#18181B] border border-[#18181B]"
-                : "text-[#71717A] hover:text-[#18181B]"
-            }`}
-          >
-            Sandi Cepat (Pratinjau)
-          </button>
         </div>
 
         {errorMsg && (
@@ -189,105 +130,63 @@ export default function AdminLoginForm({
           </div>
         )}
 
-        {/* Passcode Mode */}
-        {authMode === "passcode" && (
-          <form onSubmit={handlePasscodeLogin} className="space-y-4">
-            <div className="p-4 rounded-xl bg-amber-100 border-2 border-[#18181B] text-[11px] text-[#18181B] font-bold leading-relaxed">
-              Mode Pratinjau (Read-Only): Akses sandi cepat masuk sebagai sesi anonim. Melihat &amp; ekspor data tetap bisa, namun tambah/hapus data diblokir oleh RLS. Gunakan tab Supabase Auth untuk akses tulis penuh.
-            </div>
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
-                Kode Sandi Akses
-              </label>
-              <input
-                type="password"
-                required
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Masukkan sandi akses..."
-                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
-              />
-              <div className="mt-4 p-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-[11px] text-[#18181B] space-y-2 font-bold">
-                <div className="flex items-center justify-between">
-                  <span>Super Admin (Dev):</span>
-                  <code className="px-2 py-0.5 rounded-md bg-[#FFE600] border border-[#18181B]">dev2026</code>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Admin Acara:</span>
-                  <code className="px-2 py-0.5 rounded-md bg-white border border-[#18181B]">admin123</code>
-                </div>
-              </div>
-            </div>
+        <form onSubmit={handleSupabaseAuth} className="space-y-4">
+          <div>
+            <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
+              Email
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@email.com"
+              className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+            />
+          </div>
 
+          <div>
+            <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
+              Password
+            </label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold tracking-wider transition-all shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] disabled:opacity-60 cursor-pointer"
+          >
+            {loading
+              ? "Memproses..."
+              : isRegistering
+              ? "Aktivasi Akun Admin"
+              : "Masuk"}
+          </button>
+
+          <div className="text-center pt-2">
             <button
-              type="submit"
-              className="w-full py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold tracking-wider transition-all shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer"
+              type="button"
+              onClick={() => {
+                setIsRegistering(!isRegistering);
+                setErrorMsg(null);
+                setInfoMsg(null);
+              }}
+              className="text-xs text-[#52525B] hover:text-[#18181B] underline font-bold cursor-pointer"
             >
-              Masuk Mode Pratinjau
+              {isRegistering
+                ? "Sudah punya akun aktif? Masuk di sini"
+                : "Email sudah didaftarkan Super Admin? Aktivasi password di sini"}
             </button>
-          </form>
-        )}
-
-        {/* Supabase Auth Mode */}
-        {authMode === "auth" && (
-          <form onSubmit={handleSupabaseAuth} className="space-y-4">
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
-                Email
-              </label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@email.com"
-                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
-                Password
-              </label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold tracking-wider transition-all shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] disabled:opacity-60 cursor-pointer"
-            >
-              {loading
-                ? "Memproses..."
-                : isRegistering
-                ? "Aktivasi Akun Admin"
-                : "Masuk dengan Supabase"}
-            </button>
-
-            <div className="text-center pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsRegistering(!isRegistering);
-                  setErrorMsg(null);
-                  setInfoMsg(null);
-                }}
-                className="text-xs text-[#52525B] hover:text-[#18181B] underline font-bold cursor-pointer"
-              >
-                {isRegistering
-                  ? "Sudah punya akun aktif? Masuk di sini"
-                  : "Email sudah didaftarkan Super Admin? Aktivasi password di sini"}
-              </button>
-            </div>
-          </form>
-        )}
+          </div>
+        </form>
 
         <div className="mt-6 pt-4 border-t-2 border-[#18181B] text-center">
           <Link
