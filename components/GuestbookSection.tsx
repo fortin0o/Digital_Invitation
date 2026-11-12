@@ -16,14 +16,20 @@ interface UcapanItem {
 interface GuestbookSectionProps {
   idUndangan?: string;
   initialGuestName?: string;
+  guestSyncKey?: string;
+  isRsvpConfirmed?: boolean;
 }
 
 export default function GuestbookSection({
   idUndangan = "",
   initialGuestName = "",
+  guestSyncKey = "",
+  isRsvpConfirmed = false,
 }: GuestbookSectionProps) {
   const [messages, setMessages] = useState<UcapanItem[]>([]);
-  const [nama, setNama] = useState(initialGuestName);
+  const syncKey = `${guestSyncKey}|${initialGuestName}`;
+  const [namaDraft, setNamaDraft] = useState<{ syncKey: string; value: string } | null>(null);
+  const nama = namaDraft && namaDraft.syncKey === syncKey ? namaDraft.value : initialGuestName;
   const [isiUcapan, setIsiUcapan] = useState("");
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -161,14 +167,21 @@ export default function GuestbookSection({
         <div className="fade-up-element p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left mb-8 relative">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-bold">
-                Nama Lengkap
-              </label>
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] font-bold">
+                  Nama Lengkap
+                </label>
+                {initialGuestName && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#2EE59D]/30 border border-[#18181B] text-[#18181B]">
+                    {isRsvpConfirmed ? "Terisi otomatis dari RSVP" : "Terisi dari undangan"}
+                  </span>
+                )}
+              </div>
               <input
                 type="text"
                 required
                 value={nama}
-                onChange={(e) => setNama(e.target.value)}
+                onChange={(e) => setNamaDraft({ syncKey, value: e.target.value })}
                 placeholder="Tuliskan nama Anda..."
                 className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-bold text-xs outline-none transition-colors"
               />

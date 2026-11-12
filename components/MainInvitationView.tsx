@@ -27,8 +27,9 @@ export default function MainInvitationView({
   undangan,
 }: MainInvitationViewProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeGuest, setActiveGuest] = useState<TamuWithRsvp | null>(tamu);
 
-  const guestName = tamu ? tamu.nama_tamu : "Sahabat & Keluarga Tercinta";
+  const guestName = activeGuest ? activeGuest.nama_tamu : "Sahabat & Keluarga Tercinta";
 
   const handleOpenInvitation = () => {
     setIsOpen(true);
@@ -115,6 +116,7 @@ export default function MainInvitationView({
                   ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
                   : "Arya & Sekar"
               }
+              onGuestChange={setActiveGuest}
             />
           </div>
           <div id="kado">
@@ -123,7 +125,9 @@ export default function MainInvitationView({
           <div id="buku-tamu">
             <GuestbookSection
               idUndangan={undangan?.id_undangan}
-              initialGuestName={tamu?.nama_tamu || ""}
+              initialGuestName={activeGuest?.nama_tamu || ""}
+              guestSyncKey={`${activeGuest?.kode || ""}:${activeGuest?.rsvp_tgl_konfirmasi || ""}`}
+              isRsvpConfirmed={Boolean(activeGuest?.rsvp_status)}
             />
           </div>
           <FooterSection />

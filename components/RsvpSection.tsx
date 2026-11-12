@@ -12,6 +12,7 @@ interface RsvpSectionProps {
   guestCode?: string;
   idUndangan?: string;
   coupleName?: string;
+  onGuestChange?: (guest: TamuWithRsvp | null) => void;
 }
 
 export default function RsvpSection({
@@ -19,6 +20,7 @@ export default function RsvpSection({
   guestCode = "",
   idUndangan = "",
   coupleName = "Arya & Sekar",
+  onGuestChange,
 }: RsvpSectionProps) {
   const initialQuota = Math.max(initialTamu?.kuota || 1, 1);
   const initialStatus: RsvpStatus = initialTamu?.rsvp_status || "hadir";
@@ -54,7 +56,8 @@ export default function RsvpSection({
     setStatus(nextStatus);
     setJumlahHadir(nextCount);
     setExistingRsvp(Boolean(guest.rsvp_status));
-  }, []);
+    onGuestChange?.(guest);
+  }, [onGuestChange]);
 
   // Fallback client lookup if initialTamu wasn't preloaded on SSR
   useEffect(() => {
@@ -149,12 +152,14 @@ export default function RsvpSection({
       const savedCount =
         typeof savedRow?.jumlah_hadir === "number" ? savedRow.jumlah_hadir : targetCount;
 
-      setTamu({
+      const updatedGuest: TamuWithRsvp = {
         ...currentGuest,
         rsvp_status: savedStatus,
         rsvp_jumlah_hadir: savedCount,
         rsvp_tgl_konfirmasi: savedRow?.tgl_konfirmasi || new Date().toISOString(),
-      });
+      };
+      setTamu(updatedGuest);
+      onGuestChange?.(updatedGuest);
       if (savedStatus !== "tidak_hadir") {
         setJumlahHadir(Math.min(Math.max(savedCount || 1, 1), guestQuota));
       }
@@ -363,6 +368,7 @@ export default function RsvpSection({
                           type="button"
                           onClick={() => {
                             setTamu(null);
+                            onGuestChange?.(null);
                             setManualCode("");
                             setExistingRsvp(false);
                             setErrorMessage(null);
