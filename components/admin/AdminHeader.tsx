@@ -105,7 +105,7 @@ export default function AdminHeader({
         </div>
 
         {/* Tab Navigation Row: Seamless horizontal scroll on Mobile & Tablet */}
-        <nav className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none -mx-1 px-1">
+        <nav className="flex items-center gap-2 overflow-x-auto py-1 px-1 -mx-1 scrollbar-none">
           {tabs.map((tab) => (
             <button
               key={tab.id}
