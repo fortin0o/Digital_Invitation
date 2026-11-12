@@ -8,23 +8,27 @@ import {
   PASSCODE_ROLE_KEY,
   PASSCODE_USER_KEY,
   clearLocalPasscodeSession,
-  resolveAdminRole,
+  verifyAdminAccess,
 } from "@/lib/adminAuth";
 import NeoSticker from "../NeoSticker";
 import NeoDivider from "../NeoDivider";
 
 interface AdminLoginFormProps {
   onLoginSuccess: (email?: string, role?: AdminRole, viaSupabaseAuth?: boolean) => void;
+  initialError?: string | null;
 }
 
-export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) {
+export default function AdminLoginForm({
+  onLoginSuccess,
+  initialError = null,
+}: AdminLoginFormProps) {
   const [authMode, setAuthMode] = useState<"passcode" | "auth">("auth");
   const [passcode, setPasscode] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(initialError);
   const [infoMsg, setInfoMsg] = useState<string | null>(null);
 
   const handlePasscodeLogin = (e: React.FormEvent) => {
@@ -51,36 +55,63 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
     setErrorMsg(null);
     setInfoMsg(null);
 
+    const emailClean = email.trim().toLowerCase();
+
     try {
       if (isRegistering) {
+        const preCheck = await verifyAdminAccess(emailClean);
+        if (!preCheck.authorized || !preCheck.role) {
+          setErrorMsg(
+            preCheck.reason ||
+              "Pendaftaran ditolak: email ini belum terdaftar sebagai administrator."
+          );
+          return;
+        }
+
         const { data, error } = await supabase.auth.signUp({
-          email: email.trim(),
+          email: emailClean,
           password: password,
         });
 
         if (error) throw error;
 
         if (data.session) {
-          const userEmailClean = data.user?.email || email.trim();
-          const role = await resolveAdminRole(userEmailClean);
+          const userEmailClean = data.user?.email || emailClean;
+          const postCheck = await verifyAdminAccess(userEmailClean);
+          if (!postCheck.authorized || !postCheck.role) {
+            await supabase.auth.signOut();
+            clearLocalPasscodeSession();
+            setErrorMsg(
+              postCheck.reason || "Akun ini tidak terdaftar sebagai administrator."
+            );
+            return;
+          }
           clearLocalPasscodeSession();
-          onLoginSuccess(userEmailClean, role, true);
+          onLoginSuccess(userEmailClean, postCheck.role, true);
         } else {
-          setInfoMsg("Akun berhasil didaftarkan! Cek email Anda untuk verifikasi sebelum masuk.");
+          setInfoMsg("Akun berhasil diaktivasi! Cek email Anda untuk verifikasi sebelum masuk.");
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email: email.trim(),
+          email: emailClean,
           password: password,
         });
 
         if (error) throw error;
 
         if (data.session) {
-          const userEmailClean = data.user?.email || email.trim();
-          const role = await resolveAdminRole(userEmailClean);
+          const userEmailClean = data.user?.email || emailClean;
+          const access = await verifyAdminAccess(userEmailClean);
+          if (!access.authorized || !access.role) {
+            await supabase.auth.signOut();
+            clearLocalPasscodeSession();
+            setErrorMsg(
+              access.reason || "Akses ditolak: email ini tidak terdaftar sebagai administrator."
+            );
+            return;
+          }
           clearLocalPasscodeSession();
-          onLoginSuccess(userEmailClean, role, true);
+          onLoginSuccess(userEmailClean, access.role, true);
         }
       }
     } catch (err: unknown) {
@@ -236,7 +267,7 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
               {loading
                 ? "Memproses..."
                 : isRegistering
-                ? "Daftar Akun Baru"
+                ? "Aktivasi Akun Admin"
                 : "Masuk dengan Supabase"}
             </button>
 
@@ -251,8 +282,8 @@ export default function AdminLoginForm({ onLoginSuccess }: AdminLoginFormProps) 
                 className="text-xs text-[#52525B] hover:text-[#18181B] underline font-bold cursor-pointer"
               >
                 {isRegistering
-                  ? "Sudah punya akun? Masuk di sini"
-                  : "Belum punya akun Supabase? Klik untuk mendaftar"}
+                  ? "Sudah punya akun aktif? Masuk di sini"
+                  : "Email sudah didaftarkan Super Admin? Aktivasi password di sini"}
               </button>
             </div>
           </form>

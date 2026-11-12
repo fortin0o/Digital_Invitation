@@ -7,7 +7,7 @@ import {
   PASSCODE_ROLE_KEY,
   PASSCODE_USER_KEY,
   clearLocalPasscodeSession,
-  resolveAdminRole,
+  verifyAdminAccess,
 } from "@/lib/adminAuth";
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminLoginForm from "@/components/admin/AdminLoginForm";
@@ -54,6 +54,7 @@ async function queryDashboardData() {
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [hasSupabaseSession, setHasSupabaseSession] = useState<boolean>(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string>("Admin");
   const [userRole, setUserRole] = useState<AdminRole>("admin");
   const [activeTab, setActiveTab] = useState<string>("overview");
@@ -66,7 +67,7 @@ export default function AdminPage() {
   const [greetings, setGreetings] = useState<UcapanItem[]>([]);
   const [reportCopied, setReportCopied] = useState(false);
 
-  // Check auth session (prioritize real Supabase Auth session so RLS state is accurate)
+  // Check auth session (prioritize verified Supabase Auth session over local preview passcode)
   useEffect(() => {
     let active = true;
 
@@ -78,20 +79,34 @@ export default function AdminPage() {
       if (!active) return;
 
       if (session) {
-        clearLocalPasscodeSession();
-        const email = session.user.email || "Admin";
-        const role = await resolveAdminRole(email);
+        const email = session.user.email || "";
+        const access = await verifyAdminAccess(email);
         if (!active) return;
+
+        if (!access.authorized || !access.role) {
+          await supabase.auth.signOut();
+          clearLocalPasscodeSession();
+          setIsAuthenticated(false);
+          setHasSupabaseSession(false);
+          setAuthError(
+            access.reason || "Akses ditolak: akun Anda tidak terdaftar di daftar administrator."
+          );
+          return;
+        }
+
+        clearLocalPasscodeSession();
+        setAuthError(null);
         setIsAuthenticated(true);
         setHasSupabaseSession(true);
-        setUserEmail(email);
-        setUserRole(role);
+        setUserEmail(email || "Admin");
+        setUserRole(access.role);
         return;
       }
 
       const passcodeUser = localStorage.getItem(PASSCODE_USER_KEY);
       const passcodeRole = (localStorage.getItem(PASSCODE_ROLE_KEY) as AdminRole) || "admin";
       if (passcodeUser) {
+        setAuthError(null);
         setIsAuthenticated(true);
         setHasSupabaseSession(false);
         setUserEmail(passcodeUser);
@@ -103,14 +118,12 @@ export default function AdminPage() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((event) => {
       if (!active) return;
       if (event === "SIGNED_OUT" && !localStorage.getItem(PASSCODE_USER_KEY)) {
         setIsAuthenticated(false);
         setHasSupabaseSession(false);
         setUserRole("admin");
-      } else if (session) {
-        setHasSupabaseSession(true);
       }
     });
 
@@ -123,6 +136,7 @@ export default function AdminPage() {
   const handleLogout = async () => {
     clearLocalPasscodeSession();
     await supabase.auth.signOut();
+    setAuthError(null);
     setIsAuthenticated(false);
     setHasSupabaseSession(false);
     setUserRole("admin");
@@ -237,9 +251,12 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <AdminLoginForm
+        key={authError ?? "login"}
+        initialError={authError}
         onLoginSuccess={(email, role, viaSupabaseAuth) => {
           setLoading(true);
           setFetchError(null);
+          setAuthError(null);
           setIsAuthenticated(true);
           setHasSupabaseSession(Boolean(viaSupabaseAuth));
           if (email) setUserEmail(email);

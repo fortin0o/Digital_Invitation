@@ -49,13 +49,26 @@ export function clearLocalPasscodeSession(): void {
   localStorage.removeItem(PASSCODE_ROLE_KEY);
 }
 
+export interface AdminAccessResult {
+  authorized: boolean;
+  role: AdminRole | null;
+  reason?: string;
+}
+
 /**
- * Resolve an authenticated user's admin role from `public.admin_users`.
- * Falls back to email heuristic only when the `admin_users` table does not exist yet.
+ * Verify whether an email is authorized in `public.admin_users` and return its role.
+ * Rejects unlisted emails whenever `admin_users` is provisioned; falls back to dev heuristic
+ * only when the `admin_users` table itself does not exist yet.
  */
-export async function resolveAdminRole(email: string): Promise<AdminRole> {
+export async function verifyAdminAccess(email: string): Promise<AdminAccessResult> {
   const normalized = email.trim().toLowerCase();
-  const isDevPattern = normalized.includes("dev") || normalized.includes("superadmin");
+  if (!normalized) {
+    return {
+      authorized: false,
+      role: null,
+      reason: "Email tidak boleh kosong.",
+    };
+  }
 
   try {
     const { data, error } = await supabase
@@ -64,19 +77,39 @@ export async function resolveAdminRole(email: string): Promise<AdminRole> {
       .eq("email", normalized)
       .maybeSingle();
 
-    if (data?.role === "super_admin" || data?.role === "admin") {
-      return data.role;
-    }
-
-    // Table exists and responded without error, but email is not listed as super_admin
     if (!error) {
-      return "admin";
+      if (data?.role === "super_admin" || data?.role === "admin") {
+        return { authorized: true, role: data.role };
+      }
+      return {
+        authorized: false,
+        role: null,
+        reason: `Email "${normalized}" belum terdaftar di daftar administrator (admin_users). Hubungi Super Admin untuk mendaftarkan email Anda.`,
+      };
     }
 
-    // Fallback only while public.admin_users has not been provisioned
-    return isMissingTableError(error) && isDevPattern ? "super_admin" : "admin";
-  } catch {
-    return isDevPattern ? "super_admin" : "admin";
+    if (isMissingTableError(error)) {
+      const isDevPattern = normalized.includes("dev") || normalized.includes("superadmin");
+      return {
+        authorized: true,
+        role: isDevPattern ? "super_admin" : "admin",
+      };
+    }
+
+    return {
+      authorized: false,
+      role: null,
+      reason: `Gagal memverifikasi hak akses admin: ${error.message}`,
+    };
+  } catch (err) {
+    return {
+      authorized: false,
+      role: null,
+      reason:
+        err instanceof Error
+          ? `Gagal memverifikasi hak akses admin: ${err.message}`
+          : "Gagal memverifikasi hak akses admin.",
+    };
   }
 }
 
