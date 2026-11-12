@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import NeoSticker from "./NeoSticker";
 import NeoDivider from "./NeoDivider";
 
@@ -35,15 +34,6 @@ export default function FooterSection() {
         <p className="font-sans text-[11px] font-bold text-[#71717A]">
           &copy; 2026 The Wedding of Arya &amp; Sekar. All rights reserved.
         </p>
-
-        <div className="mt-4">
-          <Link
-            href="/admin"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-bold text-[#18181B] transition-all"
-          >
-            <span>Panel Admin</span>
-          </Link>
-        </div>
       </div>
     </footer>
   );
