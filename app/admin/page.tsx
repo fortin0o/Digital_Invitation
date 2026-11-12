@@ -13,12 +13,43 @@ import GuestManagement, { GuestItem } from "@/components/admin/GuestManagement";
 import GreetingsManagement, { UcapanItem } from "@/components/admin/GreetingsManagement";
 import AdminManagement from "@/components/admin/AdminManagement";
 
+interface UndanganInfo {
+  id_undangan: string;
+  slug: string;
+  nama_pria?: string | null;
+  nama_wanita?: string | null;
+}
+
 async function queryDashboardData() {
-  const [undanganRes, tamuRes, rsvpRes, ucapanRes] = await Promise.all([
-    supabase.from("undangan").select("*").limit(1).maybeSingle(),
-    supabase.from("tamu").select("*").order("nama_tamu", { ascending: true }),
+  const undanganRes = await supabase
+    .from("undangan")
+    .select("id_undangan, slug, nama_pria, nama_wanita")
+    .limit(1)
+    .maybeSingle();
+
+  const activeUndangan = (undanganRes.data as UndanganInfo | null) || null;
+
+  if (!activeUndangan?.id_undangan) {
+    return {
+      undangan: null,
+      guests: [] as GuestItem[],
+      greetings: [] as UcapanItem[],
+      errorMsg: undanganRes.error ? `Undangan: ${undanganRes.error.message}` : null,
+    };
+  }
+
+  const [tamuRes, rsvpRes, ucapanRes] = await Promise.all([
+    supabase
+      .from("tamu")
+      .select("*")
+      .eq("id_undangan", activeUndangan.id_undangan)
+      .order("nama_tamu", { ascending: true }),
     supabase.from("rsvp").select("*"),
-    supabase.from("ucapan").select("*").order("tgl_kirim", { ascending: false }),
+    supabase
+      .from("ucapan")
+      .select("*")
+      .eq("id_undangan", activeUndangan.id_undangan)
+      .order("tgl_kirim", { ascending: false }),
   ]);
 
   const errors = [
@@ -41,7 +72,7 @@ async function queryDashboardData() {
   }));
 
   return {
-    undangan: undanganRes.data,
+    undangan: activeUndangan,
     guests: mergedGuests,
     greetings: (ucapanRes.data as UcapanItem[]) || [],
     errorMsg: errors.length > 0 ? errors.join(" | ") : null,
@@ -58,8 +89,7 @@ export default function AdminPage() {
 
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
-  const [idUndangan, setIdUndangan] = useState<string>("f71db70a-a73f-43f2-9189-9b0fe97fec5b");
-  const [undanganSlug, setUndanganSlug] = useState<string>("rina-dan-budi");
+  const [undangan, setUndangan] = useState<UndanganInfo | null>(null);
   const [guests, setGuests] = useState<GuestItem[]>([]);
   const [greetings, setGreetings] = useState<UcapanItem[]>([]);
   const [reportCopied, setReportCopied] = useState(false);
@@ -128,14 +158,14 @@ export default function AdminPage() {
     setActiveTab("overview");
     setLoading(true);
     setFetchError(null);
+    setUndangan(null);
+    setGuests([]);
+    setGreetings([]);
   };
 
   const applyDashboardResult = useCallback(
     (result: Awaited<ReturnType<typeof queryDashboardData>>) => {
-      if (result.undangan) {
-        setIdUndangan(result.undangan.id_undangan);
-        if (result.undangan.slug) setUndanganSlug(result.undangan.slug);
-      }
+      setUndangan(result.undangan);
       setGuests(result.guests);
       setGreetings(result.greetings);
       setFetchError(result.errorMsg);
@@ -200,6 +230,13 @@ export default function AdminPage() {
   // Restrict admin-users tab to Super Admin only during render
   const currentTab =
     userRole !== "super_admin" && activeTab === "admin-users" ? "overview" : activeTab;
+
+  const idUndangan = undangan?.id_undangan || "";
+  const undanganSlug = undangan?.slug || "";
+  const coupleTitle =
+    undangan?.nama_pria && undangan?.nama_wanita
+      ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
+      : "Arya & Sekar";
 
   // Compute RSVP statistics in a single pass
   const stats = useMemo(() => {
@@ -290,6 +327,26 @@ export default function AdminPage() {
           </div>
         )}
 
+        {!loading && !fetchError && !idUndangan && (
+          <div className="p-4 sm:p-6 rounded-[24px] bg-amber-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <p className="font-display text-sm sm:text-base font-extrabold text-[#18181B]">
+                Data acara (undangan) belum tersedia di database
+              </p>
+              <p className="text-xs text-[#52525B] font-medium leading-relaxed">
+                Tambahkan minimal 1 baris data acara di tabel <code>public.undangan</code> Supabase agar fitur tambah tamu dan tautan undangan dapat digunakan.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void fetchData(false)}
+              className="w-full sm:w-auto px-6 py-2 rounded-full bg-white hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] cursor-pointer whitespace-nowrap"
+            >
+              Cek Ulang DB
+            </button>
+          </div>
+        )}
+
         {loading ? (
           <div className="py-20 text-center">
             <div className="inline-block w-8 h-8 border-3 border-[#18181B] border-t-[#FFE600] rounded-full animate-spin mb-2" />
@@ -313,7 +370,7 @@ export default function AdminPage() {
                   </div>
                   <button
                     onClick={() => {
-                      const text = `REKAP RSVP WEDDING ARYA & SEKAR\n-----------------------------\nTotal Undangan: ${stats.totalTamu}\nKonfirmasi Hadir: ${stats.totalHadirOrang} Orang (${stats.totalHadirTamu} Tamu)\nMasih Ragu: ${stats.totalRagu} Tamu\nTidak Hadir: ${stats.totalTidakHadir} Tamu\nBelum Merespon: ${stats.totalBelumKonfirmasi} Tamu`;
+                      const text = `REKAP RSVP WEDDING ${coupleTitle.toUpperCase()}\n-----------------------------\nTotal Undangan: ${stats.totalTamu}\nKonfirmasi Hadir: ${stats.totalHadirOrang} Orang (${stats.totalHadirTamu} Tamu)\nMasih Ragu: ${stats.totalRagu} Tamu\nTidak Hadir: ${stats.totalTidakHadir} Tamu\nBelum Merespon: ${stats.totalBelumKonfirmasi} Tamu`;
                       navigator.clipboard.writeText(text);
                       setReportCopied(true);
                       setTimeout(() => setReportCopied(false), 2500);
@@ -352,6 +409,7 @@ export default function AdminPage() {
                     onRefresh={handleSilentRefresh}
                     idUndangan={idUndangan}
                     slug={undanganSlug}
+                    coupleName={coupleTitle}
                     previewLimit={5}
                     onViewAll={() => setActiveTab("tamu")}
                   />
@@ -366,6 +424,7 @@ export default function AdminPage() {
                   onRefresh={handleSilentRefresh}
                   idUndangan={idUndangan}
                   slug={undanganSlug}
+                  coupleName={coupleTitle}
                 />
               </div>
             )}

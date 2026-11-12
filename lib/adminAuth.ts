@@ -46,8 +46,9 @@ export interface AdminAccessResult {
 
 /**
  * Verify whether an email is authorized in `public.admin_users` and return its role.
- * Rejects unlisted emails whenever `admin_users` is provisioned; falls back to dev heuristic
- * only when the `admin_users` table itself does not exist yet.
+ * Uses the `check_admin_allowlist` RPC so unauthenticated pre-checks never require
+ * exposing the full `admin_users` table to `anon`. Falls back to case-insensitive table
+ * lookup when the RPC is not provisioned yet, or dev heuristic only if `admin_users` is missing.
  */
 export async function verifyAdminAccess(email: string): Promise<AdminAccessResult> {
   const normalized = email.trim().toLowerCase();
@@ -60,15 +61,19 @@ export async function verifyAdminAccess(email: string): Promise<AdminAccessResul
   }
 
   try {
-    const { data, error } = await supabase
-      .from("admin_users")
-      .select("role")
-      .eq("email", normalized)
-      .maybeSingle();
+    const { data: rpcData, error: rpcError } = await supabase.rpc(
+      "check_admin_allowlist",
+      { p_email: normalized }
+    );
 
-    if (!error) {
-      if (data?.role === "super_admin" || data?.role === "admin") {
-        return { authorized: true, role: data.role };
+    if (!rpcError) {
+      const row = (Array.isArray(rpcData) ? rpcData[0] : rpcData) as {
+        authorized?: boolean;
+        role?: string | null;
+      } | null;
+
+      if (row?.authorized && (row.role === "super_admin" || row.role === "admin")) {
+        return { authorized: true, role: row.role };
       }
       return {
         authorized: false,
@@ -77,7 +82,7 @@ export async function verifyAdminAccess(email: string): Promise<AdminAccessResul
       };
     }
 
-    if (isMissingTableError(error)) {
+    if (isMissingTableError(rpcError)) {
       const isDevPattern = normalized.includes("dev") || normalized.includes("superadmin");
       return {
         authorized: true,
@@ -85,10 +90,49 @@ export async function verifyAdminAccess(email: string): Promise<AdminAccessResul
       };
     }
 
+    const isMissingRpc =
+      rpcError.code === "PGRST202" ||
+      rpcError.code === "42883" ||
+      Boolean(rpcError.message?.includes("Could not find the function"));
+
+    if (isMissingRpc) {
+      const { data, error } = await supabase
+        .from("admin_users")
+        .select("role")
+        .ilike("email", normalized)
+        .limit(1)
+        .maybeSingle();
+
+      if (!error) {
+        if (data?.role === "super_admin" || data?.role === "admin") {
+          return { authorized: true, role: data.role };
+        }
+        return {
+          authorized: false,
+          role: null,
+          reason: `Email "${normalized}" belum terdaftar di daftar administrator (admin_users). Hubungi Super Admin untuk mendaftarkan email Anda.`,
+        };
+      }
+
+      if (isMissingTableError(error)) {
+        const isDevPattern = normalized.includes("dev") || normalized.includes("superadmin");
+        return {
+          authorized: true,
+          role: isDevPattern ? "super_admin" : "admin",
+        };
+      }
+
+      return {
+        authorized: false,
+        role: null,
+        reason: `Gagal memverifikasi hak akses admin: ${error.message}`,
+      };
+    }
+
     return {
       authorized: false,
       role: null,
-      reason: `Gagal memverifikasi hak akses admin: ${error.message}`,
+      reason: `Gagal memverifikasi hak akses admin: ${rpcError.message}`,
     };
   } catch (err) {
     return {

@@ -23,6 +23,7 @@ interface GuestManagementProps {
   onRefresh: () => void;
   idUndangan: string;
   slug?: string;
+  coupleName?: string;
   previewLimit?: number;
   onViewAll?: () => void;
 }
@@ -31,7 +32,8 @@ export default function GuestManagement({
   guests,
   onRefresh,
   idUndangan,
-  slug = "rina-dan-budi",
+  slug = "",
+  coupleName = "Arya & Sekar",
   previewLimit,
   onViewAll,
 }: GuestManagementProps) {
@@ -59,6 +61,10 @@ export default function GuestManagement({
   const handleAddGuest = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNama.trim()) return;
+    if (!idUndangan) {
+      alert("Data acara pada tabel undangan belum tersedia di database.");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -129,8 +135,7 @@ export default function GuestManagement({
 
   const getInvitationUrl = (kode: string) => {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const activeSlug = slug || "rina-dan-budi";
-    return `${origin}/${activeSlug}/${kode}`;
+    return slug ? `${origin}/${slug}/${kode}` : `${origin}/?to=${kode}`;
   };
 
   const copyInvitationLink = (kode: string, nama: string) => {
@@ -141,7 +146,7 @@ export default function GuestManagement({
 
   const openWhatsApp = (tamu: GuestItem) => {
     const url = getInvitationUrl(tamu.kode);
-    const message = `Halo ${tamu.nama_tamu}!\n\nTanpa mengurangi rasa hormat, kami bermaksud mengundang Anda untuk hadir dan merayakan hari bahagia kami: The Wedding of Arya & Sekar.\n\nBerikut tautan undangan spesial Anda:\n${url}\n\nMerupakan suatu kebahagiaan bagi kami apabila Anda berkenan hadir. Terima kasih banyak.\n- Arya & Sekar`;
+    const message = `Halo ${tamu.nama_tamu}!\n\nTanpa mengurangi rasa hormat, kami bermaksud mengundang Anda untuk hadir dan merayakan hari bahagia kami: The Wedding of ${coupleName}.\n\nBerikut tautan undangan spesial Anda:\n${url}\n\nMerupakan suatu kebahagiaan bagi kami apabila Anda berkenan hadir. Terima kasih banyak.\n- ${coupleName}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
   };
 
@@ -319,8 +324,10 @@ export default function GuestManagement({
           {/* Add Guest Button */}
           <button
             onClick={() => setShowAddModal(true)}
+            disabled={!idUndangan}
             type="button"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
+            title={!idUndangan ? "Tambahkan data undangan di database terlebih dahulu" : undefined}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>+ Tambah Tamu</span>
           </button>

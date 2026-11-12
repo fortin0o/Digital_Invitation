@@ -19,7 +19,7 @@ interface GuestbookSectionProps {
 }
 
 export default function GuestbookSection({
-  idUndangan = "f71db70a-a73f-43f2-9189-9b0fe97fec5b",
+  idUndangan = "",
   initialGuestName = "",
 }: GuestbookSectionProps) {
   const [messages, setMessages] = useState<UcapanItem[]>([]);
@@ -68,6 +68,10 @@ export default function GuestbookSection({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nama.trim() || !isiUcapan.trim()) return;
+    if (!idUndangan) {
+      setErrorMsg("Data acara undangan belum tersedia di database, sehingga ucapan belum dapat dikirim.");
+      return;
+    }
 
     setLoading(true);
     setErrorMsg(null);

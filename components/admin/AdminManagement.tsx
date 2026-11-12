@@ -589,6 +589,9 @@ export default function AdminManagement({
                   placeholder="admin.panitia@email.com"
                   className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
+                <p className="text-[10px] text-[#71717A] font-medium mt-1">
+                  Setelah email disimpan, admin baru dapat mengatur password melalui link aktivasi di halaman login.
+                </p>
               </div>
 
               <div>
