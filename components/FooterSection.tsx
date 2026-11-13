@@ -4,7 +4,7 @@ import NeoDivider from "./NeoDivider";
 
 export default function FooterSection() {
   return (
-    <footer className="relative w-full pt-6 pb-20 sm:pt-8 sm:pb-24 px-4 text-center overflow-hidden">
+    <footer className="relative w-full pt-6 pb-8 sm:pt-8 sm:pb-10 px-4 text-center overflow-hidden">
       <div className="max-w-md mx-auto relative z-10">
         <div className="fade-up-element px-6 py-6 sm:py-8 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] mb-4">
           <div className="mb-2">

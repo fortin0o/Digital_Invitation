@@ -43,17 +43,6 @@ export default function MainInvitationView({
     }, 60);
   };
 
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number | string | HTMLElement, opts?: unknown) => void } }).__lenis;
-    if (lenis) {
-      lenis.scrollTo(el, { offset: -16, duration: 1.2 });
-    } else {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <ScrollFadeProvider>
       {/* Cover / Opening Screen */}
@@ -131,56 +120,6 @@ export default function MainInvitationView({
             />
           </div>
           <FooterSection />
-
-          {/* Bottom Floating Navigation Bar when invitation is open */}
-          {isOpen && (
-            <div className="sticky bottom-4 z-30 mx-auto px-2 w-[calc(100%-1rem)] max-w-sm mb-4 animate-in fade-in slide-in-from-bottom-2">
-              <nav className="flex items-center justify-between gap-1 px-2 sm:px-4 py-2 rounded-full bg-white/95 backdrop-blur-md border-[2.5px] border-[#18181B] shadow-[4px_4px_0px_#18181B] text-[#18181B]">
-                <button
-                  type="button"
-                  onClick={() => scrollTo("mempelai")}
-                  className="px-2 py-1 rounded-full text-[10px] sm:text-[11px] font-bold hover:bg-[#FFE600] transition-colors cursor-pointer"
-                >
-                  Mempelai
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollTo("acara")}
-                  className="px-2 py-1 rounded-full text-[10px] sm:text-[11px] font-bold hover:bg-[#FFE600] transition-colors cursor-pointer"
-                >
-                  Acara
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollTo("galeri")}
-                  className="px-2 py-1 rounded-full text-[10px] sm:text-[11px] font-bold hover:bg-[#FFE600] transition-colors cursor-pointer"
-                >
-                  Galeri
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollTo("rsvp")}
-                  className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-extrabold bg-[#FF5D8F] text-[#18181B] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] transition-transform active:scale-95 cursor-pointer whitespace-nowrap"
-                >
-                  RSVP
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollTo("kado")}
-                  className="px-2 py-1 rounded-full text-[10px] sm:text-[11px] font-bold hover:bg-[#FFE600] transition-colors cursor-pointer"
-                >
-                  Kado
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollTo("buku-tamu")}
-                  className="px-2 py-1 rounded-full text-[10px] sm:text-[11px] font-bold hover:bg-[#FFE600] transition-colors cursor-pointer"
-                >
-                  Ucapan
-                </button>
-              </nav>
-            </div>
-          )}
         </main>
       </div>
     </ScrollFadeProvider>
