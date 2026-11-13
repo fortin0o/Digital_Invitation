@@ -4,6 +4,14 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { formatWriteErrorMessage } from "@/lib/adminAuth";
 import NeoDivider from "../NeoDivider";
+import {
+  WaShareConfig,
+  getStoredWaConfig,
+  saveStoredWaConfig,
+  buildWaMessage,
+  DEFAULT_WA_TEMPLATE,
+  DEFAULT_PRODUCTION_DOMAIN,
+} from "@/lib/invitationShareConfig";
 
 export interface UndanganCmsData {
   id_undangan: string;
@@ -29,6 +37,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
   const [tempat, setTempat] = useState("");
   const [alamat, setAlamat] = useState("");
   const [linkMaps, setLinkMaps] = useState("");
+  const [waConfig, setWaConfig] = useState<WaShareConfig>(getStoredWaConfig);
 
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -146,6 +155,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           "Pembaruan tidak tersimpan: pastikan akun Anda memiliki izin admin atau data acara masih ada di database."
         );
       } else {
+        saveStoredWaConfig(waConfig);
         showToast("Perubahan isi undangan berhasil disimpan & langsung aktif!");
         onSaved();
       }
@@ -389,6 +399,119 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
             <p className="text-[10px] text-[#71717A] mt-1 font-medium">
               Link ini dibuka saat tamu menekan tombol <strong>&ldquo;Buka Google Maps&rdquo;</strong> di undangan.
             </p>
+          </div>
+        </div>
+
+        {/* Card 4: WhatsApp Message & Base Domain Share Settings */}
+        <div className="p-6 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b-2 border-[#18181B]/10">
+            <div className="flex items-center gap-2">
+              <span className="w-7 h-7 rounded-lg bg-[#2EE59D] text-[#18181B] font-black text-xs flex items-center justify-center border-2 border-[#18181B]">
+                4
+              </span>
+              <h3 className="font-display text-base font-extrabold text-[#18181B]">
+                Format Pesan WhatsApp &amp; Domain Tautan
+              </h3>
+            </div>
+            <span className="text-[11px] text-[#71717A] font-bold">Kirim Undangan ke HP</span>
+          </div>
+
+          <div className="space-y-4">
+            {/* Domain Selection */}
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
+                Domain Tautan untuk Share Undangan
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold text-[#18181B]">
+                <label className="flex items-start gap-2 p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] cursor-pointer">
+                  <input
+                    type="radio"
+                    name="domainMode"
+                    value="production"
+                    checked={waConfig.domainMode === "production"}
+                    onChange={() =>
+                      setWaConfig((prev) => ({ ...prev, domainMode: "production" }))
+                    }
+                    className="accent-[#18181B] mt-0.5"
+                  />
+                  <div>
+                    <span className="font-black text-[#18181B]">{DEFAULT_PRODUCTION_DOMAIN}</span>
+                    <span className="ml-2 text-[9px] bg-[#FFE600] text-[#18181B] px-1.5 py-0.5 rounded font-black border border-[#18181B]">
+                      Rekomendasi
+                    </span>
+                    <p className="text-[10px] text-[#71717A] font-medium mt-1">
+                      Link bisa dibuka di HP penguji &amp; tamu meskipun admin sedang membuka via laptop.
+                    </p>
+                  </div>
+                </label>
+
+                <label className="flex items-start gap-2 p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] cursor-pointer">
+                  <input
+                    type="radio"
+                    name="domainMode"
+                    value="auto"
+                    checked={waConfig.domainMode === "auto"}
+                    onChange={() =>
+                      setWaConfig((prev) => ({ ...prev, domainMode: "auto" }))
+                    }
+                    className="accent-[#18181B] mt-0.5"
+                  />
+                  <div>
+                    <span className="font-black text-[#18181B]">Otomatis Sesuai Browser</span>
+                    <p className="text-[10px] text-[#71717A] font-medium mt-1">
+                      Mengikuti domain/port yang sedang aktif di tab browser Anda saat ini.
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Template Message */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] font-extrabold">
+                  Template Teks Pesan WhatsApp
+                </label>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setWaConfig((prev) => ({
+                      ...prev,
+                      template: DEFAULT_WA_TEMPLATE,
+                    }))
+                  }
+                  className="text-[10px] font-black text-rose-700 hover:underline cursor-pointer"
+                >
+                  Reset ke Teks Standar
+                </button>
+              </div>
+
+              <textarea
+                rows={5}
+                value={waConfig.template}
+                onChange={(e) =>
+                  setWaConfig((prev) => ({ ...prev, template: e.target.value }))
+                }
+                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-sans font-medium text-[#18181B] outline-none resize-none leading-relaxed"
+              />
+              <p className="text-[10px] text-[#71717A] mt-1 font-medium">
+                Gunakan tag <code>&#123;nama&#125;</code> (nama tamu), <code>&#123;link&#125;</code> (link undangan), dan <code>&#123;mempelai&#125;</code> (nama mempelai).
+              </p>
+            </div>
+
+            {/* Live Preview */}
+            <div className="p-3.5 rounded-2xl bg-[#DCF8C6] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-sans text-[#18181B] whitespace-pre-wrap leading-relaxed">
+              <span className="block text-[10px] uppercase font-black text-[#71717A] mb-1">
+                Pratinjau Pesan:
+              </span>
+              {buildWaMessage(
+                "Bapak Ahmad Subagyo",
+                "88231920",
+                slug,
+                namaPria && namaWanita ? `${namaPria.split(" ")[0]} & ${namaWanita.split(" ")[0]}` : "Arya & Sekar",
+                waConfig
+              )}
+            </div>
           </div>
         </div>
 

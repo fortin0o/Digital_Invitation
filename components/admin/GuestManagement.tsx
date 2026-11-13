@@ -3,6 +3,15 @@
 import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { formatWriteErrorMessage } from "@/lib/adminAuth";
+import {
+  WaShareConfig,
+  getStoredWaConfig,
+  saveStoredWaConfig,
+  buildInvitationUrl,
+  buildWaMessage,
+  DEFAULT_WA_TEMPLATE,
+  DEFAULT_PRODUCTION_DOMAIN,
+} from "@/lib/invitationShareConfig";
 
 export interface GuestItem {
   id_tamu: string;
@@ -48,10 +57,34 @@ export default function GuestManagement({
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [qrModalGuest, setQrModalGuest] = useState<GuestItem | null>(null);
+  const [waConfig, setWaConfig] = useState<WaShareConfig>(getStoredWaConfig);
+  const [showWaConfigModal, setShowWaConfigModal] = useState(false);
+  const [tempWaConfig, setTempWaConfig] = useState<WaShareConfig>(getStoredWaConfig);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleOpenWaConfig = () => {
+    setTempWaConfig(waConfig);
+    setShowWaConfigModal(true);
+  };
+
+  const handleSaveWaConfig = () => {
+    saveStoredWaConfig(tempWaConfig);
+    setWaConfig(tempWaConfig);
+    setShowWaConfigModal(false);
+    showToast("Pengaturan pesan WhatsApp & domain berhasil disimpan!");
+  };
+
+  const handleResetWaConfig = () => {
+    const defaultConfig: WaShareConfig = {
+      domainMode: "production",
+      customDomain: DEFAULT_PRODUCTION_DOMAIN,
+      template: DEFAULT_WA_TEMPLATE,
+    };
+    setTempWaConfig(defaultConfig);
   };
 
   const generateUniqueCode = () => {
@@ -134,8 +167,7 @@ export default function GuestManagement({
   };
 
   const getInvitationUrl = (kode: string) => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    return slug ? `${origin}/${slug}/${kode}` : `${origin}/?to=${kode}`;
+    return buildInvitationUrl(kode, slug, waConfig);
   };
 
   const copyInvitationLink = (kode: string, nama: string) => {
@@ -150,8 +182,7 @@ export default function GuestManagement({
   };
 
   const openWhatsApp = (tamu: GuestItem) => {
-    const url = getInvitationUrl(tamu.kode);
-    const message = `Halo ${tamu.nama_tamu}!\n\nTanpa mengurangi rasa hormat, kami bermaksud mengundang Anda untuk hadir dan merayakan hari bahagia kami: The Wedding of ${coupleName}.\n\nBerikut tautan undangan spesial Anda:\n${url}\n\nMerupakan suatu kebahagiaan bagi kami apabila Anda berkenan hadir. Terima kasih banyak.\n- ${coupleName}`;
+    const message = buildWaMessage(tamu.nama_tamu, tamu.kode, slug, coupleName, waConfig);
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
   };
 
@@ -316,11 +347,24 @@ export default function GuestManagement({
         </div>
 
         <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
+          {/* Format WA & Domain Button */}
+          <button
+            onClick={handleOpenWaConfig}
+            type="button"
+            className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-[#2EE59D] hover:bg-[#28D08D] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
+            title="Atur format kata-kata WhatsApp & domain link undangan"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.062-1.925-.448-1.543-.637-2.531-2.203-2.607-2.305-.077-.102-.622-.828-.622-1.58 0-.751.393-1.121.533-1.27.14-.15.305-.188.406-.188.102 0 .204.002.292.006.094.004.22-.036.344.262.128.307.437 1.066.475 1.144.038.077.064.168.013.269-.051.102-.077.165-.153.254-.077.09-.161.2-.23.269-.077.077-.157.161-.068.314.09.153.399.658.857 1.066.589.524 1.085.687 1.238.763.153.076.242.064.331-.038.09-.102.383-.448.485-.601.102-.153.204-.128.344-.077.14.051.89.419 1.043.495.153.076.255.114.293.178.039.064.039.37-.105.775z"/>
+            </svg>
+            <span>Format WA</span>
+          </button>
+
           {/* Export Excel Button */}
           <button
             onClick={handleExportCSV}
             type="button"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
             title="Unduh Laporan Excel (CSV)"
           >
             <span>Ekspor Excel</span>
@@ -750,6 +794,216 @@ export default function GuestManagement({
               >
                 Tutup
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* WhatsApp Message & Domain Configuration Modal */}
+      {showWaConfigModal && (
+        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
+          <div className="w-full max-w-lg rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#2EE59D] relative max-h-[90vh] overflow-y-auto space-y-4">
+            <button
+              onClick={() => setShowWaConfigModal(false)}
+              type="button"
+              className="absolute top-4 right-4 text-[#18181B] hover:scale-110 p-1 font-black cursor-pointer"
+            >
+              ✕
+            </button>
+
+            <div>
+              <span className="text-[10px] uppercase tracking-wider text-[#18181B] font-extrabold bg-[#2EE59D] px-2.5 py-0.5 rounded-full border border-[#18181B]">
+                PENGATURAN SHARE
+              </span>
+              <h3 className="font-display text-lg font-extrabold text-[#18181B] mt-1">
+                Format Pesan WhatsApp &amp; Domain Link
+              </h3>
+              <p className="text-xs text-[#71717A] font-medium mt-0.5">
+                Sesuaikan kata-kata undangan WhatsApp dan pastikan link mengarah ke domain publik agar bisa dibuka di HP penerima.
+              </p>
+            </div>
+
+            {/* Section 1: Domain Selection */}
+            <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] space-y-2">
+              <label className="block text-xs uppercase tracking-wider text-[#18181B] font-black">
+                1. Domain Tautan Undangan
+              </label>
+
+              <div className="space-y-1.5 text-xs font-bold text-[#18181B]">
+                <label className="flex items-center gap-2 cursor-pointer p-2 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20">
+                  <input
+                    type="radio"
+                    name="domainMode"
+                    value="production"
+                    checked={tempWaConfig.domainMode === "production"}
+                    onChange={() =>
+                      setTempWaConfig((prev) => ({ ...prev, domainMode: "production" }))
+                    }
+                    className="accent-[#18181B]"
+                  />
+                  <div>
+                    <span className="font-black text-[#18181B]">{DEFAULT_PRODUCTION_DOMAIN}</span>
+                    <span className="ml-2 text-[10px] bg-[#FFE600] text-[#18181B] px-1.5 py-0.5 rounded font-black border border-[#18181B]">
+                      Rekomendasi (Online HP)
+                    </span>
+                    <p className="text-[10px] text-[#71717A] font-medium mt-0.5">
+                      Bisa dibuka oleh penguji &amp; tamu langsung di smartphone mereka.
+                    </p>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer p-2 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20">
+                  <input
+                    type="radio"
+                    name="domainMode"
+                    value="auto"
+                    checked={tempWaConfig.domainMode === "auto"}
+                    onChange={() =>
+                      setTempWaConfig((prev) => ({ ...prev, domainMode: "auto" }))
+                    }
+                    className="accent-[#18181B]"
+                  />
+                  <div>
+                    <span>Otomatis (Sesuai Browser Saat Ini)</span>
+                    <p className="text-[10px] text-[#71717A] font-medium mt-0.5">
+                      Mengikuti domain yang sedang dibuka (misal: localhost jika sedang dibuka di laptop).
+                    </p>
+                  </div>
+                </label>
+
+                <label className="flex items-start gap-2 cursor-pointer p-2 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20">
+                  <input
+                    type="radio"
+                    name="domainMode"
+                    value="custom"
+                    checked={tempWaConfig.domainMode === "custom"}
+                    onChange={() =>
+                      setTempWaConfig((prev) => ({ ...prev, domainMode: "custom" }))
+                    }
+                    className="accent-[#18181B] mt-0.5"
+                  />
+                  <div className="flex-1">
+                    <span>Domain Kustom Sendiri</span>
+                    {tempWaConfig.domainMode === "custom" && (
+                      <input
+                        type="url"
+                        value={tempWaConfig.customDomain}
+                        onChange={(e) =>
+                          setTempWaConfig((prev) => ({
+                            ...prev,
+                            customDomain: e.target.value,
+                          }))
+                        }
+                        placeholder="https://weddingmu.web.id"
+                        className="w-full mt-1.5 py-1.5 px-3 rounded-lg bg-white border-2 border-[#18181B] text-xs font-mono font-bold text-[#18181B] outline-none"
+                      />
+                    )}
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Section 2: Message Template */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] font-black">
+                  2. Template Teks Undangan WhatsApp
+                </label>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setTempWaConfig((prev) => ({
+                        ...prev,
+                        template: prev.template + " {nama}",
+                      }))
+                    }
+                    className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F4F4F5] hover:bg-[#FFE600] border border-[#18181B] cursor-pointer"
+                  >
+                    +{"{nama}"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setTempWaConfig((prev) => ({
+                        ...prev,
+                        template: prev.template + " {link}",
+                      }))
+                    }
+                    className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F4F4F5] hover:bg-[#FFE600] border border-[#18181B] cursor-pointer"
+                  >
+                    +{"{link}"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setTempWaConfig((prev) => ({
+                        ...prev,
+                        template: prev.template + " {mempelai}",
+                      }))
+                    }
+                    className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#F4F4F5] hover:bg-[#FFE600] border border-[#18181B] cursor-pointer"
+                  >
+                    +{"{mempelai}"}
+                  </button>
+                </div>
+              </div>
+
+              <textarea
+                rows={6}
+                value={tempWaConfig.template}
+                onChange={(e) =>
+                  setTempWaConfig((prev) => ({ ...prev, template: e.target.value }))
+                }
+                className="w-full p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-sans font-medium text-[#18181B] outline-none resize-none leading-relaxed"
+              />
+              <p className="text-[10px] text-[#71717A] font-medium">
+                Gunakan tag <code>&#123;nama&#125;</code>, <code>&#123;link&#125;</code>, dan <code>&#123;mempelai&#125;</code> agar pesan otomatis menyesuaikan nama tamu dan link uniknya.
+              </p>
+            </div>
+
+            {/* Section 3: Live Preview Bubble */}
+            <div className="space-y-1.5">
+              <label className="block text-[11px] uppercase tracking-wider text-[#71717A] font-bold">
+                Pratinjau Pesan yang Diterima Tamu:
+              </label>
+              <div className="p-3.5 rounded-2xl bg-[#DCF8C6] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-sans text-[#18181B] whitespace-pre-wrap leading-relaxed">
+                {buildWaMessage(
+                  "Bapak Ahmad Subagyo",
+                  "88231920",
+                  slug,
+                  coupleName,
+                  tempWaConfig
+                )}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-2 border-t-2 border-[#18181B]/15">
+              <button
+                type="button"
+                onClick={handleResetWaConfig}
+                className="w-full sm:w-auto text-xs font-bold text-rose-700 hover:text-rose-900 underline cursor-pointer py-1"
+              >
+                Reset ke Format Standar
+              </button>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => setShowWaConfigModal(false)}
+                  className="flex-1 sm:flex-initial px-4 py-2 rounded-xl border-2 border-[#18181B] bg-white text-xs font-bold cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveWaConfig}
+                  className="flex-1 sm:flex-initial px-5 py-2 rounded-xl bg-[#2EE59D] hover:bg-[#28D08D] border-2 border-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer"
+                >
+                  Simpan Pengaturan
+                </button>
+              </div>
             </div>
           </div>
         </div>
