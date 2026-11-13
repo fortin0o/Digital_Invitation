@@ -348,7 +348,7 @@ export default function AdminPage() {
         )}
 
         {loading ? (
-          <div className="py-20 text-center">
+          <div className="py-12 text-center">
             <div className="inline-block w-8 h-8 border-3 border-[#18181B] border-t-[#FFE600] rounded-full animate-spin mb-2" />
             <p className="text-xs font-bold text-[#71717A]">Memuat data admin...</p>
           </div>

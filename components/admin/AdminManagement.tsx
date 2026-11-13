@@ -313,7 +313,7 @@ export default function AdminManagement({
           <button
             onClick={() => setShowAddModal(true)}
             type="button"
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] text-[#18181B] text-xs font-black tracking-wide border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap self-start sm:self-auto"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] text-[#18181B] text-xs font-black tracking-wide border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap self-start sm:self-auto"
           >
             <span>+</span>
             <span>Tambah Admin Baru</span>
@@ -380,12 +380,12 @@ export default function AdminManagement({
         </div>
 
         {loading ? (
-          <div className="py-12 text-center text-xs text-[#71717A]">
+          <div className="py-8 text-center text-xs text-[#71717A]">
             <div className="inline-block w-6 h-6 border-3 border-[#18181B] border-t-[#FFE600] rounded-full animate-spin mb-2" />
             <p className="font-bold">Memuat daftar admin...</p>
           </div>
         ) : admins.length === 0 ? (
-          <div className="py-12 px-4 text-center">
+          <div className="py-8 px-4 text-center">
             <p className="font-display text-base font-extrabold text-[#18181B]">
               Belum ada administrator terdaftar
             </p>
@@ -400,10 +400,10 @@ export default function AdminManagement({
               <table className="w-full text-left text-xs min-w-[560px]">
                 <thead className="bg-[#FFFDF5] text-[#18181B] uppercase text-[10px] tracking-wider font-extrabold border-b-2 border-[#18181B]">
                   <tr>
-                    <th className="px-4 py-3.5">Nama &amp; Identitas</th>
-                    <th className="px-4 py-3.5">Email</th>
-                    <th className="px-4 py-3.5">Peran (Role)</th>
-                    <th className="px-4 py-3.5 text-right">Aksi</th>
+                    <th className="px-4 py-3">Nama &amp; Identitas</th>
+                    <th className="px-4 py-3">Email</th>
+                    <th className="px-4 py-3">Peran (Role)</th>
+                    <th className="px-4 py-3 text-right">Aksi</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#18181B]/15">

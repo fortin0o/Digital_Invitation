@@ -202,10 +202,10 @@ export default function RsvpSection({
   };
 
   return (
-    <section className="relative w-full py-12 px-4 overflow-hidden">
+    <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section title */}
-        <div className="fade-up-element mb-8">
+        <div className="fade-up-element mb-6">
           <div className="mb-2">
             <NeoSticker
               label="RSVP ONLINE"
@@ -243,7 +243,7 @@ export default function RsvpSection({
 
               {/* Digital Pass Ticket for Hadir */}
               {status === "hadir" && tamu && (
-                <div className="my-6 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] max-w-xs mx-auto text-center relative">
+                <div className="my-4 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] max-w-xs mx-auto text-center relative">
                   <div className="flex items-center justify-between pb-2 border-b-2 border-dashed border-[#18181B] mb-4">
                     <span className="font-display text-xs font-black uppercase tracking-wider text-[#18181B]">
                       TIKET MASUK RESEPSI
@@ -281,7 +281,7 @@ export default function RsvpSection({
                       type="button"
                       onClick={handleDownloadQrPhoto}
                       disabled={savingPhoto}
-                      className="w-full py-2.5 px-4 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2.5px_2.5px_0px_#18181B] hover:shadow-[4px_4px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-60 inline-flex items-center justify-center gap-2"
+                      className="w-full py-2 px-4 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2.5px_2.5px_0px_#18181B] hover:shadow-[4px_4px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer disabled:opacity-60 inline-flex items-center justify-center gap-2"
                     >
                       <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3" />
@@ -316,7 +316,7 @@ export default function RsvpSection({
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {existingRsvp && (
                 <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs text-[#18181B] space-y-2">
                   <div className="flex items-center gap-2 font-bold">
@@ -398,7 +398,7 @@ export default function RsvpSection({
                         type="button"
                         onClick={handleManualCheck}
                         disabled={verifying || !manualCode.trim()}
-                        className="absolute right-2 px-3 py-1.5 rounded-lg bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] text-[11px] font-extrabold border border-[#18181B] transition-colors disabled:opacity-40 cursor-pointer"
+                        className="absolute right-2 px-3 py-1 rounded-lg bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] text-[11px] font-extrabold border border-[#18181B] transition-colors disabled:opacity-40 cursor-pointer"
                       >
                         {verifying ? "Memeriksa..." : "Cek Kode"}
                       </button>
@@ -425,7 +425,7 @@ export default function RsvpSection({
                       key={opt.id}
                       type="button"
                       onClick={() => setStatus(opt.id as "hadir" | "tidak_hadir" | "ragu")}
-                      className={`py-2 sm:py-3 px-2 rounded-2xl text-[11px] sm:text-xs font-bold tracking-tight transition-all border-2 border-[#18181B] cursor-pointer text-center ${
+                      className={`py-2 px-2 rounded-2xl text-[11px] sm:text-xs font-bold tracking-tight transition-all border-2 border-[#18181B] cursor-pointer text-center ${
                         status === opt.id
                           ? `${opt.activeBg} text-[#18181B] shadow-[2.5px_2.5px_0px_#18181B] sm:shadow-[3px_3px_0px_#18181B] -translate-x-0.5 -translate-y-0.5`
                           : "bg-[#FFFDF5] text-[#52525B] hover:bg-white"

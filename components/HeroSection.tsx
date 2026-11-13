@@ -5,7 +5,7 @@ import NeoDivider from "./NeoDivider";
 
 export default function HeroSection() {
   return (
-    <header className="relative w-full overflow-hidden pt-12 pb-12 px-4 text-center">
+    <header className="relative w-full overflow-hidden pt-8 pb-6 sm:pt-10 sm:pb-8 px-4 text-center">
       <div className="max-w-md mx-auto relative z-10 flex flex-col items-center">
         {/* Top Playful Badge */}
         <div className="mb-4 animate-neo-wiggle">
@@ -25,7 +25,7 @@ export default function HeroSection() {
           Arya Suryo Wicaksono &amp; Sekar Arum Kinanti
         </p>
 
-        <div className="mt-4">
+        <div className="mt-2">
           <NeoSticker
             label="14 November 2026 • Surakarta"
             color="cyan"
@@ -34,10 +34,10 @@ export default function HeroSection() {
           />
         </div>
 
-        <NeoDivider className="!my-4" />
+        <NeoDivider className="!my-2 sm:!my-4" />
 
         {/* Featured Arch Couple Image in Semi-Neobrutalist Frame */}
-        <div className="relative mt-4 mb-6 w-64 sm:w-72 aspect-[3/4] p-4 rounded-[36px] bg-white border-[3px] border-[#18181B] shadow-[8px_8px_0px_#18181B] transition-transform hover:-translate-y-1 hover:shadow-[10px_10px_0px_#18181B]">
+        <div className="relative mt-2 mb-4 w-64 sm:w-72 aspect-[3/4] p-4 rounded-[36px] bg-white border-[3px] border-[#18181B] shadow-[8px_8px_0px_#18181B] transition-transform hover:-translate-y-1 hover:shadow-[10px_10px_0px_#18181B]">
           <div className="relative w-full h-full rounded-[26px] overflow-hidden border-2 border-[#18181B]">
             <Image
               src="/images/couple.jpg"

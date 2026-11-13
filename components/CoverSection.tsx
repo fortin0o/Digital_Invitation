@@ -50,7 +50,7 @@ export default function CoverSection({
       </div>
 
       {/* Main Semi-Neobrutalist Card */}
-      <div className="relative z-30 w-[calc(100%-2rem)] max-w-sm sm:max-w-md mx-auto text-center px-6 sm:px-8 py-8 sm:py-10 bg-white rounded-[28px] sm:rounded-[32px] border-[3px] border-[#18181B] shadow-[6px_6px_0px_#18181B] sm:shadow-[8px_8px_0px_#18181B] flex flex-col items-center">
+      <div className="relative z-30 w-[calc(100%-2rem)] max-w-sm sm:max-w-md mx-auto text-center px-6 sm:px-8 py-6 sm:py-8 bg-white rounded-[28px] sm:rounded-[32px] border-[3px] border-[#18181B] shadow-[6px_6px_0px_#18181B] sm:shadow-[8px_8px_0px_#18181B] flex flex-col items-center">
         {/* Top Tag */}
         <div className="mb-4">
           <NeoSticker
@@ -76,12 +76,12 @@ export default function CoverSection({
 
         <NeoDivider className="!my-2 sm:!my-4" />
 
-        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-[10px] sm:text-xs font-bold mb-4 sm:mb-6 max-w-full">
+        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-[10px] sm:text-xs font-bold mb-4 max-w-full">
           <span className="truncate">Sabtu, 14 Nov 2026 • Surakarta</span>
         </div>
 
         {/* Guest Greeting Box */}
-        <div className="w-full p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] mb-6 text-center">
+        <div className="w-full p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] mb-4 text-center">
           <p className="text-[10px] sm:text-[11px] uppercase tracking-wider text-[#71717A] font-bold mb-1">
             Kepada Yth. Tamu Spesial Kami:
           </p>
@@ -98,7 +98,7 @@ export default function CoverSection({
           onClick={handleOpen}
           type="button"
           disabled={isOpening}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#FF5D8F] hover:bg-[#FF4075] text-[#18181B] font-bold text-xs uppercase tracking-wider border-[2.5px] border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 sm:py-4 rounded-full bg-[#FF5D8F] hover:bg-[#FF4075] text-[#18181B] font-bold text-xs uppercase tracking-wider border-[2.5px] border-[#18181B] shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer"
         >
           <svg
             className="w-4 h-4 text-[#18181B]"

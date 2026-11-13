@@ -5,10 +5,10 @@ import NeoDivider from "./NeoDivider";
 
 export default function CoupleSection() {
   return (
-    <section className="relative w-full py-12 px-4 text-center overflow-hidden">
+    <section className="relative w-full py-6 sm:py-8 px-4 text-center overflow-hidden">
       <div className="max-w-md mx-auto relative z-10">
         {/* Section title */}
-        <div className="fade-up-element mb-10">
+        <div className="fade-up-element mb-6">
           <div className="mb-2">
             <NeoSticker
               label="MEET THE COUPLE"
@@ -26,7 +26,7 @@ export default function CoupleSection() {
         </div>
 
         {/* Bride Card (Sekar) */}
-        <div className="fade-up-element mb-6 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] flex flex-col items-center relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181B]">
+        <div className="fade-up-element mb-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] flex flex-col items-center relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181B]">
           {/* Top accent badge */}
           <div className="absolute top-4 right-4">
             <span className="px-2 py-0.5 rounded-full bg-[#FF5D8F] text-[#18181B] font-bold text-[10px] border-2 border-[#18181B]">
@@ -68,7 +68,7 @@ export default function CoupleSection() {
         </div>
 
         {/* Match Center Badge */}
-        <div className="fade-up-element my-4 flex items-center justify-center">
+        <div className="fade-up-element my-2 flex items-center justify-center">
           <NeoSticker
             label="THE PERFECT PAIR"
             color="yellow"
@@ -78,7 +78,7 @@ export default function CoupleSection() {
         </div>
 
         {/* Groom Card (Arya) */}
-        <div className="fade-up-element mt-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] flex flex-col items-center relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181B]">
+        <div className="fade-up-element mt-2 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] flex flex-col items-center relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181B]">
           {/* Top accent badge */}
           <div className="absolute top-4 right-4">
             <span className="px-2 py-0.5 rounded-full bg-[#38BDF8] text-[#18181B] font-bold text-[10px] border-2 border-[#18181B]">

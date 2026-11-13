@@ -48,10 +48,10 @@ export default function GallerySection() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   return (
-    <section className="relative w-full py-12 px-4 overflow-hidden">
+    <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section title */}
-        <div className="fade-up-element mb-8">
+        <div className="fade-up-element mb-6">
           <div className="mb-2">
             <NeoSticker
               label="OUR MEMORIES"

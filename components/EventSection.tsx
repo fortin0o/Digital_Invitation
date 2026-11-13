@@ -37,10 +37,10 @@ export default function EventSection() {
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+Celebration+Arya+%26+Sekar&dates=20261114T010000Z/20261114T070000Z&details=The+Wedding+Celebration+of+Arya+Suryo+Wicaksono+%26+Sekar+Arum+Kinanti.+Sasana+Pendopo+Ageng,+Surakarta.&location=Sasana+Pendopo+Ageng,+Surakarta`;
 
   return (
-    <section className="relative w-full py-12 px-4 overflow-hidden">
+    <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section title */}
-        <div className="fade-up-element mb-8">
+        <div className="fade-up-element mb-6">
           <div className="mb-2">
             <NeoSticker
               label="SAVE THE DATE"
@@ -58,7 +58,7 @@ export default function EventSection() {
         </div>
 
         {/* Colorful Neobrutalist Countdown Timer */}
-        <div className="fade-up-element mb-8 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
+        <div className="fade-up-element mb-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
           <p className="font-display font-bold text-xs uppercase tracking-wider text-[#18181B] mb-4 text-center">
             COUNTING DOWN TO THE BIG DAY
           </p>
@@ -86,7 +86,7 @@ export default function EventSection() {
         </div>
 
         {/* Akad Nikah Card */}
-        <div className="fade-up-element mb-6 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
+        <div className="fade-up-element mb-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
           <div className="mb-4">
             <span className="px-4 py-1 rounded-full bg-[#FFE600] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
               AKAD NIKAH
@@ -115,7 +115,7 @@ export default function EventSection() {
         </div>
 
         {/* Resepsi Card */}
-        <div className="fade-up-element mb-6 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
+        <div className="fade-up-element mb-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
           <div className="mb-4">
             <span className="px-4 py-1 rounded-full bg-[#FF5D8F] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
               RESEPSI PERNIKAHAN
@@ -154,7 +154,7 @@ export default function EventSection() {
           <h4 className="font-display text-xl text-[#18181B] font-extrabold mb-1">
             Sasana Pendopo Ageng
           </h4>
-          <p className="font-sans text-xs text-[#71717A] leading-relaxed mb-6 font-medium max-w-xs mx-auto">
+          <p className="font-sans text-xs text-[#71717A] leading-relaxed mb-4 font-medium max-w-xs mx-auto">
             Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta, Jawa Tengah
           </p>
 

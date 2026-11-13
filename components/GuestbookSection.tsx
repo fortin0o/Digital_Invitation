@@ -143,10 +143,10 @@ export default function GuestbookSection({
   const avatarColors = ["bg-[#FFE600]", "bg-[#FF5D8F]", "bg-[#38BDF8]", "bg-[#2EE59D]", "bg-[#A78BFA]", "bg-[#FF9233]"];
 
   return (
-    <section className="relative w-full py-12 px-4 overflow-hidden">
+    <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section title */}
-        <div className="fade-up-element mb-8">
+        <div className="fade-up-element mb-6">
           <div className="mb-2">
             <NeoSticker
               label="WISHES & PRAYERS"
@@ -164,7 +164,7 @@ export default function GuestbookSection({
         </div>
 
         {/* Input Form Card */}
-        <div className="fade-up-element p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left mb-8 relative">
+        <div className="fade-up-element p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left mb-6 relative">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <div className="flex items-center justify-between gap-2 mb-1">

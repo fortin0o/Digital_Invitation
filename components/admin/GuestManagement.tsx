@@ -275,7 +275,7 @@ export default function GuestManagement({
     <div className="space-y-6 font-sans">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed top-20 right-6 z-50 px-4 py-2.5 rounded-2xl bg-[#18181B] text-white text-xs font-bold shadow-[4px_4px_0px_#FFE600] animate-in fade-in flex items-center gap-2 border-2 border-white">
+        <div className="fixed top-20 right-6 z-50 px-4 py-2 rounded-2xl bg-[#18181B] text-white text-xs font-bold shadow-[4px_4px_0px_#FFE600] animate-in fade-in flex items-center gap-2 border-2 border-white">
           <span>✓</span>
           <span>{toastMessage}</span>
         </div>
@@ -342,7 +342,7 @@ export default function GuestManagement({
       {/* Guest List Table */}
       <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] overflow-hidden">
         {filteredGuests.length === 0 ? (
-          <div className="text-center py-12 px-4">
+          <div className="text-center py-8 px-4">
             <p className="font-display font-extrabold text-base text-[#18181B]">Tidak ada tamu ditemukan</p>
             <p className="text-xs text-[#71717A] mt-1 font-medium">
               Coba sesuaikan kata kunci pencarian atau tambah tamu baru.

@@ -36,10 +36,10 @@ export default function DigitalGiftSection() {
   };
 
   return (
-    <section className="relative w-full py-12 px-4 overflow-hidden" id="amplop-digital">
+    <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden" id="amplop-digital">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section Title */}
-        <div className="fade-up-element mb-8">
+        <div className="fade-up-element mb-6">
           <div className="mb-2">
             <NeoSticker
               label="WEDDING REGISTRY"
@@ -57,7 +57,7 @@ export default function DigitalGiftSection() {
         </div>
 
         {/* Toggle Button */}
-        <div className="fade-up-element mb-6">
+        <div className="fade-up-element mb-4">
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}

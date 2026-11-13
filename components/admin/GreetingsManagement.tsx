@@ -111,7 +111,7 @@ export default function GreetingsManagement({
       </div>
 
       {greetings.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="text-center py-8">
           <p className="font-display text-base font-extrabold text-[#18181B]">Belum ada ucapan</p>
           <p className="text-xs text-[#71717A] mt-1 font-medium">
             Ucapan dari para tamu undangan akan otomatis tampil di sini.
