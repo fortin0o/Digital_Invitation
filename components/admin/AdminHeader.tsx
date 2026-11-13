@@ -20,6 +20,7 @@ export default function AdminHeader({
 }: AdminHeaderProps) {
   const tabs = [
     { id: "overview", label: "Ringkasan RSVP" },
+    { id: "cms", label: "Edit Undangan" },
     { id: "tamu", label: "Kelola Tamu Undangan" },
     { id: "ucapan", label: "Buku Tamu & Doa" },
     ...(userRole === "super_admin"

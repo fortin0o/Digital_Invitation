@@ -3,19 +3,48 @@
 import React, { useState } from "react";
 import NeoSticker from "./NeoSticker";
 import NeoDivider from "./NeoDivider";
+import { UndanganData } from "@/lib/guestInvitation";
 
 interface CoverSectionProps {
   guestName?: string;
   onOpen: () => void;
   isOpen: boolean;
+  undangan?: UndanganData | null;
 }
 
 export default function CoverSection({
   guestName = "Sahabat & Keluarga Tercinta",
   onOpen,
   isOpen,
+  undangan,
 }: CoverSectionProps) {
   const [isOpening, setIsOpening] = useState(false);
+
+  const coupleShortPria = undangan?.nama_pria ? undangan.nama_pria.trim().split(" ")[0] : "Arya";
+  const coupleShortWanita = undangan?.nama_wanita ? undangan.nama_wanita.trim().split(" ")[0] : "Sekar";
+  const coupleFull =
+    undangan?.nama_pria && undangan?.nama_wanita
+      ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
+      : "Arya Suryo Wicaksono & Sekar Arum Kinanti";
+
+  const formattedDate = React.useMemo(() => {
+    if (!undangan?.tgl_acara) return "Sabtu, 14 Nov 2026 • Surakarta";
+    try {
+      const d = new Date(undangan.tgl_acara);
+      if (isNaN(d.getTime())) return "Sabtu, 14 Nov 2026 • Surakarta";
+      const venueCity = undangan.tempat ? ` • ${undangan.tempat.split(",")[0]}` : "";
+      return (
+        new Intl.DateTimeFormat("id-ID", {
+          weekday: "long",
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }).format(d) + venueCity
+      );
+    } catch {
+      return "Sabtu, 14 Nov 2026 • Surakarta";
+    }
+  }, [undangan?.tgl_acara, undangan?.tempat]);
 
   const handleOpen = () => {
     setIsOpening(true);
@@ -67,17 +96,17 @@ export default function CoverSection({
 
         {/* Big Bold Headline */}
         <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-[#18181B] tracking-tight my-2 leading-none">
-          Arya <span className="text-[#FF5D8F]">&amp;</span> Sekar
+          {coupleShortPria} <span className="text-[#FF5D8F]">&amp;</span> {coupleShortWanita}
         </h1>
 
         <p className="font-sans text-xs sm:text-sm text-[#52525B] font-semibold mt-1">
-          Arya Suryo Wicaksono &amp; Sekar Arum Kinanti
+          {coupleFull}
         </p>
 
         <NeoDivider className="!my-2 sm:!my-4" />
 
         <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-[10px] sm:text-xs font-bold mb-4 max-w-full">
-          <span className="truncate">Sabtu, 14 Nov 2026 • Surakarta</span>
+          <span className="truncate">{formattedDate}</span>
         </div>
 
         {/* Guest Greeting Box */}

@@ -2,8 +2,38 @@ import React from "react";
 import Image from "next/image";
 import NeoSticker from "./NeoSticker";
 import NeoDivider from "./NeoDivider";
+import { UndanganData } from "@/lib/guestInvitation";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  undangan?: UndanganData | null;
+}
+
+export default function HeroSection({ undangan }: HeroSectionProps) {
+  const coupleShortPria = undangan?.nama_pria ? undangan.nama_pria.trim().split(" ")[0] : "Arya";
+  const coupleShortWanita = undangan?.nama_wanita ? undangan.nama_wanita.trim().split(" ")[0] : "Sekar";
+  const coupleFull =
+    undangan?.nama_pria && undangan?.nama_wanita
+      ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
+      : "Arya Suryo Wicaksono & Sekar Arum Kinanti";
+
+  const dateLabel = React.useMemo(() => {
+    if (!undangan?.tgl_acara) return "14 November 2026 • Surakarta";
+    try {
+      const d = new Date(undangan.tgl_acara);
+      if (isNaN(d.getTime())) return "14 November 2026 • Surakarta";
+      const venueCity = undangan.tempat ? ` • ${undangan.tempat.split(",")[0]}` : "";
+      return (
+        new Intl.DateTimeFormat("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }).format(d) + venueCity
+      );
+    } catch {
+      return "14 November 2026 • Surakarta";
+    }
+  }, [undangan?.tgl_acara, undangan?.tempat]);
+
   return (
     <header className="relative w-full overflow-hidden pt-8 pb-6 sm:pt-10 sm:pb-8 px-4 text-center">
       <div className="max-w-md mx-auto relative z-10 flex flex-col items-center">
@@ -18,16 +48,16 @@ export default function HeroSection() {
 
         {/* Couple Big Headline */}
         <h1 className="font-display font-extrabold text-4xl sm:text-5xl text-[#18181B] tracking-tight my-2 leading-none">
-          Arya <span className="text-[#FF5D8F]">&amp;</span> Sekar
+          {coupleShortPria} <span className="text-[#FF5D8F]">&amp;</span> {coupleShortWanita}
         </h1>
 
         <p className="font-sans text-xs sm:text-sm text-[#52525B] font-semibold">
-          Arya Suryo Wicaksono &amp; Sekar Arum Kinanti
+          {coupleFull}
         </p>
 
         <div className="mt-2">
           <NeoSticker
-            label="14 November 2026 • Surakarta"
+            label={dateLabel}
             color="cyan"
             rotate="rotate-1"
             size="sm"

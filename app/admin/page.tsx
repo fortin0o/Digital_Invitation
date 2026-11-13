@@ -12,18 +12,23 @@ import RsvpSummaryCards from "@/components/admin/RsvpSummaryCards";
 import GuestManagement, { GuestItem } from "@/components/admin/GuestManagement";
 import GreetingsManagement, { UcapanItem } from "@/components/admin/GreetingsManagement";
 import AdminManagement from "@/components/admin/AdminManagement";
+import InvitationCms from "@/components/admin/InvitationCms";
 
 interface UndanganInfo {
   id_undangan: string;
   slug: string;
   nama_pria?: string | null;
   nama_wanita?: string | null;
+  tgl_acara?: string | null;
+  tempat?: string | null;
+  alamat?: string | null;
+  link_maps?: string | null;
 }
 
 async function queryDashboardData() {
   const undanganRes = await supabase
     .from("undangan")
-    .select("id_undangan, slug, nama_pria, nama_wanita")
+    .select("id_undangan, slug, nama_pria, nama_wanita, tgl_acara, tempat, alamat, link_maps")
     .limit(1)
     .maybeSingle();
 
@@ -414,6 +419,15 @@ export default function AdminPage() {
                     onViewAll={() => setActiveTab("tamu")}
                   />
                 </div>
+              </div>
+            )}
+
+            {currentTab === "cms" && (
+              <div className="animate-in fade-in">
+                <InvitationCms
+                  undangan={undangan}
+                  onSaved={handleSilentRefresh}
+                />
               </div>
             )}
 

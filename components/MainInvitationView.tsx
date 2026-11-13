@@ -31,6 +31,26 @@ export default function MainInvitationView({
 
   const guestName = activeGuest ? activeGuest.nama_tamu : "Sahabat & Keluarga Tercinta";
 
+  const desktopCouplePria = undangan?.nama_pria ? undangan.nama_pria.trim().split(" ")[0] : "Arya";
+  const desktopCoupleWanita = undangan?.nama_wanita ? undangan.nama_wanita.trim().split(" ")[0] : "Sekar";
+  const desktopDateVenue = React.useMemo(() => {
+    if (!undangan?.tgl_acara) return "14 November 2026 • Surakarta";
+    try {
+      const d = new Date(undangan.tgl_acara);
+      if (isNaN(d.getTime())) return "14 November 2026 • Surakarta";
+      const venue = undangan.tempat ? ` • ${undangan.tempat.split(",")[0]}` : "";
+      return (
+        new Intl.DateTimeFormat("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }).format(d) + venue
+      );
+    } catch {
+      return "14 November 2026 • Surakarta";
+    }
+  }, [undangan?.tgl_acara, undangan?.tempat]);
+
   const handleOpenInvitation = () => {
     setIsOpen(true);
     setTimeout(() => {
@@ -50,6 +70,7 @@ export default function MainInvitationView({
         isOpen={isOpen}
         onOpen={handleOpenInvitation}
         guestName={guestName}
+        undangan={undangan}
       />
 
       {/* Main Invitation Layout */}
@@ -67,10 +88,10 @@ export default function MainInvitationView({
             />
           </div>
           <h2 className="font-display font-extrabold text-4xl text-[#18181B] tracking-tight mt-1">
-            Arya <span className="text-[#FF5D8F]">&amp;</span> Sekar
+            {desktopCouplePria} <span className="text-[#FF5D8F]">&amp;</span> {desktopCoupleWanita}
           </h2>
           <p className="font-mono text-xs font-bold tracking-widest text-[#71717A] uppercase mt-2">
-            14 November 2026 • Surakarta
+            {desktopDateVenue}
           </p>
         </div>
 
@@ -84,13 +105,13 @@ export default function MainInvitationView({
 
         {/* Central Mobile/Card Invitation Container */}
         <main className="w-full max-w-md md:max-w-xl lg:max-w-lg bg-[#FFFDF5] min-h-screen md:my-8 md:rounded-[40px] md:border-[3px] md:border-[#18181B] md:shadow-[10px_10px_0px_#18181B] relative overflow-hidden flex flex-col">
-          <HeroSection />
+          <HeroSection undangan={undangan} />
           <QuoteSection />
           <div id="mempelai">
             <CoupleSection />
           </div>
           <div id="acara">
-            <EventSection />
+            <EventSection undangan={undangan} />
           </div>
           <div id="galeri">
             <GallerySection />

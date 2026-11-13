@@ -3,8 +3,13 @@
 import React, { useState, useEffect } from "react";
 import NeoSticker from "./NeoSticker";
 import NeoDivider from "./NeoDivider";
+import { UndanganData } from "@/lib/guestInvitation";
 
-export default function EventSection() {
+interface EventSectionProps {
+  undangan?: UndanganData | null;
+}
+
+export default function EventSection({ undangan }: EventSectionProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -12,8 +17,20 @@ export default function EventSection() {
     seconds: 0,
   });
 
+  const eventDateStr = undangan?.tgl_acara || "2026-11-14T08:00:00+07:00";
+  const venueName = undangan?.tempat || "Sasana Pendopo Ageng";
+  const venueAddress =
+    undangan?.alamat ||
+    "Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta, Jawa Tengah";
+  const mapsUrl = undangan?.link_maps || "https://maps.google.com/?q=Surakarta";
+
+  const coupleTitle =
+    undangan?.nama_pria && undangan?.nama_wanita
+      ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
+      : "Arya & Sekar";
+
   useEffect(() => {
-    const targetDate = new Date("2026-11-14T08:00:00+07:00").getTime();
+    const targetDate = new Date(eventDateStr).getTime();
 
     const calculateTime = () => {
       const now = new Date().getTime();
@@ -26,15 +43,50 @@ export default function EventSection() {
           minutes: Math.floor((difference / 1000 / 60) % 60),
           seconds: Math.floor((difference / 1000) % 60),
         });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
     };
 
     calculateTime();
     const interval = setInterval(calculateTime, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [eventDateStr]);
 
-  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+Celebration+Arya+%26+Sekar&dates=20261114T010000Z/20261114T070000Z&details=The+Wedding+Celebration+of+Arya+Suryo+Wicaksono+%26+Sekar+Arum+Kinanti.+Sasana+Pendopo+Ageng,+Surakarta.&location=Sasana+Pendopo+Ageng,+Surakarta`;
+  const formattedDate = React.useMemo(() => {
+    try {
+      const d = new Date(eventDateStr);
+      if (isNaN(d.getTime())) return "Sabtu, 14 November 2026";
+      return new Intl.DateTimeFormat("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(d);
+    } catch {
+      return "Sabtu, 14 November 2026";
+    }
+  }, [eventDateStr]);
+
+  const formattedTime = React.useMemo(() => {
+    try {
+      const d = new Date(eventDateStr);
+      if (isNaN(d.getTime())) return "Pukul 08.00 - Selesai WIB";
+      const h = String(d.getHours()).padStart(2, "0");
+      const m = String(d.getMinutes()).padStart(2, "0");
+      return `Pukul ${h}.${m} WIB - Selesai`;
+    } catch {
+      return "Pukul 08.00 - Selesai WIB";
+    }
+  }, [eventDateStr]);
+
+  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=The+Wedding+of+${encodeURIComponent(
+    coupleTitle
+  )}&details=The+Wedding+Celebration+of+${encodeURIComponent(
+    coupleTitle
+  )}+di+${encodeURIComponent(venueName)}.&location=${encodeURIComponent(
+    venueAddress
+  )}`;
 
   return (
     <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden">
@@ -102,14 +154,14 @@ export default function EventSection() {
 
           <div className="space-y-2 text-xs text-[#52525B] font-sans font-medium">
             <div className="inline-flex items-center px-4 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
-              <span>Sabtu, 14 November 2026</span>
+              <span>{formattedDate}</span>
             </div>
             <br />
             <div className="inline-flex items-center px-4 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
               <span>Pukul 08.00 - 10.00 WIB</span>
             </div>
             <div className="pt-4 text-[#18181B] font-bold font-display text-base">
-              Pendopo Sasana Ageng Kridha
+              {venueName}
             </div>
           </div>
         </div>
@@ -131,14 +183,14 @@ export default function EventSection() {
 
           <div className="space-y-2 text-xs text-[#52525B] font-sans font-medium">
             <div className="inline-flex items-center px-4 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
-              <span>Sabtu, 14 November 2026</span>
+              <span>{formattedDate}</span>
             </div>
             <br />
             <div className="inline-flex items-center px-4 py-1 rounded-full bg-[#FFFDF5] border border-[#18181B]">
-              <span>Pukul 11.00 - 14.00 WIB</span>
+              <span>{formattedTime}</span>
             </div>
             <div className="pt-4 text-[#18181B] font-bold font-display text-base">
-              Grand Ballroom Sasana Utama
+              {venueName}
             </div>
           </div>
         </div>
@@ -152,15 +204,15 @@ export default function EventSection() {
           </div>
 
           <h4 className="font-display text-xl text-[#18181B] font-extrabold mb-1">
-            Sasana Pendopo Ageng
+            {venueName}
           </h4>
           <p className="font-sans text-xs text-[#71717A] leading-relaxed mb-4 font-medium max-w-xs mx-auto">
-            Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta, Jawa Tengah
+            {venueAddress}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="https://maps.google.com/?q=Surakarta"
+              href={mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#FFE600] hover:bg-[#FDD835] text-[#18181B] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 text-xs font-bold transition-all"
