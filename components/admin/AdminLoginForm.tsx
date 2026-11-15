@@ -133,10 +133,10 @@ export default function AdminLoginForm({
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#FFFDF5] flex items-center justify-center p-4 sm:p-6 relative overflow-hidden font-sans w-full">
       <div className="absolute inset-0 neo-bg-pattern opacity-15 pointer-events-none" />
 
-      <div className="w-full max-w-md bg-white rounded-2xl sm:rounded-3xl border-[3px] border-[#18181B] shadow-[6px_6px_0px_#FFE600] sm:shadow-[8px_8px_0px_#FFE600] p-4 sm:p-8 relative z-10">
+      <div className="w-full max-w-[340px] sm:max-w-md bg-white rounded-2xl sm:rounded-3xl border-[3px] border-[#18181B] shadow-[4px_4px_0px_#FFE600] sm:shadow-[8px_8px_0px_#FFE600] p-4 sm:p-8 relative z-10 min-w-0">
         <div className="text-center mb-6">
           <div className="mb-2">
             <NeoSticker
