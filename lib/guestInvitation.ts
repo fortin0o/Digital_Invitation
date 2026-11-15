@@ -105,3 +105,39 @@ export async function resolveInvitationAndGuest({
   return { undangan, tamu };
 }
 
+/**
+ * Build dynamic Next.js Metadata based on the resolved invitation & guest record.
+ */
+export function buildInvitationMetadata({
+  undangan,
+  tamu,
+}: {
+  undangan?: UndanganData | null;
+  tamu?: TamuWithRsvp | null;
+}) {
+  const groom = undangan?.nama_pria ? undangan.nama_pria.trim().split(" ")[0] : "";
+  const bride = undangan?.nama_wanita ? undangan.nama_wanita.trim().split(" ")[0] : "";
+  const couple = groom && bride ? `${groom} & ${bride}` : null;
+
+  const baseTitle = couple ? `The Wedding of ${couple}` : "Undangan Pernikahan Digital";
+
+  const title = tamu?.nama_tamu
+    ? `Undangan: ${tamu.nama_tamu} — ${baseTitle}`
+    : baseTitle;
+
+  const description = tamu?.nama_tamu
+    ? `Kepada Yth. ${tamu.nama_tamu}, Anda diundang untuk merayakan momen bahagia pernikahan ${couple || "kami"} bersama WeddingMu.`
+    : `Rayakan momen bahagia pernikahan ${couple || ""} bersama WeddingMu.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website" as const,
+    },
+  };
+}
+
+

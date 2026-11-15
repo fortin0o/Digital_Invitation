@@ -18,12 +18,15 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "The Wedding of Arya & Sekar — We're Getting Married",
+  title: {
+    default: "WeddingMu — Undangan Pernikahan Digital",
+    template: "%s — WeddingMu",
+  },
   description:
-    "You are cordially invited to celebrate the wedding of Arya Suryo Wicaksono & Sekar Arum Kinanti. Join our celebration of love and happiness.",
+    "Platform undangan pernikahan digital modern, interaktif, dan elegan bersama WeddingMu.",
   openGraph: {
-    title: "The Wedding of Arya & Sekar",
-    description: "Rayakan Momen Bahagia Arya & Sekar bersama kami.",
+    title: "WeddingMu — Undangan Pernikahan Digital",
+    description: "Rayakan momen bahagia pernikahan dengan undangan digital interaktif WeddingMu.",
     type: "website",
   },
 };

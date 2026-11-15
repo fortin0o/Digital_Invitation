@@ -1,9 +1,23 @@
+import type { Metadata } from "next";
 import MainInvitationView from "@/components/MainInvitationView";
-import { resolveInvitationAndGuest } from "@/lib/guestInvitation";
+import { resolveInvitationAndGuest, buildInvitationMetadata } from "@/lib/guestInvitation";
 import { notFound } from "next/navigation";
 
 interface CleanGuestPageProps {
   params: Promise<{ slug: string; kode: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: CleanGuestPageProps): Promise<Metadata> {
+  const { slug, kode } = await params;
+  const guestCode = decodeURIComponent(kode);
+
+  const { undangan, tamu } = await resolveInvitationAndGuest({ slug, guestCode });
+  if (!undangan) {
+    return { title: "Undangan Tidak Ditemukan" };
+  }
+  return buildInvitationMetadata({ undangan, tamu });
 }
 
 export default async function CleanGuestInvitationPage({
