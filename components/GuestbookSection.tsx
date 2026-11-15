@@ -18,6 +18,7 @@ interface GuestbookSectionProps {
   initialGuestName?: string;
   guestSyncKey?: string;
   isRsvpConfirmed?: boolean;
+  coupleName?: string;
 }
 
 export default function GuestbookSection({
@@ -25,6 +26,7 @@ export default function GuestbookSection({
   initialGuestName = "",
   guestSyncKey = "",
   isRsvpConfirmed = false,
+  coupleName = "kedua mempelai",
 }: GuestbookSectionProps) {
   const [messages, setMessages] = useState<UcapanItem[]>([]);
   const syncKey = `${guestSyncKey}|${initialGuestName}`;
@@ -196,7 +198,7 @@ export default function GuestbookSection({
                 rows={3}
                 value={isiUcapan}
                 onChange={(e) => setIsiUcapan(e.target.value)}
-                placeholder="Berikan ucapan selamat & doa untuk Arya & Sekar..."
+                placeholder={`Berikan ucapan selamat & doa untuk ${coupleName}...`}
                 className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-[#18181B] font-medium text-xs outline-none transition-colors resize-none"
               />
             </div>

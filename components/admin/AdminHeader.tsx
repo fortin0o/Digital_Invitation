@@ -9,6 +9,7 @@ interface AdminHeaderProps {
   onLogout: () => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  coupleTitle?: string;
 }
 
 export default function AdminHeader({
@@ -17,6 +18,7 @@ export default function AdminHeader({
   onLogout,
   activeTab,
   setActiveTab,
+  coupleTitle = "",
 }: AdminHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -53,14 +55,14 @@ export default function AdminHeader({
         {/* Top Bar: Brand, Identity, Quick Actions & Hamburger */}
         <div className="flex items-center justify-between gap-2">
           {/* Brand & Subtitle */}
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-center text-[#18181B] text-xs font-black">
-              A&amp;S
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-center text-[#18181B] text-xs sm:text-sm font-black tracking-wide">
+              WM
             </span>
             <div className="truncate">
               <div className="flex items-center gap-2">
                 <h1 className="font-display text-sm sm:text-lg text-[#18181B] font-extrabold leading-none truncate">
-                  Admin Dashboard
+                  WeddingMu <span className="text-xs sm:text-sm font-bold text-[#71717A]">Admin</span>
                 </h1>
                 {/* Desktop Role Pill */}
                 <span
@@ -75,7 +77,7 @@ export default function AdminHeader({
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <p className="text-[10px] sm:text-[11px] text-[#71717A] font-bold truncate">
-                  Arya &amp; Sekar
+                  {coupleTitle ? coupleTitle : "weddingmu.web.id"}
                 </p>
                 {/* Mobile Active Tab Indicator Pill */}
                 <span className="sm:hidden text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-md bg-[#FFE600] text-[#18181B] border border-[#18181B] truncate max-w-[120px]">
