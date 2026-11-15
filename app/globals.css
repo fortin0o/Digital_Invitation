@@ -155,3 +155,15 @@ body {
   animation-play-state: paused;
 }
 
+/* Print Styles for UKK Report Output */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  header, nav, .no-print, button, input {
+    box-shadow: none !important;
+  }
+}
+
+
