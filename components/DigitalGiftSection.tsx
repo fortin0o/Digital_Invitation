@@ -115,7 +115,7 @@ export default function DigitalGiftSection() {
             ))}
 
             {/* Alamat Pengiriman Kado Fisik */}
-            <div className="p-6 rounded-[24px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left">
+            <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left">
               <div className="flex items-center gap-2 mb-2">
                 <h4 className="font-display text-base font-extrabold text-[#18181B]">
                   Kirim Kado Fisik (Alamat)

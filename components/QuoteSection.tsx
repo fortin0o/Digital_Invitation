@@ -5,7 +5,7 @@ import NeoDivider from "./NeoDivider";
 export default function QuoteSection() {
   return (
     <section className="relative w-full py-6 sm:py-8 px-4 text-center fade-up-element">
-      <div className="max-w-md mx-auto relative z-10 px-6 py-6 sm:py-8 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
+      <div className="max-w-md mx-auto relative z-10 px-4 sm:px-8 py-6 sm:py-8 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
         {/* Top Sticker */}
         <div className="mb-4">
           <NeoSticker

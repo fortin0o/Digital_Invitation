@@ -314,7 +314,7 @@ export default function AdminPage() {
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {fetchError && (
-          <div className="p-4 sm:p-6 rounded-[24px] bg-rose-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-rose-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <p className="font-display text-sm sm:text-base font-extrabold text-rose-950">
                 Sebagian atau seluruh data gagal dimuat
@@ -334,7 +334,7 @@ export default function AdminPage() {
         )}
 
         {!loading && !fetchError && !idUndangan && (
-          <div className="p-4 sm:p-6 rounded-[24px] bg-amber-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-amber-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <p className="font-display text-sm sm:text-base font-extrabold text-[#18181B]">
                 Data acara (undangan) belum tersedia di database
@@ -365,7 +365,7 @@ export default function AdminPage() {
                 <RsvpSummaryCards stats={stats} />
 
                 {/* Quick actions & recap */}
-                <div className="p-6 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <h3 className="font-display font-extrabold text-base sm:text-lg text-[#18181B]">
                       Rekap Kehadiran Tamu Undangan

@@ -57,7 +57,7 @@ export default function CoverSection({
 
   return (
     <section
-      className={`fixed inset-0 z-50 overflow-hidden flex items-center justify-center bg-[#FFFDF5] transition-all duration-700 ${
+      className={`fixed inset-0 z-50 overflow-hidden flex items-center justify-center px-4 bg-[#FFFDF5] transition-all duration-700 ${
         isOpening ? "opacity-0 scale-105 pointer-events-none" : "opacity-100 scale-100"
       }`}
     >
@@ -79,7 +79,7 @@ export default function CoverSection({
       </div>
 
       {/* Main Semi-Neobrutalist Card */}
-      <div className="relative z-30 w-[calc(100%-2rem)] max-w-sm sm:max-w-md mx-auto text-center px-4 sm:px-8 py-6 sm:py-8 bg-white rounded-2xl sm:rounded-3xl border-[3px] border-[#18181B] shadow-[6px_6px_0px_#18181B] sm:shadow-[8px_8px_0px_#18181B] flex flex-col items-center">
+      <div className="relative z-30 w-full max-w-sm sm:max-w-md mx-auto text-center px-4 sm:px-8 py-6 sm:py-8 bg-white rounded-2xl sm:rounded-3xl border-[3px] border-[#18181B] shadow-[6px_6px_0px_#18181B] sm:shadow-[8px_8px_0px_#18181B] flex flex-col items-center">
         {/* Top Tag */}
         <div className="mb-4">
           <NeoSticker

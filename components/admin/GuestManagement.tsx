@@ -717,7 +717,7 @@ export default function GuestManagement({
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[85vh] overflow-y-auto overscroll-contain"
+            className="w-full max-w-sm rounded-2xl sm:rounded-3xl bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[85vh] overflow-y-auto overscroll-contain"
           >
             <h3 className="font-display text-xl font-extrabold text-[#18181B] mb-1">
               Tambah Tamu Undangan
@@ -785,7 +785,7 @@ export default function GuestManagement({
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-xs rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center max-h-[85vh] overflow-y-auto overscroll-contain"
+            className="w-full max-w-xs rounded-2xl sm:rounded-3xl bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center max-h-[85vh] overflow-y-auto overscroll-contain"
           >
             <button
               onClick={() => setQrModalGuest(null)}
@@ -855,7 +855,7 @@ export default function GuestManagement({
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#2EE59D] relative max-h-[85vh] overflow-y-auto overscroll-contain space-y-4"
+            className="w-full max-w-lg rounded-2xl sm:rounded-3xl bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#2EE59D] relative max-h-[85vh] overflow-y-auto overscroll-contain space-y-4"
           >
             <button
               onClick={() => setShowWaConfigModal(false)}
@@ -1021,7 +1021,7 @@ export default function GuestManagement({
               <label className="block text-[11px] uppercase tracking-wider text-[#71717A] font-bold">
                 Pratinjau Pesan yang Diterima Tamu:
               </label>
-              <div className="p-3.5 rounded-2xl bg-[#DCF8C6] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-sans text-[#18181B] whitespace-pre-wrap leading-relaxed">
+              <div className="p-4 rounded-2xl bg-[#DCF8C6] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-sans text-[#18181B] whitespace-pre-wrap break-words break-all leading-relaxed">
                 {buildWaMessage(
                   "Bapak Ahmad Subagyo",
                   "88231920",
@@ -1053,7 +1053,7 @@ export default function GuestManagement({
                 <button
                   type="button"
                   onClick={handleSaveWaConfig}
-                  className="flex-1 sm:flex-initial px-5 py-2 rounded-xl bg-[#2EE59D] hover:bg-[#28D08D] border-2 border-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer"
+                  className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 rounded-xl bg-[#2EE59D] hover:bg-[#28D08D] border-2 border-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer"
                 >
                   Simpan Pengaturan
                 </button>

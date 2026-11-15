@@ -273,7 +273,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
               />
             </div>
             <p className="text-[10px] text-[#71717A] mt-1 font-medium">
-              Format tautan unik website pernikahan Anda (contoh: <code>{slug ? `${currentOrigin}/${slug}` : "nama-pria-dan-wanita"}</code>).
+              Format tautan unik website pernikahan Anda (contoh: <code className="break-all">{slug ? `${currentOrigin}/${slug}` : "nama-pria-dan-wanita"}</code>).
             </p>
           </div>
         </div>

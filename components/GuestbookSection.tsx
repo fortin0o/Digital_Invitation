@@ -252,7 +252,7 @@ export default function GuestbookSection({
               </p>
             </div>
           ) : (
-            <div className="relative h-[420px] overflow-hidden rounded-[28px] bg-[#FFFDF5] p-4 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] select-none">
+            <div className="relative h-[420px] overflow-hidden rounded-2xl sm:rounded-3xl bg-[#FFFDF5] p-4 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] select-none">
               {/* Soft Gradient Fade Overlays (Top & Bottom) */}
               <div className="absolute top-0 inset-x-0 h-8 bg-gradient-to-b from-[#FFFDF5] to-transparent z-10 pointer-events-none" />
               <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-[#FFFDF5] to-transparent z-10 pointer-events-none" />

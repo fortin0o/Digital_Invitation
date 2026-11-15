@@ -290,7 +290,7 @@ export default function AdminManagement({
 
       {/* Database Provisioning Status Banner */}
       {dbStatus !== "connected" && dbMessage && (
-        <div className="p-4 sm:p-6 rounded-[24px] bg-amber-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-amber-100 border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <p className="font-display text-sm font-extrabold text-[#18181B]">
               Mode Fallback Lokal (admin_users belum aktif di Supabase)
@@ -571,7 +571,7 @@ export default function AdminManagement({
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-6 relative max-h-[85vh] overflow-y-auto overscroll-contain"
+            className="w-full max-w-md bg-white rounded-2xl sm:rounded-3xl border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-6 relative max-h-[85vh] overflow-y-auto overscroll-contain"
           >
             <div className="text-center mb-6">
               <h3 className="font-display text-xl font-extrabold text-[#18181B]">

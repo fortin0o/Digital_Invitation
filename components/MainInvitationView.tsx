@@ -104,7 +104,7 @@ export default function MainInvitationView({
         </div>
 
         {/* Central Mobile/Card Invitation Container */}
-        <main className="w-full max-w-md md:max-w-xl lg:max-w-lg bg-[#FFFDF5] min-h-screen md:my-8 md:rounded-[40px] md:border-[3px] md:border-[#18181B] md:shadow-[10px_10px_0px_#18181B] relative overflow-hidden flex flex-col">
+        <main className="w-full max-w-md md:max-w-xl lg:max-w-lg bg-[#FFFDF5] min-h-screen md:my-8 md:rounded-3xl md:border-[3px] md:border-[#18181B] md:shadow-[10px_10px_0px_#18181B] relative overflow-hidden flex flex-col">
           <HeroSection undangan={undangan} />
           <QuoteSection />
           <div id="mempelai">
