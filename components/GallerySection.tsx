@@ -84,7 +84,7 @@ export default function GallerySection() {
         </div>
 
         {/* 2-Column Grid with Semi-Neobrutalist Frames */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {galleryImages.map((img, idx) => (
             <div
               key={idx}
@@ -117,7 +117,7 @@ export default function GallerySection() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-lg w-full max-h-[85vh] rounded-[32px] overflow-hidden bg-white border-[3px] border-[#18181B] p-4 shadow-[8px_8px_0px_#FFE600]"
+            className="relative max-w-lg w-full max-h-[85vh] rounded-2xl sm:rounded-3xl overflow-hidden bg-white border-[3px] border-[#18181B] p-4 shadow-[8px_8px_0px_#FFE600]"
           >
             <div className="relative w-full h-[65vh] rounded-2xl overflow-hidden border-2 border-[#18181B]">
               <Image

@@ -73,7 +73,7 @@ export default function DigitalGiftSection() {
             {bankAccounts.map((account) => (
               <div
                 key={account.id}
-                className="p-6 rounded-[24px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left relative overflow-hidden"
+                className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left relative overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-display text-lg font-extrabold text-[#18181B]">

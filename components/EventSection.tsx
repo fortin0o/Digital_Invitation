@@ -138,7 +138,7 @@ export default function EventSection({ undangan }: EventSectionProps) {
         </div>
 
         {/* Akad Nikah Card */}
-        <div className="fade-up-element mb-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
+        <div className="fade-up-element mb-4 p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
           <div className="mb-4">
             <span className="px-4 py-1 rounded-full bg-[#FFE600] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
               AKAD NIKAH
@@ -167,7 +167,7 @@ export default function EventSection({ undangan }: EventSectionProps) {
         </div>
 
         {/* Resepsi Card */}
-        <div className="fade-up-element mb-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
+        <div className="fade-up-element mb-4 p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center relative overflow-hidden transition-transform hover:-translate-y-1">
           <div className="mb-4">
             <span className="px-4 py-1 rounded-full bg-[#FF5D8F] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
               RESEPSI PERNIKAHAN
@@ -196,7 +196,7 @@ export default function EventSection({ undangan }: EventSectionProps) {
         </div>
 
         {/* Location & Map Card */}
-        <div className="fade-up-element p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center">
+        <div className="fade-up-element p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-center">
           <div className="mb-4">
             <span className="px-4 py-1 rounded-full bg-[#38BDF8] text-[#18181B] font-extrabold text-xs border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B]">
               LOKASI VENUE

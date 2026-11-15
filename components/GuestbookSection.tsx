@@ -166,7 +166,7 @@ export default function GuestbookSection({
         </div>
 
         {/* Input Form Card */}
-        <div className="fade-up-element p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left mb-6 relative">
+        <div className="fade-up-element p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left mb-6 relative">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <div className="flex items-center justify-between gap-2 mb-1">

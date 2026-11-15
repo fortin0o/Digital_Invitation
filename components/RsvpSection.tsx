@@ -223,7 +223,7 @@ export default function RsvpSection({
         </div>
 
         {/* Form Card */}
-        <div className="fade-up-element p-6 sm:p-8 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[6px_6px_0px_#18181B] text-left relative">
+        <div className="fade-up-element p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] sm:shadow-[6px_6px_0px_#18181B] text-left relative">
           {submitted ? (
             <div className="py-4 text-center animate-in fade-in duration-400">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-lg font-black text-[#18181B]">

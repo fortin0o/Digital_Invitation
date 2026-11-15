@@ -26,7 +26,7 @@ export default function CoupleSection() {
         </div>
 
         {/* Bride Card (Sekar) */}
-        <div className="fade-up-element mb-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] flex flex-col items-center relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181B]">
+        <div className="fade-up-element mb-4 p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] flex flex-col items-center relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181B]">
           {/* Top accent badge */}
           <div className="absolute top-4 right-4">
             <span className="px-2 py-0.5 rounded-full bg-[#FF5D8F] text-[#18181B] font-bold text-[10px] border-2 border-[#18181B]">
@@ -78,7 +78,7 @@ export default function CoupleSection() {
         </div>
 
         {/* Groom Card (Arya) */}
-        <div className="fade-up-element mt-2 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] flex flex-col items-center relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181B]">
+        <div className="fade-up-element mt-2 p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] flex flex-col items-center relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[7px_7px_0px_#18181B]">
           {/* Top accent badge */}
           <div className="absolute top-4 right-4">
             <span className="px-2 py-0.5 rounded-full bg-[#38BDF8] text-[#18181B] font-bold text-[10px] border-2 border-[#18181B]">
