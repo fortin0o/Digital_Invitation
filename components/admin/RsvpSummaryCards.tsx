@@ -24,7 +24,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
       {/* Stat Cards Grid (Mobile 2-col, Tablet & Desktop 4-col) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
         {/* Total Tamu */}
-        <div className="p-4 sm:p-6 rounded-[22px] bg-[#FFE600] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#FFE600] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
           <p className="text-[10px] sm:text-xs uppercase tracking-wider text-[#18181B] font-extrabold truncate">
             Total Undangan
           </p>
@@ -37,7 +37,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
         </div>
 
         {/* Konfirmasi Hadir */}
-        <div className="p-4 sm:p-6 rounded-[22px] bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <p className="text-[10px] sm:text-xs uppercase tracking-wider text-[#18181B] font-extrabold truncate">
               Konfirmasi Hadir
@@ -58,7 +58,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
         </div>
 
         {/* Belum Konfirmasi */}
-        <div className="p-4 sm:p-6 rounded-[22px] bg-[#38BDF8] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#38BDF8] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <p className="text-[10px] sm:text-xs uppercase tracking-wider text-[#18181B] font-extrabold truncate">
               Belum Respon
@@ -74,7 +74,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
         </div>
 
         {/* Tidak Hadir & Ragu */}
-        <div className="p-4 sm:p-6 rounded-[22px] bg-[#FF5D8F] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#FF5D8F] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B] flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <p className="text-[10px] sm:text-xs uppercase tracking-wider text-[#18181B] font-extrabold truncate">
               Ragu / Absen
@@ -96,7 +96,7 @@ export default function RsvpSummaryCards({ stats }: RsvpSummaryCardsProps) {
       </div>
 
       {/* Response Progress Card */}
-      <div className="p-4 sm:p-6 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B]">
+      <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] sm:shadow-[4px_4px_0px_#18181B]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
           <span className="font-display text-xs sm:text-sm font-extrabold text-[#18181B]">
             Tingkat Respon Konfirmasi RSVP ({responseRate}%)

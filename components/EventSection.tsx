@@ -110,7 +110,7 @@ export default function EventSection({ undangan }: EventSectionProps) {
         </div>
 
         {/* Colorful Neobrutalist Countdown Timer */}
-        <div className="fade-up-element mb-4 p-6 rounded-[28px] bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
+        <div className="fade-up-element mb-4 p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B]">
           <p className="font-display font-bold text-xs uppercase tracking-wider text-[#18181B] mb-4 text-center">
             COUNTING DOWN TO THE BIG DAY
           </p>

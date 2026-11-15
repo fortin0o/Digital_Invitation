@@ -68,10 +68,10 @@ export default function HeroSection({ undangan }: HeroSectionProps) {
 
         {/* Featured Arch Couple Image in Semi-Neobrutalist Frame */}
         <div className="relative mt-2 mb-4 w-64 sm:w-72 aspect-[3/4] p-4 rounded-[36px] bg-white border-[3px] border-[#18181B] shadow-[8px_8px_0px_#18181B] transition-transform hover:-translate-y-1 hover:shadow-[10px_10px_0px_#18181B]">
-          <div className="relative w-full h-full rounded-[26px] overflow-hidden border-2 border-[#18181B]">
+          <div className="relative w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-[#18181B]">
             <Image
               src="/images/couple.jpg"
-              alt="The Wedding of Arya & Sekar"
+              alt={`The Wedding of ${coupleShortPria} & ${coupleShortWanita}`}
               fill
               priority
               className="object-cover object-center"

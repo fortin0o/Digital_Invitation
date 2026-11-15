@@ -310,7 +310,7 @@ export default function AdminManagement({
       )}
 
       {/* Header Banner */}
-      <div className="p-6 rounded-[28px] bg-white border-2 border-[#18181B] shadow-[5px_5px_0px_#18181B] relative overflow-hidden">
+      <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-[11px] font-extrabold mb-2 shadow-[2px_2px_0px_#18181B]">
@@ -328,7 +328,7 @@ export default function AdminManagement({
           <button
             onClick={() => setShowAddModal(true)}
             type="button"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] text-[#18181B] text-xs font-black tracking-wide border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap self-start sm:self-auto"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] text-[#18181B] text-xs font-black tracking-wide border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] hover:shadow-[4px_4px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
           >
             <span>+</span>
             <span>Tambah Admin Baru</span>
@@ -338,7 +338,7 @@ export default function AdminManagement({
 
       {/* Role explanation cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 rounded-[20px] bg-[#FFE600]/25 border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B]">
+        <div className="p-4 rounded-2xl bg-[#FFE600]/25 border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B]">
           <div className="flex items-center gap-2 mb-2">
             <span className="w-7 h-7 rounded-xl bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] flex items-center justify-center text-xs font-black shadow-[2px_2px_0px_#18181B]">
               SA
@@ -355,7 +355,7 @@ export default function AdminManagement({
           </ul>
         </div>
 
-        <div className="p-4 rounded-[20px] bg-[#38BDF8]/20 border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B]">
+        <div className="p-4 rounded-2xl bg-[#38BDF8]/20 border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B]">
           <div className="flex items-center gap-2 mb-2">
             <span className="w-7 h-7 rounded-xl bg-[#38BDF8] border-2 border-[#18181B] text-[#18181B] flex items-center justify-center text-xs font-black shadow-[2px_2px_0px_#18181B]">
               AA
@@ -374,7 +374,7 @@ export default function AdminManagement({
       </div>
 
       {/* Admin Table */}
-      <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] overflow-hidden">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] overflow-hidden">
         <div className="p-4 sm:p-6 border-b-2 border-[#18181B] flex items-center justify-between">
           <div>
             <h3 className="font-display font-extrabold text-sm sm:text-base text-[#18181B]">

@@ -329,7 +329,7 @@ export default function GuestManagement({
       )}
 
       {/* Header Bar */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B]">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B]">
         <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
           {/* Search Box */}
           <div className="relative flex-1">
@@ -362,53 +362,61 @@ export default function GuestManagement({
           </select>
         </div>
 
-        <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
-          {/* Format WA & Domain Button */}
-          <button
-            onClick={handleOpenWaConfig}
-            type="button"
-            className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-[#2EE59D] hover:bg-[#28D08D] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
-            title="Atur format kata-kata WhatsApp & domain link undangan"
-          >
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.062-1.925-.448-1.543-.637-2.531-2.203-2.607-2.305-.077-.102-.622-.828-.622-1.58 0-.751.393-1.121.533-1.27.14-.15.305-.188.406-.188.102 0 .204.002.292.006.094.004.22-.036.344.262.128.307.437 1.066.475 1.144.038.077.064.168.013.269-.051.102-.077.165-.153.254-.077.09-.161.2-.23.269-.077.077-.157.161-.068.314.09.153.399.658.857 1.066.589.524 1.085.687 1.238.763.153.076.242.064.331-.038.09-.102.383-.448.485-.601.102-.153.204-.128.344-.077.14.051.89.419 1.043.495.153.076.255.114.293.178.039.064.039.37-.105.775z"/>
-            </svg>
-            <span>Format WA</span>
-          </button>
-
-          {/* Export Excel Button */}
-          <button
-            onClick={handleExportCSV}
-            type="button"
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
-            title="Unduh Laporan Excel (CSV)"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span>Ekspor Excel</span>
-          </button>
-
-          {/* Print / PDF Report Button */}
-          <button
-            onClick={() => window.print()}
-            type="button"
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
-            title="Cetak Laporan Tamu atau Simpan sebagai PDF"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            <span>Cetak / PDF</span>
-          </button>
-
-          {/* Add Guest Button */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+          {/* Add Guest Button - Prominent full-width on mobile */}
           <button
             onClick={() => setShowAddModal(true)}
             disabled={!idUndangan}
             type="button"
             title={!idUndangan ? "Tambahkan data undangan di database terlebih dahulu" : undefined}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span>+ Tambah Tamu</span>
+          </button>
+
+          {/* Quick Tools Row: Format WA, Excel, Cetak/PDF (3-column on mobile, fits perfectly without overflow) */}
+          <div className="grid grid-cols-3 sm:flex sm:items-center gap-1.5 sm:gap-2">
+            {/* Format WA & Domain Button */}
+            <button
+              onClick={handleOpenWaConfig}
+              type="button"
+              className="inline-flex items-center justify-center gap-1 px-2 sm:px-3 py-2 rounded-xl bg-[#2EE59D] hover:bg-[#28D08D] border-2 border-[#18181B] text-[#18181B] text-[11px] sm:text-xs font-black shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
+              title="Atur format kata-kata WhatsApp & domain link undangan"
+            >
+              <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.062-1.925-.448-1.543-.637-2.531-2.203-2.607-2.305-.077-.102-.622-.828-.622-1.58 0-.751.393-1.121.533-1.27.14-.15.305-.188.406-.188.102 0 .204.002.292.006.094.004.22-.036.344.262.128.307.437 1.066.475 1.144.038.077.064.168.013.269-.051.102-.077.165-.153.254-.077.09-.161.2-.23.269-.077.077-.157.161-.068.314.09.153.399.658.857 1.066.589.524 1.085.687 1.238.763.153.076.242.064.331-.038.09-.102.383-.448.485-.601.102-.153.204-.128.344-.077.14.051.89.419 1.043.495.153.076.255.114.293.178.039.064.039.37-.105.775z"/>
+              </svg>
+              <span className="truncate">Format WA</span>
+            </button>
+
+            {/* Export Excel Button */}
+            <button
+              onClick={handleExportCSV}
+              type="button"
+              className="inline-flex items-center justify-center gap-1 px-2 sm:px-3 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-[11px] sm:text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
+              title="Unduh Laporan Excel (CSV)"
+            >
+              <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="truncate">Excel</span>
+            </button>
+
+            {/* Print / PDF Report Button */}
+            <button
+              onClick={() => window.print()}
+              type="button"
+              className="inline-flex items-center justify-center gap-1 px-2 sm:px-3 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-[11px] sm:text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
+              title="Cetak Laporan Tamu atau Simpan sebagai PDF"
+            >
+              <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              <span className="truncate">Cetak/PDF</span>
+            </button>
+          </div>
+        </div>
+      </div>
           >
             <span>+ Tambah Tamu</span>
           </button>
@@ -582,21 +590,21 @@ export default function GuestManagement({
                       <button
                         onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
                         type="button"
-                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2 px-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
                         <span>Salin Link</span>
                       </button>
                       <button
                         onClick={() => openWhatsApp(tamu)}
                         type="button"
-                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2 px-2 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-[11px] font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
                         <span>WhatsApp</span>
                       </button>
                       <button
                         onClick={() => setQrModalGuest(tamu)}
                         type="button"
-                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2 px-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-[11px] font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
                       >
                         <span>Tiket QR</span>
                       </button>
@@ -604,7 +612,7 @@ export default function GuestManagement({
                         onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
                         disabled={deletingId === tamu.id_tamu}
                         type="button"
-                        className="py-2 px-3 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="py-2 px-2 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <span>{deletingId === tamu.id_tamu ? "Menghapus..." : "Hapus"}</span>
                       </button>

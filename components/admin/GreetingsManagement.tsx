@@ -81,7 +81,7 @@ export default function GreetingsManagement({
   };
 
   return (
-    <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] p-6 space-y-4 font-sans">
+    <div className="bg-white rounded-2xl sm:rounded-3xl border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] p-4 sm:p-6 space-y-4 font-sans">
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 px-4 py-2 rounded-2xl bg-[#18181B] text-white text-xs font-bold shadow-[4px_4px_0px_#FFE600] animate-in fade-in border-2 border-white">
           {toastMessage}

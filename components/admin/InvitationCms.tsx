@@ -166,9 +166,9 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
       )}
 
       {/* Header Banner */}
-      <div className="p-5 sm:p-6 rounded-[24px] bg-[#FFE600] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#FFE600] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="inline-block px-2.5 py-0.5 rounded-full bg-white border border-[#18181B] text-[10px] font-black uppercase tracking-wider text-[#18181B] mb-1">
+          <span className="inline-block px-2 py-0.5 rounded-full bg-white border border-[#18181B] text-[10px] font-black uppercase tracking-wider text-[#18181B] mb-1">
             CMS Management
           </span>
           <h2 className="font-display font-extrabold text-lg sm:text-xl text-[#18181B]">
@@ -183,7 +183,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           href={publicUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-[#FFFDF5] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap self-start sm:self-auto"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#FFFDF5] border-2 border-[#18181B] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer whitespace-nowrap"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -194,7 +194,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Card 1: Mempelai & URL Slug */}
-        <div className="p-6 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b-2 border-[#18181B]/10">
             <div className="flex items-center gap-2">
               <span className="w-7 h-7 rounded-lg bg-[#FF5D8F] text-[#18181B] font-black text-xs flex items-center justify-center border-2 border-[#18181B]">
@@ -218,7 +218,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
                 value={namaPria}
                 onChange={(e) => setNamaPria(e.target.value)}
                 placeholder="Contoh: Arya Suryo Wicaksono"
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
               <p className="text-[10px] text-[#71717A] mt-1 font-medium">
                 Digunakan pada judul cover, ucapan selamat, dan kartu mempelai.
@@ -235,7 +235,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
                 value={namaWanita}
                 onChange={(e) => setNamaWanita(e.target.value)}
                 placeholder="Contoh: Sekar Arum Kinanti"
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
               <p className="text-[10px] text-[#71717A] mt-1 font-medium">
                 Digunakan pada judul cover, ucapan selamat, dan kartu mempelai.
@@ -257,8 +257,11 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
               </button>
             </div>
             <div className="flex items-center">
-              <span className="px-3 py-2.5 rounded-l-xl bg-[#F4F4F5] border-2 border-r-0 border-[#18181B] text-xs font-mono font-bold text-[#71717A] select-none">
+              <span className="hidden sm:inline-flex px-3 py-2.5 rounded-l-xl bg-[#F4F4F5] border-2 border-r-0 border-[#18181B] text-xs font-mono font-bold text-[#71717A] select-none shrink-0">
                 {currentOrigin}/
+              </span>
+              <span className="sm:hidden px-3 py-2.5 rounded-l-xl bg-[#F4F4F5] border-2 border-r-0 border-[#18181B] text-xs font-mono font-bold text-[#71717A] select-none shrink-0">
+                /
               </span>
               <input
                 type="text"
@@ -266,17 +269,17 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
                 placeholder="arya-dan-sekar"
-                className="flex-1 py-2.5 px-4 rounded-r-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-mono font-bold text-[#18181B] outline-none"
+                className="flex-1 min-w-0 py-2.5 px-3 sm:px-4 rounded-r-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-mono font-bold text-[#18181B] outline-none"
               />
             </div>
             <p className="text-[10px] text-[#71717A] mt-1 font-medium">
-              Format tautan unik website pernikahan Anda (gunakan huruf kecil dan tanda hubung).
+              Format tautan unik website pernikahan Anda (contoh: <code>{slug ? `${currentOrigin}/${slug}` : "nama-pria-dan-wanita"}</code>).
             </p>
           </div>
         </div>
 
         {/* Card 2: Jadwal & Countdown */}
-        <div className="p-6 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b-2 border-[#18181B]/10">
             <div className="flex items-center gap-2">
               <span className="w-7 h-7 rounded-lg bg-[#38BDF8] text-[#18181B] font-black text-xs flex items-center justify-center border-2 border-[#18181B]">
@@ -299,7 +302,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
                 required
                 value={tglAcara}
                 onChange={(e) => setTglAcara(e.target.value)}
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                className="w-full py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
               />
             </div>
 
@@ -307,7 +310,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
               <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-extrabold">
                 Pratinjau Format Tanggal
               </label>
-              <div className="py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] min-h-[42px] flex items-center">
+              <div className="py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] text-xs font-bold text-[#18181B] min-h-[42px] flex items-center">
                 <span>{formattedDatePreview}</span>
               </div>
             </div>
@@ -318,7 +321,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
         </div>
 
         {/* Card 3: Lokasi & Maps */}
-        <div className="p-6 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b-2 border-[#18181B]/10">
             <div className="flex items-center gap-2">
               <span className="w-7 h-7 rounded-lg bg-[#2EE59D] text-[#18181B] font-black text-xs flex items-center justify-center border-2 border-[#18181B]">
@@ -341,7 +344,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
               value={tempat}
               onChange={(e) => setTempat(e.target.value)}
               placeholder="Contoh: Sasana Pendopo Ageng / Gedung Serbaguna Wijaya"
-              className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+              className="w-full py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
             />
           </div>
 
@@ -355,7 +358,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
               value={alamat}
               onChange={(e) => setAlamat(e.target.value)}
               placeholder="Contoh: Jl. Slamet Riyadi No. 45, Kampung Baru, Kec. Pasar Kliwon, Kota Surakarta"
-              className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none resize-none"
+              className="w-full py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none resize-none"
             />
           </div>
 
@@ -380,7 +383,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
               value={linkMaps}
               onChange={(e) => setLinkMaps(e.target.value)}
               placeholder="https://maps.google.com/?q=..."
-              className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-mono font-bold text-[#18181B] outline-none"
+              className="w-full py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-mono font-bold text-[#18181B] outline-none"
             />
             <p className="text-[10px] text-[#71717A] mt-1 font-medium">
               Link ini dibuka saat tamu menekan tombol <strong>&ldquo;Buka Google Maps&rdquo;</strong> di undangan.
@@ -389,7 +392,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
         </div>
 
         {/* Card 4: WhatsApp Message & Base Domain Share Settings */}
-        <div className="p-6 rounded-[24px] bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b-2 border-[#18181B]/10">
             <div className="flex items-center gap-2">
               <span className="w-7 h-7 rounded-lg bg-[#2EE59D] text-[#18181B] font-black text-xs flex items-center justify-center border-2 border-[#18181B]">
@@ -478,7 +481,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
                 onChange={(e) =>
                   setWaConfig((prev) => ({ ...prev, template: e.target.value }))
                 }
-                className="w-full py-2.5 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-sans font-medium text-[#18181B] outline-none resize-none leading-relaxed"
+                className="w-full py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-sans font-medium text-[#18181B] outline-none resize-none leading-relaxed"
               />
               <p className="text-[10px] text-[#71717A] mt-1 font-medium">
                 Gunakan tag <code>&#123;nama&#125;</code> (nama tamu), <code>&#123;link&#125;</code> (link undangan), dan <code>&#123;mempelai&#125;</code> (nama mempelai).
@@ -486,7 +489,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
             </div>
 
             {/* Live Preview */}
-            <div className="p-3.5 rounded-2xl bg-[#DCF8C6] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-sans text-[#18181B] whitespace-pre-wrap leading-relaxed">
+            <div className="p-4 rounded-2xl bg-[#DCF8C6] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-sans text-[#18181B] whitespace-pre-wrap break-words break-all leading-relaxed">
               <span className="block text-[10px] uppercase font-black text-[#71717A] mb-1">
                 Pratinjau Pesan:
               </span>
@@ -502,7 +505,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
         </div>
 
         {/* Action Bar */}
-        <div className="p-4 sm:p-6 rounded-[24px] bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div className="text-center sm:text-left">
             <p className="text-xs font-extrabold text-[#18181B]">
               Simpan dan Publikasikan Perubahan
@@ -515,7 +518,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           <button
             type="submit"
             disabled={saving}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[3px_3px_0px_#18181B] hover:shadow-[4px_4px_0px_#18181B] transition-all cursor-pointer disabled:opacity-50"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[3px_3px_0px_#18181B] hover:shadow-[4px_4px_0px_#18181B] transition-all cursor-pointer disabled:opacity-50"
           >
             {saving ? (
               <>

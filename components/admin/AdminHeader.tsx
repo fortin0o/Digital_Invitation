@@ -50,23 +50,23 @@ export default function AdminHeader({
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-[2.5px] border-[#18181B] shadow-[0_2px_0px_#18181B] font-sans">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 sm:py-4 flex flex-col gap-2">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-[#18181B] shadow-[0_2px_0px_#18181B] font-sans">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-col gap-2">
         {/* Top Bar: Brand, Identity, Quick Actions & Hamburger */}
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-3">
           {/* Brand & Subtitle */}
-          <div className="flex items-center gap-2.5 min-w-0">
+          <div className="flex items-center gap-3 min-w-0">
             <span className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-center text-[#18181B] text-xs sm:text-sm font-black tracking-wide">
               WM
             </span>
             <div className="min-w-0 flex flex-col justify-center">
-              <div className="flex items-center gap-2">
-                <h1 className="font-display text-sm sm:text-lg text-[#18181B] font-extrabold leading-snug truncate">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="font-display text-sm sm:text-lg text-[#18181B] font-extrabold leading-tight">
                   WeddingMu
                 </h1>
-                {/* Desktop Role Pill */}
+                {/* Unified Role Pill (Always visible, never clipped) */}
                 <span
-                  className={`hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-[#18181B] shadow-[1px_1px_0px_#18181B] shrink-0 ${
+                  className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-[#18181B] shadow-[1px_1px_0px_#18181B] shrink-0 ${
                     userRole === "super_admin"
                       ? "bg-[#FFE600] text-[#18181B]"
                       : "bg-[#38BDF8] text-[#18181B]"
@@ -75,33 +75,16 @@ export default function AdminHeader({
                   {userRole === "super_admin" ? "Super Admin" : "Admin"}
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 mt-0.5 sm:mt-1">
-                <p className="text-[11px] sm:text-xs text-[#71717A] font-bold truncate leading-normal">
-                  {coupleTitle ? coupleTitle : "weddingmu.web.id"}
-                </p>
-                {/* Mobile Active Tab Indicator Pill */}
-                <span className="sm:hidden text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-[#FFE600] text-[#18181B] border border-[#18181B] shrink-0">
-                  {activeTabObj?.label}
-                </span>
-              </div>
+              <p className="text-[11px] sm:text-xs text-[#71717A] font-bold truncate mt-0.5">
+                {coupleTitle ? coupleTitle : "weddingmu.web.id"}
+              </p>
             </div>
           </div>
 
           {/* User Info & Actions */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* Mobile role pill */}
-            <span
-              className={`sm:hidden px-2 py-0.5 rounded-full text-[9px] font-extrabold border border-[#18181B] ${
-                userRole === "super_admin"
-                  ? "bg-[#FFE600] text-[#18181B]"
-                  : "bg-[#38BDF8] text-[#18181B]"
-              }`}
-            >
-              {userRole === "super_admin" ? "Super" : "Admin"}
-            </span>
-
             {/* User email badge for tablet & desktop */}
-            <span className="hidden lg:inline-block text-xs font-semibold text-[#52525B] truncate max-w-[150px]">
+            <span className="hidden lg:inline-block text-xs font-semibold text-[#52525B] truncate max-w-[160px]">
               {userLabel}
             </span>
 
@@ -109,7 +92,7 @@ export default function AdminHeader({
             <Link
               href="/"
               target="_blank"
-              className="hidden sm:inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
               title="Buka Undangan Digital"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -122,7 +105,7 @@ export default function AdminHeader({
             <button
               onClick={onLogout}
               type="button"
-              className="hidden sm:inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 border-2 border-[#18181B] text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-100 hover:bg-rose-200 border-2 border-[#18181B] text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
               title="Keluar dari Panel Admin"
             >
               <span>Keluar</span>
@@ -132,7 +115,7 @@ export default function AdminHeader({
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="sm:hidden w-8 h-8 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-center cursor-pointer transition-transform active:translate-x-0.5 active:translate-y-0.5"
+              className="sm:hidden w-9 h-9 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-center cursor-pointer transition-transform active:translate-x-0.5 active:translate-y-0.5"
               aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
             >
               {mobileMenuOpen ? (
@@ -176,18 +159,23 @@ export default function AdminHeader({
             />
 
             {/* Dropdown Menu Content */}
-            <div className="sm:hidden relative z-40 bg-white border-t-2 border-[#18181B] -mx-4 -mb-2.5 px-4 py-3 space-y-2 shadow-[0_4px_0px_#18181B] animate-in slide-in-from-top-2 duration-150 max-h-[calc(100vh-60px)] overflow-y-auto overscroll-contain">
-              <div className="flex items-center justify-between pb-2 border-b border-[#18181B]/10 text-xs">
-                <span className="font-extrabold uppercase tracking-wider text-[10px] text-[#71717A]">
-                  Menu Navigasi
-                </span>
-                <span className="font-bold text-[#18181B] text-[11px] truncate max-w-[170px]">
-                  {userLabel}
+            <div className="sm:hidden relative z-40 bg-white border-t-2 border-[#18181B] -mx-4 -mb-3 px-4 py-4 space-y-3 shadow-[0_4px_0px_#18181B] animate-in slide-in-from-top-2 duration-150 max-h-[calc(100vh-64px)] overflow-y-auto overscroll-contain">
+              <div className="p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-[10px] uppercase font-bold text-[#71717A]">Masuk Sebagai</p>
+                  <p className="text-xs font-extrabold text-[#18181B] truncate">{userLabel}</p>
+                </div>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-black border border-[#18181B] shrink-0 ${
+                    userRole === "super_admin" ? "bg-[#FFE600] text-[#18181B]" : "bg-[#38BDF8] text-[#18181B]"
+                  }`}
+                >
+                  {userRole === "super_admin" ? "Super Admin" : "Admin"}
                 </span>
               </div>
 
               {/* Vertical Tab Navigation List */}
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {tabs.map((tab) => {
                   const isActive = activeTab === tab.id;
                   return (
@@ -198,13 +186,13 @@ export default function AdminHeader({
                         setMobileMenuOpen(false);
                       }}
                       type="button"
-                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all border-2 border-[#18181B] cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all border-2 border-[#18181B] cursor-pointer ${
                         isActive
                           ? "bg-[#FFE600] text-[#18181B] shadow-[2px_2px_0px_#18181B] -translate-x-0.5 -translate-y-0.5"
                           : "bg-[#FFFDF5] text-[#18181B] hover:bg-white"
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-3">
                         {/* Tab Icons */}
                         {tab.id === "overview" && (
                           <svg className="w-4 h-4 text-[#18181B]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -248,7 +236,7 @@ export default function AdminHeader({
                   href="/"
                   target="_blank"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -262,7 +250,7 @@ export default function AdminHeader({
                     setMobileMenuOpen(false);
                     onLogout();
                   }}
-                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-rose-100 hover:bg-rose-200 border-2 border-[#18181B] text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-100 hover:bg-rose-200 border-2 border-[#18181B] text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
