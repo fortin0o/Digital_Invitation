@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 interface AdminHeaderProps {
@@ -31,6 +31,21 @@ export default function AdminHeader({
   ];
 
   const activeTabObj = tabs.find((t) => t.id === activeTab) || tabs[0];
+
+  // Prevent background scroll when mobile menu is open
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    const originalOverscroll = document.body.style.overscrollBehavior;
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.overscrollBehavior = originalOverscroll;
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-[2.5px] border-[#18181B] shadow-[0_2px_0px_#18181B] font-sans">
@@ -155,11 +170,11 @@ export default function AdminHeader({
             {/* Backdrop Overlay */}
             <div
               onClick={() => setMobileMenuOpen(false)}
-              className="sm:hidden fixed inset-0 top-[52px] bg-[#18181B]/40 backdrop-blur-xs z-30 animate-in fade-in"
+              className="sm:hidden fixed inset-0 top-[52px] bg-[#18181B]/40 backdrop-blur-xs z-30 animate-in fade-in overscroll-contain"
             />
 
             {/* Dropdown Menu Content */}
-            <div className="sm:hidden relative z-40 bg-white border-t-2 border-[#18181B] -mx-4 -mb-2.5 px-4 py-3 space-y-2 shadow-[0_4px_0px_#18181B] animate-in slide-in-from-top-2 duration-150">
+            <div className="sm:hidden relative z-40 bg-white border-t-2 border-[#18181B] -mx-4 -mb-2.5 px-4 py-3 space-y-2 shadow-[0_4px_0px_#18181B] animate-in slide-in-from-top-2 duration-150 max-h-[calc(100vh-60px)] overflow-y-auto overscroll-contain">
               <div className="flex items-center justify-between pb-2 border-b border-[#18181B]/10 text-xs">
                 <span className="font-extrabold uppercase tracking-wider text-[10px] text-[#71717A]">
                   Menu Navigasi

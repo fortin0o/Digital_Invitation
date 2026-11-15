@@ -134,6 +134,21 @@ export default function AdminManagement({
     setLoading(false);
   }, []);
 
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (!showAddModal) return;
+
+    const originalOverflow = document.body.style.overflow;
+    const originalOverscroll = document.body.style.overscrollBehavior;
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.overscrollBehavior = originalOverscroll;
+    };
+  }, [showAddModal]);
+
   useEffect(() => {
     let active = true;
     (async () => {
@@ -550,8 +565,14 @@ export default function AdminManagement({
 
       {/* Add Admin Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
-          <div className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-6 relative max-h-[90vh] overflow-y-auto">
+        <div
+          onClick={() => setShowAddModal(false)}
+          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md bg-white rounded-[32px] border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-6 relative max-h-[85vh] overflow-y-auto overscroll-contain"
+          >
             <div className="text-center mb-6">
               <h3 className="font-display text-xl font-extrabold text-[#18181B]">
                 Tambah Administrator Baru

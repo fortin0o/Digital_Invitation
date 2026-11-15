@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { formatWriteErrorMessage } from "@/lib/adminAuth";
 import {
@@ -86,6 +86,22 @@ export default function GuestManagement({
     };
     setTempWaConfig(defaultConfig);
   };
+
+  // Prevent background scroll when any modal is open on mobile/desktop
+  useEffect(() => {
+    const isModalOpen = Boolean(showAddModal || qrModalGuest || showWaConfigModal);
+    if (!isModalOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    const originalOverscroll = document.body.style.overscrollBehavior;
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.overscrollBehavior = originalOverscroll;
+    };
+  }, [showAddModal, qrModalGuest, showWaConfigModal]);
 
   const generateUniqueCode = () => {
     return Math.floor(10000000 + Math.random() * 90000000).toString();
@@ -676,8 +692,14 @@ export default function GuestManagement({
 
       {/* Add Guest Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
-          <div className="w-full max-w-sm rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[90vh] overflow-y-auto">
+        <div
+          onClick={() => setShowAddModal(false)}
+          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[85vh] overflow-y-auto overscroll-contain"
+          >
             <h3 className="font-display text-xl font-extrabold text-[#18181B] mb-1">
               Tambah Tamu Undangan
             </h3>
@@ -738,8 +760,14 @@ export default function GuestManagement({
 
       {/* Guest QR Code Pass Modal */}
       {qrModalGuest && (
-        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
-          <div className="w-full max-w-xs rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center max-h-[90vh] overflow-y-auto">
+        <div
+          onClick={() => setQrModalGuest(null)}
+          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-xs rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center max-h-[85vh] overflow-y-auto overscroll-contain"
+          >
             <button
               onClick={() => setQrModalGuest(null)}
               type="button"
@@ -801,8 +829,14 @@ export default function GuestManagement({
 
       {/* WhatsApp Message & Domain Configuration Modal */}
       {showWaConfigModal && (
-        <div className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto">
-          <div className="w-full max-w-lg rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#2EE59D] relative max-h-[90vh] overflow-y-auto space-y-4">
+        <div
+          onClick={() => setShowWaConfigModal(false)}
+          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg rounded-[28px] bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#2EE59D] relative max-h-[85vh] overflow-y-auto overscroll-contain space-y-4"
+          >
             <button
               onClick={() => setShowWaConfigModal(false)}
               type="button"
