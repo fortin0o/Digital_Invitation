@@ -32,8 +32,6 @@ export default function AdminHeader({
       : []),
   ];
 
-  const activeTabObj = tabs.find((t) => t.id === activeTab) || tabs[0];
-
   // Prevent background scroll when mobile menu is open
   useEffect(() => {
     if (!mobileMenuOpen) return;

@@ -417,14 +417,9 @@ export default function GuestManagement({
           </div>
         </div>
       </div>
-          >
-            <span>+ Tambah Tamu</span>
-          </button>
-        </div>
-      </div>
 
       {/* Guest List Table */}
-      <div className="bg-white rounded-[24px] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] overflow-hidden">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] overflow-hidden">
         {filteredGuests.length === 0 ? (
           <div className="text-center py-8 px-4">
             <p className="font-display font-extrabold text-base text-[#18181B]">Tidak ada tamu ditemukan</p>
