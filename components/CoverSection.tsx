@@ -27,7 +27,7 @@ export default function CoverSection({
       ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
       : "Arya Suryo Wicaksono & Sekar Arum Kinanti";
 
-  const formattedDate = React.useMemo(() => {
+  const formattedDate = (() => {
     if (!undangan?.tgl_acara) return "Sabtu, 14 Nov 2026 • Surakarta";
     try {
       const d = new Date(undangan.tgl_acara);
@@ -44,7 +44,7 @@ export default function CoverSection({
     } catch {
       return "Sabtu, 14 Nov 2026 • Surakarta";
     }
-  }, [undangan?.tgl_acara, undangan?.tempat]);
+  })();
 
   const handleOpen = () => {
     setIsOpening(true);

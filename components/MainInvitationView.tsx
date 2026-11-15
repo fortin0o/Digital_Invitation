@@ -33,7 +33,7 @@ export default function MainInvitationView({
 
   const desktopCouplePria = undangan?.nama_pria ? undangan.nama_pria.trim().split(" ")[0] : "Arya";
   const desktopCoupleWanita = undangan?.nama_wanita ? undangan.nama_wanita.trim().split(" ")[0] : "Sekar";
-  const desktopDateVenue = React.useMemo(() => {
+  const desktopDateVenue = (() => {
     if (!undangan?.tgl_acara) return "14 November 2026 • Surakarta";
     try {
       const d = new Date(undangan.tgl_acara);
@@ -49,7 +49,7 @@ export default function MainInvitationView({
     } catch {
       return "14 November 2026 • Surakarta";
     }
-  }, [undangan?.tgl_acara, undangan?.tempat]);
+  })();
 
   const handleOpenInvitation = () => {
     setIsOpen(true);

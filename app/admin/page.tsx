@@ -426,6 +426,7 @@ export default function AdminPage() {
             {currentTab === "cms" && (
               <div className="animate-in fade-in">
                 <InvitationCms
+                  key={undangan?.id_undangan || "cms"}
                   undangan={undangan}
                   onSaved={handleSilentRefresh}
                 />

@@ -16,7 +16,7 @@ export default function HeroSection({ undangan }: HeroSectionProps) {
       ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
       : "Arya Suryo Wicaksono & Sekar Arum Kinanti";
 
-  const dateLabel = React.useMemo(() => {
+  const dateLabel = (() => {
     if (!undangan?.tgl_acara) return "14 November 2026 • Surakarta";
     try {
       const d = new Date(undangan.tgl_acara);
@@ -32,7 +32,7 @@ export default function HeroSection({ undangan }: HeroSectionProps) {
     } catch {
       return "14 November 2026 • Surakarta";
     }
-  }, [undangan?.tgl_acara, undangan?.tempat]);
+  })();
 
   return (
     <header className="relative w-full overflow-hidden pt-8 pb-6 sm:pt-10 sm:pb-8 px-4 text-center">

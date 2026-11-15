@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { formatWriteErrorMessage } from "@/lib/adminAuth";
-import NeoDivider from "../NeoDivider";
 import {
   WaShareConfig,
   getStoredWaConfig,
@@ -29,49 +28,36 @@ interface InvitationCmsProps {
   onSaved: () => void;
 }
 
+// Helper format ISO string to input datetime-local format (YYYY-MM-DDTHH:mm)
+function toInputDateTime(isoString?: string | null): string {
+  if (!isoString) return "";
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return "";
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  } catch {
+    return "";
+  }
+}
+
 export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps) {
-  const [namaPria, setNamaPria] = useState("");
-  const [namaWanita, setNamaWanita] = useState("");
-  const [slug, setSlug] = useState("");
-  const [tglAcara, setTglAcara] = useState("");
-  const [tempat, setTempat] = useState("");
-  const [alamat, setAlamat] = useState("");
-  const [linkMaps, setLinkMaps] = useState("");
+  const [namaPria, setNamaPria] = useState(undangan?.nama_pria || "");
+  const [namaWanita, setNamaWanita] = useState(undangan?.nama_wanita || "");
+  const [slug, setSlug] = useState(undangan?.slug || "");
+  const [tglAcara, setTglAcara] = useState(() => toInputDateTime(undangan?.tgl_acara));
+  const [tempat, setTempat] = useState(undangan?.tempat || "");
+  const [alamat, setAlamat] = useState(undangan?.alamat || "");
+  const [linkMaps, setLinkMaps] = useState(undangan?.link_maps || "");
   const [waConfig, setWaConfig] = useState<WaShareConfig>(getStoredWaConfig);
 
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  // Helper format ISO string to input datetime-local format (YYYY-MM-DDTHH:mm)
-  const toInputDateTime = (isoString?: string | null) => {
-    if (!isoString) return "";
-    try {
-      const d = new Date(isoString);
-      if (isNaN(d.getTime())) return "";
-      const pad = (n: number) => String(n).padStart(2, "0");
-      const year = d.getFullYear();
-      const month = pad(d.getMonth() + 1);
-      const day = pad(d.getDate());
-      const hours = pad(d.getHours());
-      const minutes = pad(d.getMinutes());
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
-    } catch {
-      return "";
-    }
-  };
-
-  // Sync state when undangan prop changes
-  useEffect(() => {
-    if (undangan) {
-      setNamaPria(undangan.nama_pria || "");
-      setNamaWanita(undangan.nama_wanita || "");
-      setSlug(undangan.slug || "");
-      setTglAcara(toInputDateTime(undangan.tgl_acara));
-      setTempat(undangan.tempat || "");
-      setAlamat(undangan.alamat || "");
-      setLinkMaps(undangan.link_maps || "");
-    }
-  }, [undangan]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -90,7 +76,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
   };
 
   // Format date preview in Indonesian
-  const formattedDatePreview = React.useMemo(() => {
+  const formattedDatePreview = (() => {
     if (!tglAcara) return "Belum diatur";
     try {
       const d = new Date(tglAcara);
@@ -107,7 +93,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
     } catch {
       return tglAcara;
     }
-  }, [tglAcara]);
+  })();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
