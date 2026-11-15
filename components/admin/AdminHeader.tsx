@@ -56,13 +56,13 @@ export default function AdminHeader({
         <div className="flex items-center justify-between gap-2">
           {/* Brand & Subtitle */}
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-center text-[#18181B] text-xs sm:text-sm font-black tracking-wide">
+            <span className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-[#FFE600] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-center text-[#18181B] text-xs sm:text-sm font-black tracking-wide">
               WM
             </span>
-            <div className="truncate">
+            <div className="min-w-0 flex flex-col justify-center">
               <div className="flex items-center gap-2">
-                <h1 className="font-display text-sm sm:text-lg text-[#18181B] font-extrabold leading-none truncate">
-                  WeddingMu <span className="text-xs sm:text-sm font-bold text-[#71717A]">Admin</span>
+                <h1 className="font-display text-sm sm:text-lg text-[#18181B] font-extrabold leading-snug truncate">
+                  WeddingMu
                 </h1>
                 {/* Desktop Role Pill */}
                 <span
@@ -75,12 +75,12 @@ export default function AdminHeader({
                   {userRole === "super_admin" ? "Super Admin" : "Admin"}
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <p className="text-[10px] sm:text-[11px] text-[#71717A] font-bold truncate">
+              <div className="flex items-center gap-1.5 mt-0.5 sm:mt-1">
+                <p className="text-[11px] sm:text-xs text-[#71717A] font-bold truncate leading-normal">
                   {coupleTitle ? coupleTitle : "weddingmu.web.id"}
                 </p>
                 {/* Mobile Active Tab Indicator Pill */}
-                <span className="sm:hidden text-[9px] font-black uppercase tracking-wider px-1.5 py-0.2 rounded-md bg-[#FFE600] text-[#18181B] border border-[#18181B] truncate max-w-[120px]">
+                <span className="sm:hidden text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-[#FFE600] text-[#18181B] border border-[#18181B] shrink-0">
                   {activeTabObj?.label}
                 </span>
               </div>
