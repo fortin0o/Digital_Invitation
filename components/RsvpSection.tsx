@@ -15,6 +15,23 @@ interface RsvpSectionProps {
   onGuestChange?: (guest: TamuWithRsvp | null) => void;
 }
 
+function formatConfirmationTime(isoString?: string | null): string {
+  if (!isoString) return "";
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return "";
+    return new Intl.DateTimeFormat("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(d);
+  } catch {
+    return "";
+  }
+}
+
 export default function RsvpSection({
   initialTamu,
   guestCode = "",
@@ -34,9 +51,9 @@ export default function RsvpSection({
   const [jumlahHadir, setJumlahHadir] = useState<number>(initialCount);
   const [manualCode, setManualCode] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [justUpdatedNotice, setJustUpdatedNotice] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [existingRsvp, setExistingRsvp] = useState<boolean>(Boolean(initialTamu?.rsvp_status));
   const [verifying, setVerifying] = useState(false);
   const [savingPhoto, setSavingPhoto] = useState(false);
   const [photoFeedback, setPhotoFeedback] = useState<{
@@ -44,20 +61,22 @@ export default function RsvpSection({
     text: string;
   } | null>(null);
 
-  const applyGuestRecord = useCallback((guest: TamuWithRsvp) => {
-    const quota = Math.max(guest.kuota || 1, 1);
-    const nextStatus: RsvpStatus = guest.rsvp_status || "hadir";
-    const nextCount =
-      nextStatus === "tidak_hadir"
-        ? 1
-        : Math.min(Math.max(guest.rsvp_jumlah_hadir || 1, 1), quota);
+  const applyGuestRecord = useCallback(
+    (guest: TamuWithRsvp) => {
+      const quota = Math.max(guest.kuota || 1, 1);
+      const nextStatus: RsvpStatus = guest.rsvp_status || "hadir";
+      const nextCount =
+        nextStatus === "tidak_hadir"
+          ? 1
+          : Math.min(Math.max(guest.rsvp_jumlah_hadir || 1, 1), quota);
 
-    setTamu(guest);
-    setStatus(nextStatus);
-    setJumlahHadir(nextCount);
-    setExistingRsvp(Boolean(guest.rsvp_status));
-    onGuestChange?.(guest);
-  }, [onGuestChange]);
+      setTamu(guest);
+      setStatus(nextStatus);
+      setJumlahHadir(nextCount);
+      onGuestChange?.(guest);
+    },
+    [onGuestChange]
+  );
 
   // Fallback client lookup if initialTamu wasn't preloaded on SSR
   useEffect(() => {
@@ -77,6 +96,7 @@ export default function RsvpSection({
   }, [guestCode, idUndangan, tamu, applyGuestRecord]);
 
   const maxQuota = Math.max(tamu?.kuota || 1, 1);
+  const hasConfirmed = Boolean(tamu?.rsvp_status);
 
   const handleManualCheck = async () => {
     const trimmedCode = manualCode.trim();
@@ -158,14 +178,16 @@ export default function RsvpSection({
         rsvp_jumlah_hadir: savedCount,
         rsvp_tgl_konfirmasi: savedRow?.tgl_konfirmasi || new Date().toISOString(),
       };
+
       setTamu(updatedGuest);
       onGuestChange?.(updatedGuest);
       if (savedStatus !== "tidak_hadir") {
         setJumlahHadir(Math.min(Math.max(savedCount || 1, 1), guestQuota));
       }
       setPhotoFeedback(null);
-      setSubmitted(true);
-      setExistingRsvp(true);
+      setIsEditing(false);
+      setJustUpdatedNotice(true);
+      setTimeout(() => setJustUpdatedNotice(false), 4500);
     } catch (err: unknown) {
       const error = err as Error;
       setErrorMessage(error.message || "Terjadi kendala saat mengirim RSVP ke server.");
@@ -202,7 +224,7 @@ export default function RsvpSection({
   };
 
   return (
-    <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden">
+    <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden" id="konfirmasi-rsvp">
       <div className="max-w-md mx-auto relative z-10 text-center">
         {/* Section title */}
         <div className="fade-up-element mb-6">
@@ -222,26 +244,88 @@ export default function RsvpSection({
           </p>
         </div>
 
-        {/* Form Card */}
+        {/* Card Container */}
         <div className="fade-up-element p-4 sm:p-8 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] sm:shadow-[6px_6px_0px_#18181B] text-left relative">
-          {submitted ? (
-            <div className="py-4 text-center animate-in fade-in duration-400">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#2EE59D] border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-lg font-black text-[#18181B]">
-                ✓
-              </div>
-              <h3 className="font-display font-extrabold text-2xl text-[#18181B] mb-1">
-                Terima Kasih Banyak
-              </h3>
-              <p className="font-sans text-xs text-[#52525B] leading-relaxed mb-4 font-medium">
-                Konfirmasi kehadiran Anda telah berhasil kami simpan.
-                {status === "hadir" && (
-                  <span className="block mt-2 font-bold text-[#18181B] bg-[#2EE59D]/30 p-2 sm:p-4 rounded-xl border border-[#18181B]">
-                    Sampai jumpa di hari perayaan kami ({jumlahHadir} orang).
-                  </span>
-                )}
-              </p>
+          {/* =========================================================================
+              STATE 2: KARTU STATUS TERKONFIRMASI & TIKET MASUK (JIKA SUDAH KONFIRMASI)
+             ========================================================================= */}
+          {hasConfirmed && !isEditing ? (
+            <div className="py-2 text-center animate-in fade-in duration-300">
+              {/* Notifikasi jika baru saja selesai mengupdate */}
+              {justUpdatedNotice && (
+                <div className="mb-4 p-3 rounded-2xl bg-[#2EE59D]/30 border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-extrabold text-[#18181B] animate-in fade-in">
+                  ✓ Konfirmasi kehadiran Anda berhasil diperbarui!
+                </div>
+              )}
 
-              {/* Digital Pass Ticket for Hadir */}
+              {/* Status Header Icon */}
+              <div
+                className={`w-12 h-12 mx-auto mb-3 rounded-full border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-lg font-black text-[#18181B] ${
+                  status === "hadir"
+                    ? "bg-[#2EE59D]"
+                    : status === "ragu"
+                    ? "bg-[#FFE600]"
+                    : "bg-[#FF5D8F]"
+                }`}
+              >
+                {status === "hadir" ? "✓" : status === "ragu" ? "?" : "✕"}
+              </div>
+
+              {/* Status Title */}
+              <h3 className="font-display font-extrabold text-2xl text-[#18181B] mb-1">
+                {status === "hadir"
+                  ? "Konfirmasi Kehadiran Tersimpan"
+                  : status === "ragu"
+                  ? "Status: Masih Ragu"
+                  : "Konfirmasi: Berhalangan Hadir"}
+              </h3>
+
+              {/* Status Pill Badge */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-black my-2">
+                <span
+                  className={`w-2.5 h-2.5 rounded-full border border-[#18181B] ${
+                    status === "hadir"
+                      ? "bg-[#2EE59D]"
+                      : status === "ragu"
+                      ? "bg-[#FFE600]"
+                      : "bg-[#FF5D8F]"
+                  }`}
+                />
+                <span>
+                  {status === "hadir"
+                    ? `Pasti Hadir (${jumlahHadir} Orang)`
+                    : status === "ragu"
+                    ? "Masih Ragu"
+                    : "Berhalangan Hadir"}
+                </span>
+              </div>
+
+              {/* Dynamic Friendly Message based on status */}
+              <div className="font-sans text-xs text-[#52525B] leading-relaxed mb-4 font-medium max-w-sm mx-auto">
+                {status === "hadir" && (
+                  <p>
+                    Terima kasih atas konfirmasinya. Kami sangat menantikan kehadiran Anda di hari bahagia kami.
+                  </p>
+                )}
+                {status === "ragu" && (
+                  <p>
+                    Jawaban Anda telah kami simpan. Kuota undangan ({maxQuota} orang) tetap kami alokasikan sementara. Anda dapat memastikan kehadiran sewaktu-waktu.
+                  </p>
+                )}
+                {status === "tidak_hadir" && (
+                  <p>
+                    Terima kasih telah memberi kabar. Kami sangat memahami jika Anda belum dapat hadir secara langsung. Doa restu Anda tetap menjadi kado terindah bagi kami.
+                  </p>
+                )}
+
+                {tamu?.rsvp_tgl_konfirmasi && (
+                  <p className="text-[11px] text-[#71717A] mt-2 font-semibold">
+                    Tercatat pada: {formatConfirmationTime(tamu.rsvp_tgl_konfirmasi)}
+                  </p>
+                )}
+              </div>
+
+              {/* DIGITAL PASS TIKET RESEPSI (KHUSUS STATUS HADIR) */}
               {status === "hadir" && tamu && (
                 <div className="my-4 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] max-w-xs mx-auto text-center relative">
                   <div className="flex items-center justify-between pb-2 border-b-2 border-dashed border-[#18181B] mb-4">
@@ -253,7 +337,7 @@ export default function RsvpSection({
                     </span>
                   </div>
 
-                  {/* QR Code image */}
+                  {/* QR Code */}
                   <div className="bg-white p-2 rounded-xl border-2 border-[#18181B] inline-block shadow-[2px_2px_0px_#18181B] mb-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -270,7 +354,7 @@ export default function RsvpSection({
                   <p className="font-mono text-xs font-extrabold text-[#18181B] tracking-widest mt-1">
                     {tamu.kode}
                   </p>
-                  <p className="font-display text-sm font-bold text-[#FF5D8F] mt-1">
+                  <p className="font-display text-sm font-bold text-[#FF5D8F] mt-1 break-words">
                     {tamu.nama_tamu}
                   </p>
                   <p className="font-sans text-[10px] text-[#71717A] mt-2 font-medium">
@@ -303,44 +387,69 @@ export default function RsvpSection({
                 </div>
               )}
 
-              <div className="pt-2">
+              {/* ACTION: UBAH KONFIRMASI KEHADIRAN */}
+              <div className="mt-6 pt-4 border-t-2 border-dashed border-[#18181B]/20 text-center">
                 <button
                   type="button"
                   onClick={() => {
-                    setSubmitted(false);
+                    setIsEditing(true);
+                    setErrorMessage(null);
                     setPhotoFeedback(null);
                   }}
-                  className="inline-flex px-6 py-2 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_#18181B]"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-black transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] hover:shadow-[3px_3px_0px_#18181B]"
                 >
-                  Ubah Konfirmasi Kehadiran
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.5"
+                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                    />
+                  </svg>
+                  <span>
+                    {status === "hadir"
+                      ? "Ubah Konfirmasi Kehadiran"
+                      : "Perbarui Konfirmasi Kehadiran"}
+                  </span>
                 </button>
+                <p className="text-[10px] text-[#71717A] mt-1.5 font-medium">
+                  *Rencana Anda berubah? Anda dapat memperbarui pilihan kehadiran kapan saja.
+                </p>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {existingRsvp && (
-                <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs text-[#18181B] space-y-2">
-                  <div className="flex items-center gap-2 font-bold">
-                    <span>✓</span>
-                    <span>
-                      Anda sudah konfirmasi sebelumnya:{" "}
-                      <span className="underline">
-                        {status === "hadir" ? "Pasti Hadir" : status === "ragu" ? "Masih Ragu" : "Berhalangan"}
-                      </span>
+            /* =========================================================================
+                STATE 1 / STATE 3: FORMULIR RSVP (BARU ATAU MODE PENGUBAHAN)
+               ========================================================================= */
+            <form onSubmit={handleSubmit} className="space-y-4 animate-in fade-in duration-200">
+              {/* EDIT MODE CONTEXT BANNER */}
+              {hasConfirmed && isEditing && (
+                <div className="p-3.5 rounded-2xl bg-[#FFE600]/30 border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <span className="font-extrabold text-xs text-[#18181B] block">
+                      Mode Pengubahan Kehadiran
+                    </span>
+                    <span className="text-[11px] text-[#52525B] font-medium block">
+                      Pilihan saat ini:{" "}
+                      <strong>
+                        {status === "hadir"
+                          ? `Pasti Hadir (${jumlahHadir} orang)`
+                          : status === "ragu"
+                          ? "Masih Ragu"
+                          : "Berhalangan Hadir"}
+                      </strong>
                     </span>
                   </div>
-                  {status === "hadir" && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPhotoFeedback(null);
-                        setSubmitted(true);
-                      }}
-                      className="text-[11px] font-bold text-[#FF5D8F] underline hover:text-[#18181B] cursor-pointer block pl-6"
-                    >
-                      Buka Tiket Masuk QR Code &rarr;
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditing(false);
+                      setErrorMessage(null);
+                    }}
+                    className="text-[11px] font-extrabold text-[#18181B] underline hover:text-[#FF5D8F] cursor-pointer shrink-0"
+                  >
+                    Batal Ubah
+                  </button>
                 </div>
               )}
 
@@ -371,7 +480,7 @@ export default function RsvpSection({
                             setTamu(null);
                             onGuestChange?.(null);
                             setManualCode("");
-                            setExistingRsvp(false);
+                            setIsEditing(false);
                             setErrorMessage(null);
                           }}
                           className="text-[10px] text-[#71717A] hover:text-[#18181B] underline font-bold cursor-pointer"
@@ -474,24 +583,56 @@ export default function RsvpSection({
                 </div>
               )}
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 px-6 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-[2.5px] border-[#18181B] text-[#18181B] font-display text-xs uppercase tracking-wider font-extrabold shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#18181B]" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                    </svg>
-                    <span>Menyimpan RSVP...</span>
-                  </>
-                ) : (
-                  <span>Kirim Konfirmasi Kehadiran</span>
-                )}
-              </button>
+              {/* Submit Buttons Row */}
+              {hasConfirmed && isEditing ? (
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditing(false);
+                      setErrorMessage(null);
+                    }}
+                    className="w-full sm:w-auto px-6 py-3 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-neutral-100 text-xs font-bold text-[#18181B] cursor-pointer shadow-[2px_2px_0px_#18181B]"
+                  >
+                    Batal Ubah
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 py-3 px-6 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] font-display text-xs uppercase tracking-wider font-extrabold shadow-[4px_4px_0px_#18181B] hover:shadow-[5px_5px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#18181B]" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                        <span>Menyimpan Perubahan...</span>
+                      </>
+                    ) : (
+                      <span>Simpan Perubahan Kehadiran</span>
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-4 px-6 rounded-full bg-[#FFE600] hover:bg-[#FFD700] border-[2.5px] border-[#18181B] text-[#18181B] font-display text-xs uppercase tracking-wider font-extrabold shadow-[4px_4px_0px_#18181B] hover:shadow-[6px_6px_0px_#18181B] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_#18181B] transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#18181B]" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                      </svg>
+                      <span>Menyimpan RSVP...</span>
+                    </>
+                  ) : (
+                    <span>Kirim Konfirmasi Kehadiran</span>
+                  )}
+                </button>
+              )}
             </form>
           )}
         </div>
