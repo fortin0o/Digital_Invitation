@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import NeoSticker from "./NeoSticker";
 import NeoDivider from "./NeoDivider";
+import { useScrollLock } from "@/lib/scrollLock";
 
 const galleryImages = [
   {
@@ -48,19 +49,7 @@ export default function GallerySection() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // Prevent background scroll when lightbox is open
-  useEffect(() => {
-    if (!selectedImage) return;
-
-    const originalOverflow = document.body.style.overflow;
-    const originalOverscroll = document.body.style.overscrollBehavior;
-    document.body.style.overflow = "hidden";
-    document.body.style.overscrollBehavior = "none";
-
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.overscrollBehavior = originalOverscroll;
-    };
-  }, [selectedImage]);
+  useScrollLock(Boolean(selectedImage));
 
   return (
     <section className="relative w-full py-6 sm:py-8 px-4 overflow-hidden">

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { useScrollLock } from "@/lib/scrollLock";
 
 interface AdminHeaderProps {
   userLabel: string;
@@ -33,34 +34,7 @@ export default function AdminHeader({
   ];
 
   // Prevent background scroll when mobile menu is open
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalBodyOverscroll = document.body.style.overscrollBehavior;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
-
-    document.documentElement.style.overflow = "hidden";
-    document.documentElement.style.overscrollBehavior = "none";
-    document.body.style.overflow = "hidden";
-    document.body.style.overscrollBehavior = "none";
-
-    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
-    if (lenis) {
-      lenis.stop();
-    }
-
-    return () => {
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
-      document.body.style.overflow = originalBodyOverflow;
-      document.body.style.overflow = originalBodyOverscroll;
-      if (lenis) {
-        lenis.start();
-      }
-    };
-  }, [mobileMenuOpen]);
+  useScrollLock(mobileMenuOpen);
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-[#18181B] shadow-[0_2px_0px_#18181B] font-sans">

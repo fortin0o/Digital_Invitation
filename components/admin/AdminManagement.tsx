@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
+import { useScrollLock } from "@/lib/scrollLock";
 import {
   AdminRole,
   formatWriteErrorMessage,
@@ -135,34 +136,7 @@ export default function AdminManagement({
   }, []);
 
   // Prevent background scroll when modal is open
-  useEffect(() => {
-    if (!showAddModal) return;
-
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalBodyOverscroll = document.body.style.overscrollBehavior;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
-
-    document.documentElement.style.overflow = "hidden";
-    document.documentElement.style.overscrollBehavior = "none";
-    document.body.style.overflow = "hidden";
-    document.body.style.overscrollBehavior = "none";
-
-    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
-    if (lenis) {
-      lenis.stop();
-    }
-
-    return () => {
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
-      document.body.style.overflow = originalBodyOverflow;
-      document.body.style.overscrollBehavior = originalBodyOverscroll;
-      if (lenis) {
-        lenis.start();
-      }
-    };
-  }, [showAddModal]);
+  useScrollLock(showAddModal);
 
   useEffect(() => {
     let active = true;

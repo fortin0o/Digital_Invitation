@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useScrollLock } from "@/lib/scrollLock";
 import { formatWriteErrorMessage } from "@/lib/adminAuth";
 import {
   WaShareConfig,
@@ -88,35 +89,8 @@ export default function GuestManagement({
   };
 
   // Prevent background scroll when any modal is open on mobile/desktop
-  useEffect(() => {
-    const isModalOpen = Boolean(showAddModal || qrModalGuest || showWaConfigModal);
-    if (!isModalOpen) return;
-
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalBodyOverscroll = document.body.style.overscrollBehavior;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
-
-    document.documentElement.style.overflow = "hidden";
-    document.documentElement.style.overscrollBehavior = "none";
-    document.body.style.overflow = "hidden";
-    document.body.style.overscrollBehavior = "none";
-
-    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
-    if (lenis) {
-      lenis.stop();
-    }
-
-    return () => {
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
-      document.body.style.overflow = originalBodyOverflow;
-      document.body.style.overscrollBehavior = originalBodyOverscroll;
-      if (lenis) {
-        lenis.start();
-      }
-    };
-  }, [showAddModal, qrModalGuest, showWaConfigModal]);
+  const isModalOpen = Boolean(showAddModal || qrModalGuest || showWaConfigModal);
+  useScrollLock(isModalOpen);
 
   const generateUniqueCode = () => {
     return Math.floor(10000000 + Math.random() * 90000000).toString();

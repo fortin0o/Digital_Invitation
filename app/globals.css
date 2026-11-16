@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "lenis/dist/lenis.css";
 
 @theme {
   --color-neo-yellow: #FFE600;
@@ -22,7 +21,7 @@
 }
 
 html {
-  scroll-behavior: auto;
+  scroll-behavior: smooth;
   background-color: #FFFDF5;
   overflow-x: hidden;
   max-width: 100vw;

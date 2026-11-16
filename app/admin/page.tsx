@@ -13,6 +13,7 @@ import GuestManagement, { GuestItem } from "@/components/admin/GuestManagement";
 import GreetingsManagement, { UcapanItem } from "@/components/admin/GreetingsManagement";
 import AdminManagement from "@/components/admin/AdminManagement";
 import InvitationCms from "@/components/admin/InvitationCms";
+import { forceUnlockScroll } from "@/lib/scrollLock";
 
 interface UndanganInfo {
   id_undangan: string;
@@ -98,6 +99,11 @@ export default function AdminPage() {
   const [guests, setGuests] = useState<GuestItem[]>([]);
   const [greetings, setGreetings] = useState<UcapanItem[]>([]);
   const [reportCopied, setReportCopied] = useState(false);
+
+  // Guarantee all scroll locks are cleared when switching dashboard tabs
+  useEffect(() => {
+    forceUnlockScroll();
+  }, [activeTab]);
 
   // Verify active Supabase Auth session and admin allowlist
   useEffect(() => {

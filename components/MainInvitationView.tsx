@@ -54,12 +54,7 @@ export default function MainInvitationView({
   const handleOpenInvitation = () => {
     setIsOpen(true);
     setTimeout(() => {
-      const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number | string | HTMLElement, opts?: unknown) => void } }).__lenis;
-      if (lenis) {
-        lenis.scrollTo(0, { immediate: true });
-      } else {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }, 60);
   };
 
