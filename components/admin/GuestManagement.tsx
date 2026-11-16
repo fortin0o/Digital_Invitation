@@ -13,6 +13,7 @@ import {
   DEFAULT_WA_TEMPLATE,
   DEFAULT_PRODUCTION_DOMAIN,
 } from "@/lib/invitationShareConfig";
+import PrintableGuestReport from "./PrintableGuestReport";
 
 export interface GuestItem {
   id_tamu: string;
@@ -60,6 +61,7 @@ export default function GuestManagement({
   const [qrModalGuest, setQrModalGuest] = useState<GuestItem | null>(null);
   const [waConfig, setWaConfig] = useState<WaShareConfig>(getStoredWaConfig);
   const [showWaConfigModal, setShowWaConfigModal] = useState(false);
+  const [showPrintModal, setShowPrintModal] = useState(false);
   const [tempWaConfig, setTempWaConfig] = useState<WaShareConfig>(getStoredWaConfig);
 
   const showToast = (msg: string) => {
@@ -89,7 +91,9 @@ export default function GuestManagement({
   };
 
   // Prevent background scroll when any modal is open on mobile/desktop
-  const isModalOpen = Boolean(showAddModal || qrModalGuest || showWaConfigModal);
+  const isModalOpen = Boolean(
+    showAddModal || qrModalGuest || showWaConfigModal || showPrintModal
+  );
   useScrollLock(isModalOpen);
 
   const generateUniqueCode = () => {
@@ -393,10 +397,10 @@ export default function GuestManagement({
 
             {/* Print / PDF Report Button */}
             <button
-              onClick={() => window.print()}
+              onClick={() => setShowPrintModal(true)}
               type="button"
               className="inline-flex items-center justify-center gap-1 px-2 sm:px-3 py-2 rounded-xl bg-[#FFFDF5] hover:bg-[#FFE600] border-2 border-[#18181B] text-[#18181B] text-[11px] sm:text-xs font-bold shadow-[2px_2px_0px_#18181B] transition-all cursor-pointer"
-              title="Cetak Laporan Tamu atau Simpan sebagai PDF"
+              title="Pratinjau & Cetak Laporan Tamu atau Simpan sebagai PDF"
             >
               <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -1069,6 +1073,74 @@ export default function GuestManagement({
                 >
                   Simpan Pengaturan
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Print Preview & Official PDF Export Modal */}
+      {showPrintModal && (
+        <div
+          onClick={() => setShowPrintModal(false)}
+          onWheel={(e) => {
+            if (e.target === e.currentTarget) e.preventDefault();
+          }}
+          className="fixed inset-0 z-50 bg-[#18181B]/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 animate-in fade-in overflow-hidden"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
+            className="w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl border-[3px] border-[#18181B] shadow-[8px_8px_0px_#FFE600] p-4 sm:p-6 relative max-h-[92vh] flex flex-col overscroll-contain"
+          >
+            {/* Modal Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-3 border-b-2 border-[#18181B] gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#2EE59D] border border-[#18181B]" />
+                  <h3 className="font-display text-base sm:text-lg font-extrabold text-[#18181B]">
+                    Pratinjau Dokumen Laporan Resmi (PDF / Cetak)
+                  </h3>
+                </div>
+                <p className="text-[11px] sm:text-xs text-[#52525B] font-medium mt-0.5">
+                  Format A4 standar dengan kop resmi, rekapitulasi kehadiran, tabel lengkap tamu, dan kolom pengesahan.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowPrintModal(false)}
+                  className="px-3 sm:px-4 py-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-neutral-100 text-xs font-bold cursor-pointer"
+                >
+                  Tutup
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.print();
+                  }}
+                  className="px-4 sm:px-5 py-2 rounded-xl border-2 border-[#18181B] bg-[#FFE600] hover:bg-[#FFD700] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] flex items-center gap-1.5 cursor-pointer"
+                >
+                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                  </svg>
+                  <span>Cetak / Simpan PDF Sekarang</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Document Preview Sheet (Simulated A4 Paper) */}
+            <div className="flex-1 overflow-y-auto overscroll-contain bg-neutral-100 p-2 sm:p-6 rounded-xl border-2 border-[#18181B]/20">
+              <div className="max-w-[794px] mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-md border border-neutral-300">
+                <PrintableGuestReport
+                  guests={filteredGuests.length > 0 ? filteredGuests : guests}
+                  coupleName={coupleName}
+                  isModalPreview={true}
+                />
               </div>
             </div>
           </div>

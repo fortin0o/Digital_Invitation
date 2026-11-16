@@ -13,6 +13,7 @@ import GuestManagement, { GuestItem } from "@/components/admin/GuestManagement";
 import GreetingsManagement, { UcapanItem } from "@/components/admin/GreetingsManagement";
 import AdminManagement from "@/components/admin/AdminManagement";
 import InvitationCms from "@/components/admin/InvitationCms";
+import PrintableGuestReport from "@/components/admin/PrintableGuestReport";
 import { forceUnlockScroll } from "@/lib/scrollLock";
 
 interface UndanganInfo {
@@ -309,14 +310,15 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#FFFDF5] text-[#18181B] flex flex-col font-sans">
-      <AdminHeader
-        userLabel={userEmail}
-        userRole={userRole}
-        onLogout={handleLogout}
-        activeTab={currentTab}
-        setActiveTab={setActiveTab}
-        coupleTitle={coupleTitle}
-      />
+      <div className="screen-only min-h-screen flex flex-col">
+        <AdminHeader
+          userLabel={userEmail}
+          userRole={userRole}
+          onLogout={handleLogout}
+          activeTab={currentTab}
+          setActiveTab={setActiveTab}
+          coupleTitle={coupleTitle}
+        />
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {fetchError && (
@@ -380,26 +382,40 @@ export default function AdminPage() {
                       Estimasi kehadiran saat ini: <strong className="text-[#18181B] font-extrabold">{stats.totalHadirOrang} orang</strong> dari {stats.totalHadirTamu} undangan terkonfirmasi.
                     </p>
                   </div>
-                  <button
-                    onClick={() => {
-                      const text = `REKAP RSVP WEDDING ${coupleTitle.toUpperCase()}\n-----------------------------\nTotal Undangan: ${stats.totalTamu}\nKonfirmasi Hadir: ${stats.totalHadirOrang} Orang (${stats.totalHadirTamu} Tamu)\nMasih Ragu: ${stats.totalRagu} Tamu\nTidak Hadir: ${stats.totalTidakHadir} Tamu\nBelum Merespon: ${stats.totalBelumKonfirmasi} Tamu`;
-                      navigator.clipboard.writeText(text);
-                      setReportCopied(true);
-                      setTimeout(() => setReportCopied(false), 2500);
-                    }}
-                    type="button"
-                    className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full border-2 border-[#18181B] text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-[2px_2px_0px_#18181B] ${
-                      reportCopied
-                        ? "bg-[#2EE59D] text-[#18181B]"
-                        : "bg-[#FFE600] text-[#18181B] hover:bg-[#FFD700]"
-                    }`}
-                  >
-                    {reportCopied ? (
-                      <span>Laporan Berhasil Tersalin</span>
-                    ) : (
-                      <span>Salin Format Laporan</span>
-                    )}
-                  </button>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                    <button
+                      onClick={() => window.print()}
+                      type="button"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-[2px_2px_0px_#18181B]"
+                      title="Cetak Laporan Resmi Tamu & RSVP ke PDF / Printer"
+                    >
+                      <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                      </svg>
+                      <span>Cetak Laporan PDF</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        const text = `REKAP RSVP WEDDING ${coupleTitle.toUpperCase()}\n-----------------------------\nTotal Undangan: ${stats.totalTamu}\nKonfirmasi Hadir: ${stats.totalHadirOrang} Orang (${stats.totalHadirTamu} Tamu)\nMasih Ragu: ${stats.totalRagu} Tamu\nTidak Hadir: ${stats.totalTidakHadir} Tamu\nBelum Merespon: ${stats.totalBelumKonfirmasi} Tamu`;
+                        navigator.clipboard.writeText(text);
+                        setReportCopied(true);
+                        setTimeout(() => setReportCopied(false), 2500);
+                      }}
+                      type="button"
+                      className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full border-2 border-[#18181B] text-xs font-bold transition-all whitespace-nowrap cursor-pointer shadow-[2px_2px_0px_#18181B] ${
+                        reportCopied
+                          ? "bg-[#2EE59D] text-[#18181B]"
+                          : "bg-[#FFE600] text-[#18181B] hover:bg-[#FFD700]"
+                      }`}
+                    >
+                      {reportCopied ? (
+                        <span>Laporan Berhasil Tersalin</span>
+                      ) : (
+                        <span>Salin Format Laporan</span>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Recent guests preview table */}
@@ -472,6 +488,20 @@ export default function AdminPage() {
         )}
       </main>
     </div>
+
+    {/* Official PDF Document Report (Rendered ONLY in print/PDF output) */}
+    <PrintableGuestReport
+      guests={guests}
+      coupleName={coupleTitle}
+      weddingDate={undangan?.tgl_acara || undefined}
+      venue={
+        undangan?.tempat
+          ? `${undangan.tempat}${undangan.alamat ? `, ${undangan.alamat}` : ""}`
+          : undefined
+      }
+      printedBy={userEmail}
+    />
+  </div>
   );
 }
 
