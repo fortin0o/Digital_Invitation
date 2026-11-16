@@ -232,7 +232,7 @@ digital_invitation/
 │       └── login/                 # Pengarah rute login
 │
 ├── components/                    # Komponen Antarmuka Terstruktur
-│   ├── admin/                     # 🛡️ Khusus Administrator (Super Admin & Admin Acara)
+│   ├── admin/                     # Khusus Administrator (Super Admin & Admin Acara)
 │   │   ├── AdminHeader.tsx        # Navigasi & profil admin
 │   │   ├── AdminLoginForm.tsx     # Form login & aktivasi password Supabase
 │   │   ├── AdminManagement.tsx    # Manajemen akun & hak peran admin
@@ -242,7 +242,7 @@ digital_invitation/
 │   │   ├── PrintableGuestReport.tsx# Dokumen cetak laporan resmi A4
 │   │   └── RsvpSummaryCards.tsx   # Kartu statistik RSVP & katering
 │   │
-│   ├── invitation/                # 💌 Khusus Tamu Undangan (Guest / Publik)
+│   ├── invitation/                # Khusus Tamu Undangan (Guest / Publik)
 │   │   ├── MainInvitationView.tsx # Kontainer orkestrasi seluruh section undangan
 │   │   ├── CoverSection.tsx       # Cover pembuka dengan nama personal tamu
 │   │   ├── HeroSection.tsx        # Hero banner & countdown akad/resepsi
@@ -255,11 +255,11 @@ digital_invitation/
 │   │   ├── QuoteSection.tsx       # Kutipan doa & ayat suci
 │   │   └── FooterSection.tsx      # Penutup & ucapan terima kasih
 │   │
-│   ├── ui/                        # 🎨 Primitif Desain Neobrutalism Bersama
+│   ├── ui/                        # Primitif Desain Neobrutalism Bersama
 │   │   ├── NeoSticker.tsx         # Stiker visual kontras tinggi & sudut rotasi
 │   │   └── NeoDivider.tsx         # Garis pembatas neobrutal 3px dengan dot aksen
 │   │
-│   └── providers/                 # ⚙️ Wrapper Global & Efek Scroll
+│   └── providers/                 #  Wrapper Global & Efek Scroll
 │       ├── SmoothScrollProvider.tsx# Inisialisasi Lenis smooth scrolling
 │       └── ScrollFadeProvider.tsx # Observer animasi kemunculan elemen
 │
@@ -336,6 +336,9 @@ erDiagram
 ---
 
 ## Struktur dan Kamus Data
+
+> [!TIP]
+> Berkas rancangan basis data resmi dalam format spreadsheet Microsoft Excel siap kumpul/cetak telah disediakan: [`Rancangan_Database_WeddingMu.xlsx`](Rancangan_Database_WeddingMu.xlsx) (tersedia juga di [`docs/Rancangan_Database_WeddingMu.xlsx`](docs/Rancangan_Database_WeddingMu.xlsx)). Berkas ini memuat 8 lembar kerja (*sheets*) yang mencakup Ringkasan Proyek, Kamus Data Lengkap seluruh atribut, Spesifikasi per Tabel, serta Matriks Relasi ERD & Aturan Kaskade.
 
 ### 1. Tabel `public.undangan`
 Menyimpan konfigurasi acara pernikahan yang dikelola melalui fitur CMS Admin.
