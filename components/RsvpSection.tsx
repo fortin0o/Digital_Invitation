@@ -98,6 +98,48 @@ export default function RsvpSection({
   const maxQuota = Math.max(tamu?.kuota || 1, 1);
   const hasConfirmed = Boolean(tamu?.rsvp_status);
 
+  // Nilai resmi yang sudah tersimpan di database
+  const savedRsvpStatus: RsvpStatus = tamu?.rsvp_status || "hadir";
+  const savedGuestCount =
+    savedRsvpStatus === "tidak_hadir"
+      ? 0
+      : Math.min(Math.max(tamu?.rsvp_jumlah_hadir || 1, 1), maxQuota);
+
+  // Masuk ke mode edit dengan data prefilled dari database
+  const handleStartEdit = () => {
+    if (tamu) {
+      const currentSavedStatus: RsvpStatus = tamu.rsvp_status || "hadir";
+      const currentCount =
+        currentSavedStatus === "tidak_hadir"
+          ? 1
+          : Math.min(Math.max(tamu.rsvp_jumlah_hadir || 1, 1), maxQuota);
+      setStatus(currentSavedStatus);
+      setJumlahHadir(currentCount);
+    }
+    setIsEditing(true);
+    setErrorMessage(null);
+    setPhotoFeedback(null);
+  };
+
+  // Batalkan pengubahan dan kembalikan state form ke data tersimpan tanpa submit ke database
+  const handleCancelEdit = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (tamu) {
+      const currentSavedStatus: RsvpStatus = tamu.rsvp_status || "hadir";
+      const currentCount =
+        currentSavedStatus === "tidak_hadir"
+          ? 1
+          : Math.min(Math.max(tamu.rsvp_jumlah_hadir || 1, 1), maxQuota);
+      setStatus(currentSavedStatus);
+      setJumlahHadir(currentCount);
+    }
+    setIsEditing(false);
+    setErrorMessage(null);
+  };
+
   const handleManualCheck = async () => {
     const trimmedCode = manualCode.trim();
     if (!trimmedCode) {
@@ -181,8 +223,11 @@ export default function RsvpSection({
 
       setTamu(updatedGuest);
       onGuestChange?.(updatedGuest);
+      setStatus(savedStatus);
       if (savedStatus !== "tidak_hadir") {
         setJumlahHadir(Math.min(Math.max(savedCount || 1, 1), guestQuota));
+      } else {
+        setJumlahHadir(1);
       }
       setPhotoFeedback(null);
       setIsEditing(false);
@@ -202,10 +247,10 @@ export default function RsvpSection({
     setPhotoFeedback(null);
     try {
       await downloadQrTicketAsPhoto({
-        qrData: `WEDDING-ARYA-SEKAR:${tamu.kode}:${tamu.nama_tamu}:${jumlahHadir}`,
+        qrData: `WEDDING-ARYA-SEKAR:${tamu.kode}:${tamu.nama_tamu}:${savedGuestCount}`,
         guestCode: tamu.kode,
         guestName: tamu.nama_tamu,
-        guestCount: jumlahHadir,
+        guestCount: savedGuestCount,
         coupleName,
       });
       setPhotoFeedback({
@@ -261,21 +306,21 @@ export default function RsvpSection({
               {/* Status Header Icon */}
               <div
                 className={`w-12 h-12 mx-auto mb-3 rounded-full border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] flex items-center justify-center text-lg font-black text-[#18181B] ${
-                  status === "hadir"
+                  savedRsvpStatus === "hadir"
                     ? "bg-[#2EE59D]"
-                    : status === "ragu"
+                    : savedRsvpStatus === "ragu"
                     ? "bg-[#FFE600]"
                     : "bg-[#FF5D8F]"
                 }`}
               >
-                {status === "hadir" ? "✓" : status === "ragu" ? "?" : "✕"}
+                {savedRsvpStatus === "hadir" ? "✓" : savedRsvpStatus === "ragu" ? "?" : "✕"}
               </div>
 
               {/* Status Title */}
               <h3 className="font-display font-extrabold text-2xl text-[#18181B] mb-1">
-                {status === "hadir"
+                {savedRsvpStatus === "hadir"
                   ? "Konfirmasi Kehadiran Tersimpan"
-                  : status === "ragu"
+                  : savedRsvpStatus === "ragu"
                   ? "Status: Masih Ragu"
                   : "Konfirmasi: Berhalangan Hadir"}
               </h3>
@@ -284,17 +329,17 @@ export default function RsvpSection({
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-xs font-black my-2">
                 <span
                   className={`w-2.5 h-2.5 rounded-full border border-[#18181B] ${
-                    status === "hadir"
+                    savedRsvpStatus === "hadir"
                       ? "bg-[#2EE59D]"
-                      : status === "ragu"
+                      : savedRsvpStatus === "ragu"
                       ? "bg-[#FFE600]"
                       : "bg-[#FF5D8F]"
                   }`}
                 />
                 <span>
-                  {status === "hadir"
-                    ? `Pasti Hadir (${jumlahHadir} Orang)`
-                    : status === "ragu"
+                  {savedRsvpStatus === "hadir"
+                    ? `Pasti Hadir (${savedGuestCount} Orang)`
+                    : savedRsvpStatus === "ragu"
                     ? "Masih Ragu"
                     : "Berhalangan Hadir"}
                 </span>
@@ -302,17 +347,17 @@ export default function RsvpSection({
 
               {/* Dynamic Friendly Message based on status */}
               <div className="font-sans text-xs text-[#52525B] leading-relaxed mb-4 font-medium max-w-sm mx-auto">
-                {status === "hadir" && (
+                {savedRsvpStatus === "hadir" && (
                   <p>
                     Terima kasih atas konfirmasinya. Kami sangat menantikan kehadiran Anda di hari bahagia kami.
                   </p>
                 )}
-                {status === "ragu" && (
+                {savedRsvpStatus === "ragu" && (
                   <p>
                     Jawaban Anda telah kami simpan. Kuota undangan ({maxQuota} orang) tetap kami alokasikan sementara. Anda dapat memastikan kehadiran sewaktu-waktu.
                   </p>
                 )}
-                {status === "tidak_hadir" && (
+                {savedRsvpStatus === "tidak_hadir" && (
                   <p>
                     Terima kasih telah memberi kabar. Kami sangat memahami jika Anda belum dapat hadir secara langsung. Doa restu Anda tetap menjadi kado terindah bagi kami.
                   </p>
@@ -326,14 +371,14 @@ export default function RsvpSection({
               </div>
 
               {/* DIGITAL PASS TIKET RESEPSI (KHUSUS STATUS HADIR) */}
-              {status === "hadir" && tamu && (
+              {savedRsvpStatus === "hadir" && tamu && (
                 <div className="my-4 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] max-w-xs mx-auto text-center relative">
                   <div className="flex items-center justify-between pb-2 border-b-2 border-dashed border-[#18181B] mb-4">
                     <span className="font-display text-xs font-black uppercase tracking-wider text-[#18181B]">
                       TIKET MASUK RESEPSI
                     </span>
                     <span className="font-sans text-[10px] bg-[#FFE600] text-[#18181B] font-bold px-2 py-0.5 rounded-full border border-[#18181B]">
-                      {jumlahHadir} Orang
+                      {savedGuestCount} Orang
                     </span>
                   </div>
 
@@ -342,7 +387,7 @@ export default function RsvpSection({
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
-                        `WEDDING-ARYA-SEKAR:${tamu.kode}:${tamu.nama_tamu}:${jumlahHadir}`
+                        `WEDDING-ARYA-SEKAR:${tamu.kode}:${tamu.nama_tamu}:${savedGuestCount}`
                       )}&color=18181B&bgcolor=FFFFFF`}
                       alt="QR Code Tiket Masuk Resepsi"
                       className="w-36 h-36 mx-auto rounded-lg"
@@ -391,11 +436,7 @@ export default function RsvpSection({
               <div className="mt-6 pt-4 border-t-2 border-dashed border-[#18181B]/20 text-center">
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsEditing(true);
-                    setErrorMessage(null);
-                    setPhotoFeedback(null);
-                  }}
+                  onClick={handleStartEdit}
                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-black transition-all cursor-pointer shadow-[2px_2px_0px_#18181B] hover:shadow-[3px_3px_0px_#18181B]"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -407,7 +448,7 @@ export default function RsvpSection({
                     />
                   </svg>
                   <span>
-                    {status === "hadir"
+                    {savedRsvpStatus === "hadir"
                       ? "Ubah Konfirmasi Kehadiran"
                       : "Perbarui Konfirmasi Kehadiran"}
                   </span>
@@ -430,11 +471,11 @@ export default function RsvpSection({
                       Mode Pengubahan Kehadiran
                     </span>
                     <span className="text-[11px] text-[#52525B] font-medium block">
-                      Pilihan saat ini:{" "}
+                      Pilihan sebelumnya:{" "}
                       <strong>
-                        {status === "hadir"
-                          ? `Pasti Hadir (${jumlahHadir} orang)`
-                          : status === "ragu"
+                        {savedRsvpStatus === "hadir"
+                          ? `Pasti Hadir (${savedGuestCount} orang)`
+                          : savedRsvpStatus === "ragu"
                           ? "Masih Ragu"
                           : "Berhalangan Hadir"}
                       </strong>
@@ -442,10 +483,7 @@ export default function RsvpSection({
                   </div>
                   <button
                     type="button"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setErrorMessage(null);
-                    }}
+                    onClick={handleCancelEdit}
                     className="text-[11px] font-extrabold text-[#18181B] underline hover:text-[#FF5D8F] cursor-pointer shrink-0"
                   >
                     Batal Ubah
@@ -588,10 +626,7 @@ export default function RsvpSection({
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-2">
                   <button
                     type="button"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setErrorMessage(null);
-                    }}
+                    onClick={handleCancelEdit}
                     className="w-full sm:w-auto px-6 py-3 rounded-full border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-neutral-100 text-xs font-bold text-[#18181B] cursor-pointer shadow-[2px_2px_0px_#18181B]"
                   >
                     Batal Ubah
