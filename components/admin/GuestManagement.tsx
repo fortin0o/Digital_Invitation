@@ -179,12 +179,6 @@ export default function GuestManagement({
     return buildInvitationUrl(kode, slug, waConfig);
   };
 
-  const copyInvitationLink = (kode: string, nama: string) => {
-    const url = getInvitationUrl(kode);
-    navigator.clipboard.writeText(url);
-    showToast(`Link untuk ${nama} berhasil disalin!`);
-  };
-
   const openInvitationLink = (kode: string) => {
     const url = getInvitationUrl(kode);
     window.open(url, "_blank", "noopener,noreferrer");
@@ -479,7 +473,7 @@ export default function GuestManagement({
                             <button
                               onClick={() => setQrModalGuest(tamu)}
                               type="button"
-                              className="px-2 py-1 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-[11px] font-bold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
+                              className="px-2.5 py-1.5 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-[11px] font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
                               title="Lihat QR Code Tiket"
                             >
                               QR
@@ -487,22 +481,16 @@ export default function GuestManagement({
                             <button
                               onClick={() => openInvitationLink(tamu.kode)}
                               type="button"
-                              className="px-3 py-1 rounded-lg border-2 border-[#18181B] bg-[#38BDF8] hover:bg-[#7DD3FC] text-[#18181B] text-[11px] font-extrabold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer whitespace-nowrap"
+                              className="px-3 py-1.5 rounded-lg border-2 border-[#18181B] bg-[#38BDF8] hover:bg-[#7DD3FC] text-[#18181B] text-[11px] font-extrabold shadow-[2px_2px_0px_#18181B] cursor-pointer whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5"
                               title="Buka Undangan Pribadi di Tab Baru"
                             >
                               Buka Link
                             </button>
                             <button
-                              onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
-                              type="button"
-                              className="px-3 py-1 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer whitespace-nowrap"
-                            >
-                              Salin Link
-                            </button>
-                            <button
                               onClick={() => openWhatsApp(tamu)}
                               type="button"
-                              className="px-3 py-1 rounded-lg border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-[11px] font-extrabold shadow-[1.5px_1.5px_0px_#18181B] cursor-pointer"
+                              className="px-3 py-1.5 rounded-lg border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-[11px] font-extrabold shadow-[2px_2px_0px_#18181B] cursor-pointer whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5"
+                              title="Kirim Undangan WhatsApp"
                             >
                               WhatsApp
                             </button>
@@ -510,7 +498,7 @@ export default function GuestManagement({
                               onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
                               disabled={deletingId === tamu.id_tamu}
                               type="button"
-                              className="p-1 rounded-lg border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 cursor-pointer shadow-[1.5px_1.5px_0px_#18181B] disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="p-1.5 rounded-lg border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 cursor-pointer shadow-[2px_2px_0px_#18181B] disabled:opacity-50 disabled:cursor-not-allowed active:translate-x-0.5 active:translate-y-0.5"
                               title="Hapus Tamu"
                             >
                               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -566,33 +554,26 @@ export default function GuestManagement({
                       </div>
                     </div>
 
-                    {/* Touch-optimized action buttons */}
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#18181B]/10">
+                    {/* Touch-optimized action buttons (2x2 symmetrical grid) */}
+                    <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[#18181B]/10">
                       <button
                         onClick={() => openInvitationLink(tamu.kode)}
                         type="button"
-                        className="col-span-2 py-2 px-3 rounded-xl border-2 border-[#18181B] bg-[#38BDF8] hover:bg-[#7DD3FC] text-[#18181B] text-xs font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#38BDF8] hover:bg-[#7DD3FC] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
                       >
-                        <span>Buka Link Undangan</span>
-                      </button>
-                      <button
-                        onClick={() => copyInvitationLink(tamu.kode, tamu.nama_tamu)}
-                        type="button"
-                        className="py-2 px-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
-                      >
-                        <span>Salin Link</span>
+                        <span>Buka Link</span>
                       </button>
                       <button
                         onClick={() => openWhatsApp(tamu)}
                         type="button"
-                        className="py-2 px-2 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-[11px] font-extrabold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#2EE59D] hover:bg-[#28D08D] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
                       >
                         <span>WhatsApp</span>
                       </button>
                       <button
                         onClick={() => setQrModalGuest(tamu)}
                         type="button"
-                        className="py-2 px-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-[11px] font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer"
+                        className="py-2.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
                       >
                         <span>Tiket QR</span>
                       </button>
@@ -600,9 +581,9 @@ export default function GuestManagement({
                         onClick={() => handleDeleteGuest(tamu.id_tamu, tamu.nama_tamu)}
                         disabled={deletingId === tamu.id_tamu}
                         type="button"
-                        className="py-2 px-2 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-[11px] font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="py-2.5 px-3 rounded-xl border-2 border-[#18181B] bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:translate-x-0.5 active:translate-y-0.5"
                       >
-                        <span>{deletingId === tamu.id_tamu ? "Menghapus..." : "Hapus"}</span>
+                        <span>{deletingId === tamu.id_tamu ? "Menghapus..." : "Hapus Tamu"}</span>
                       </button>
                     </div>
                   </div>
@@ -831,21 +812,14 @@ export default function GuestManagement({
               <button
                 type="button"
                 onClick={() => openInvitationLink(qrModalGuest.kode)}
-                className="py-2 rounded-xl border-2 border-[#18181B] bg-[#38BDF8] hover:bg-[#7DD3FC] text-[#18181B] text-xs font-extrabold cursor-pointer"
+                className="py-2.5 rounded-xl border-2 border-[#18181B] bg-[#38BDF8] hover:bg-[#7DD3FC] text-[#18181B] text-xs font-black cursor-pointer shadow-[2px_2px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 text-center"
               >
                 Buka Link
               </button>
               <button
                 type="button"
-                onClick={() => copyInvitationLink(qrModalGuest.kode, qrModalGuest.nama_tamu)}
-                className="py-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-xs font-bold cursor-pointer"
-              >
-                Salin Link
-              </button>
-              <button
-                type="button"
                 onClick={() => setQrModalGuest(null)}
-                className="col-span-2 py-2 rounded-xl bg-[#18181B] text-white text-xs font-bold cursor-pointer"
+                className="py-2.5 rounded-xl bg-[#18181B] hover:bg-[#27272A] text-white text-xs font-bold cursor-pointer text-center active:translate-x-0.5 active:translate-y-0.5"
               >
                 Tutup
               </button>

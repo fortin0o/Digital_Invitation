@@ -99,7 +99,7 @@ Pusat statistik kehadiran real-time menampilkan metrik total tamu, konfirmasi ha
 <br />
 
 ### 6. Manajemen Tamu Undangan & Generator WhatsApp
-Tabel data tamu interaktif dengan fitur pencarian instan, filter status, pengubah kuota, penyalin tautan personal, dan generator pesan WhatsApp satu klik.
+Tabel data tamu interaktif dengan fitur pencarian instan, filter status, pengubah kuota, pembuka tautan undangan, tiket QR, dan generator pesan WhatsApp satu klik.
 <div align="center">
   <img src="docs/screenshots/guest_management.png" alt="Manajemen Tamu Undangan" width="820" />
 </div>
@@ -418,7 +418,7 @@ Berfokus pada pengelolaan operasional acara dan koordinasi logistik kehadiran ta
 **Tugas dan Pekerjaan:**
 - **Kustomisasi Detail Acara (CMS):** Menyesuaikan informasi tempat, waktu, dan tautan lokasi perayaan jika terjadi pembaruan jadwal.
 - **Pengelolaan Daftar Tamu:** Menginput daftar nama tamu dan kuota rombongan keluarga yang diundang.
-- **Distribusi Undangan Personal:** Menyalin tautan undangan unik atau mengirim pesan otomatis ke nomor WhatsApp tamu melalui fitur *Quick Share*.
+- **Distribusi Undangan Personal:** Membuka tautan undangan langsung atau mengirim pesan personal ke nomor WhatsApp tamu melalui fitur *Quick Share*.
 - **Pemantauan Katering & Respon:** Memantau kepastian jumlah kehadiran aktual secara langsung untuk koordinasi dengan tim katering dan panitia penerima tamu.
 - **Ekspor dan Pencetakan Laporan:** Mengunduh rekapitulasi kehadiran tamu ke format Excel serta mencetak dokumen laporan A4 untuk kebutuhan arsip fisik kepanitiaan.
 - **Moderasi Ucapan Doa:** Meninjau pesan ucapan dan doa restu yang masuk di buku tamu digital.
