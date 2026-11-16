@@ -11,8 +11,8 @@ import RsvpSection from "./RsvpSection";
 import DigitalGiftSection from "./DigitalGiftSection";
 import GuestbookSection from "./GuestbookSection";
 import FooterSection from "./FooterSection";
-import ScrollFadeProvider from "./ScrollFadeProvider";
-import NeoSticker from "./NeoSticker";
+import ScrollFadeProvider from "@/components/providers/ScrollFadeProvider";
+import NeoSticker from "@/components/ui/NeoSticker";
 import { TamuWithRsvp, UndanganData } from "@/lib/guestInvitation";
 
 interface MainInvitationViewProps {

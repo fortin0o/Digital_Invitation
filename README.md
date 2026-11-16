@@ -215,6 +215,65 @@ flowchart LR
     end
 ```
 
+### 3. Struktur Direktori Berbasis Peran (*Role & Domain-Driven Structure*)
+
+Untuk mempermudah pemeliharaan (*maintainability*) dan pemisahan tanggung jawab (*separation of concerns*), struktur kode dikelompokkan secara terisolasi berdasarkan peran pengguna dan fungsionalitasnya:
+
+```
+digital_invitation/
+├── app/                           # App Router (Next.js 16)
+│   ├── layout.tsx                 # Root layout & font provider
+│   ├── page.tsx                   # Halaman undangan publik root (?to=kode)
+│   ├── [slug]/                    # Rute dinamis undangan berdasarkan slug
+│   │   └── [kode]/                # Rute undangan slug + kode tamu
+│   └── admin/                     # Rute dashboard admin
+│       ├── layout.tsx             # Layout khusus admin panel
+│       ├── page.tsx               # Dashboard utama admin (Overview, Tamu, CMS, Doa, Admin)
+│       └── login/                 # Pengarah rute login
+│
+├── components/                    # Komponen Antarmuka Terstruktur
+│   ├── admin/                     # 🛡️ Khusus Administrator (Super Admin & Admin Acara)
+│   │   ├── AdminHeader.tsx        # Navigasi & profil admin
+│   │   ├── AdminLoginForm.tsx     # Form login & aktivasi password Supabase
+│   │   ├── AdminManagement.tsx    # Manajemen akun & hak peran admin
+│   │   ├── GreetingsManagement.tsx# Moderasi buku tamu & ucapan
+│   │   ├── GuestManagement.tsx    # CRUD tamu, kuota, & generator WhatsApp
+│   │   ├── InvitationCms.tsx      # CMS data acara & link Google Maps
+│   │   ├── PrintableGuestReport.tsx# Dokumen cetak laporan resmi A4
+│   │   └── RsvpSummaryCards.tsx   # Kartu statistik RSVP & katering
+│   │
+│   ├── invitation/                # 💌 Khusus Tamu Undangan (Guest / Publik)
+│   │   ├── MainInvitationView.tsx # Kontainer orkestrasi seluruh section undangan
+│   │   ├── CoverSection.tsx       # Cover pembuka dengan nama personal tamu
+│   │   ├── HeroSection.tsx        # Hero banner & countdown akad/resepsi
+│   │   ├── CoupleSection.tsx      # Profil kedua mempelai
+│   │   ├── EventSection.tsx       # Jadwal acara & tombol navigasi Google Maps
+│   │   ├── RsvpSection.tsx        # Konfirmasi kehadiran 2-state & tiket QR
+│   │   ├── GuestbookSection.tsx   # Formulir ucapan & running text doa restu
+│   │   ├── GallerySection.tsx     # Galeri dokumentasi pra-nikah
+│   │   ├── DigitalGiftSection.tsx # Rekening bank (salin otomatis) & kado fisik
+│   │   ├── QuoteSection.tsx       # Kutipan doa & ayat suci
+│   │   └── FooterSection.tsx      # Penutup & ucapan terima kasih
+│   │
+│   ├── ui/                        # 🎨 Primitif Desain Neobrutalism Bersama
+│   │   ├── NeoSticker.tsx         # Stiker visual kontras tinggi & sudut rotasi
+│   │   └── NeoDivider.tsx         # Garis pembatas neobrutal 3px dengan dot aksen
+│   │
+│   └── providers/                 # ⚙️ Wrapper Global & Efek Scroll
+│       ├── SmoothScrollProvider.tsx# Inisialisasi Lenis smooth scrolling
+│       └── ScrollFadeProvider.tsx # Observer animasi kemunculan elemen
+│
+├── lib/                           # Modul Logika & Utilitas Terpusat
+│   ├── adminAuth.ts               # Autentikasi admin, RPC allowlist & verifikasi peran
+│   ├── guestInvitation.ts         # Resolusi token tamu, query database & metadata SEO
+│   ├── invitationShareConfig.ts   # Pemformat pesan WhatsApp & pilihan domain
+│   ├── qrTicketImage.ts           # Pembangkit QR code & pengunduh kartu tiket PNG
+│   ├── scrollLock.ts              # Pengunci scroll modular anti-stuck
+│   └── supabase.ts                # Klien database PostgreSQL Supabase
+│
+└── public/                        # Aset Statis (Foto mempelai, ikon, font)
+```
+
 ---
 
 ## Entity Relationship Diagram (ERD)

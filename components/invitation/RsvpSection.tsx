@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { getGuestByCode, RsvpStatus, TamuWithRsvp } from "@/lib/guestInvitation";
 import { downloadQrTicketAsPhoto } from "@/lib/qrTicketImage";
-import NeoSticker from "./NeoSticker";
-import NeoDivider from "./NeoDivider";
+import NeoSticker from "@/components/ui/NeoSticker";
+import NeoDivider from "@/components/ui/NeoDivider";
 
 interface RsvpSectionProps {
   initialTamu?: TamuWithRsvp | null;

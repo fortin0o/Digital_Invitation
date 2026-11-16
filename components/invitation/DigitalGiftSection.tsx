@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import NeoSticker from "./NeoSticker";
-import NeoDivider from "./NeoDivider";
+import NeoSticker from "@/components/ui/NeoSticker";
+import NeoDivider from "@/components/ui/NeoDivider";
 
 export default function DigitalGiftSection() {
   const [isOpen, setIsOpen] = useState(false);

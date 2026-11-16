@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 
 export const viewport: Viewport = {
   width: "device-width",

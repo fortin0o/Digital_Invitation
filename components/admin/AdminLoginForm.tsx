@@ -7,8 +7,8 @@ import {
   AdminRole,
   verifyAdminAccess,
 } from "@/lib/adminAuth";
-import NeoSticker from "../NeoSticker";
-import NeoDivider from "../NeoDivider";
+import NeoSticker from "@/components/ui/NeoSticker";
+import NeoDivider from "@/components/ui/NeoDivider";
 
 interface AdminLoginFormProps {
   onLoginSuccess: (email?: string, role?: AdminRole) => void;

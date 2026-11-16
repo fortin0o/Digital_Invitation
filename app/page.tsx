@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MainInvitationView from "@/components/MainInvitationView";
+import MainInvitationView from "@/components/invitation/MainInvitationView";
 import { resolveInvitationAndGuest, buildInvitationMetadata } from "@/lib/guestInvitation";
 
 interface PageProps {

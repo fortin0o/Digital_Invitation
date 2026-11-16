@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import NeoSticker from "./NeoSticker";
-import NeoDivider from "./NeoDivider";
+import NeoSticker from "@/components/ui/NeoSticker";
+import NeoDivider from "@/components/ui/NeoDivider";
 
 export default function CoupleSection() {
   return (

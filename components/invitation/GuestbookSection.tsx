@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import NeoSticker from "./NeoSticker";
-import NeoDivider from "./NeoDivider";
+import NeoSticker from "@/components/ui/NeoSticker";
+import NeoDivider from "@/components/ui/NeoDivider";
 
 interface UcapanItem {
   id_ucapan: string;

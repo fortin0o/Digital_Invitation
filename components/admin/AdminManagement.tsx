@@ -8,7 +8,7 @@ import {
   formatWriteErrorMessage,
   isMissingTableError,
 } from "@/lib/adminAuth";
-import NeoDivider from "../NeoDivider";
+import NeoDivider from "@/components/ui/NeoDivider";
 
 export interface AdminUserItem {
   id: string;
