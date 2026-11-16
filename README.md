@@ -8,11 +8,11 @@
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-gray?style=flat-square)
 
-Platform Undangan Pernikahan Digital Interaktif dengan Sistem Konfirmasi Kehadiran (RSVP) Real-Time, Buku Tamu Digital, Manajemen Tamu Multi-Role, Tiket QR Code, dan Ekspor Laporan Kehadiran.
+Platform Undangan Pernikahan Digital Interaktif dengan Sistem Konfirmasi Kehadiran (RSVP) Real-Time 2-State, E-Ticket Masuk Berbasis QR Code, Buku Tamu Digital, Manajemen Tamu Multi-Role (RBAC), Laporan Resmi Cetak PDF Format A4, dan Generator Tautan WhatsApp Otomatis.
 
 *Dokumentasi Proyek Uji Kompetensi Keahlian (UKK) Rekayasa Perangkat Lunak.*
 
-[Demo Akun](#akun-demo-dan-hak-akses) • [Fitur Utama](#fitur-utama) • [Alur Sistem](#alur-sistem-dan-arsitektur) • [Struktur ERD](#entity-relationship-diagram-erd) • [Panduan Instalasi](#panduan-instalasi-dan-penggunaan)
+[Peran Pengguna](#peran-pengguna-dan-hak-akses) • [Tangkapan Layar](#tangkapan-layar) • [Fitur Utama](#fitur-utama-dan-keunggulan) • [Alur Sistem](#alur-sistem-dan-arsitektur) • [Struktur ERD](#entity-relationship-diagram-erd) • [Panduan Instalasi](#panduan-instalasi-dan-penggunaan)
 
 </div>
 
@@ -20,12 +20,12 @@ Platform Undangan Pernikahan Digital Interaktif dengan Sistem Konfirmasi Kehadir
 
 ## Daftar Isi
 1. [Deskripsi Proyek](#deskripsi-proyek)
-2. [Tangkapan Layar](#tangkapan-layar)
-3. [Fitur Utama](#fitur-utama)
-4. [Alur Sistem dan Arsitektur](#alur-sistem-dan-arsitektur)
+2. [Tangkapan Layar Sistem](#tangkapan-layar)
+3. [Fitur Utama dan Keunggulan](#fitur-utama-dan-keunggulan)
+4. [Alur Kerja dan Arsitektur Sistem](#alur-sistem-dan-arsitektur)
 5. [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
 6. [Struktur dan Kamus Data](#struktur-dan-kamus-data)
-7. [Akun Demo dan Hak Akses](#akun-demo-dan-hak-akses)
+7. [Peran Pengguna dan Hak Akses](#peran-pengguna-dan-hak-akses)
 8. [Panduan Instalasi dan Penggunaan](#panduan-instalasi-dan-penggunaan)
 9. [Keamanan Sistem](#keamanan-sistem)
 10. [Pemenuhan Ketentuan Rubrik UKK](#pemenuhan-ketentuan-rubrik-ukk)
@@ -36,70 +36,113 @@ Platform Undangan Pernikahan Digital Interaktif dengan Sistem Konfirmasi Kehadir
 
 ## Deskripsi Proyek
 
-**WeddingMu** adalah aplikasi berbasis web yang mentransformasikan undangan pernikahan cetak menjadi media digital yang personal, interaktif, dan efisien. Aplikasi ini dibangun untuk mempermudah calon pengantin serta panitia dalam menyebarkan informasi acara dan merekap kepastian kehadiran tamu secara terstruktur.
+**WeddingMu** adalah aplikasi web modern yang mentransformasikan undangan pernikahan fisik konvensional menjadi media digital yang personal, interaktif, dan efisien. Dibangun untuk menyederhanakan manajemen pernikahan mulai dari penyebaran undangan personal, konfirmasi kehadiran tamu secara terukur, hingga pengarsipan ucapan doa restu dan pelaporan administratif.
 
 ### Masalah yang Diselesaikan:
-- **Biaya dan Waktu Cetak:** Pengadaan undangan cetak memerlukan biaya produksi tinggi dan proses distribusi manual yang lambat.
-- **Ketidakpastian Jumlah Kehadiran:** Tuan rumah kesulitan memperkirakan jumlah tamu hadir secara akurat untuk kebutuhan katering dan kapasitas ruangan.
-- **Buku Tamu Manual:** Buku tamu kertas rawan hilang, rusak, dan menyulitkan pengarsipan ucapan selamat dari para tamu.
-- **Distribusi Pesan:** Penyebaran link secara manual sering kali tidak menyapa nama tamu secara personal.
+- **Biaya & Waktu Cetak:** Pengadaan undangan cetak memerlukan biaya produksi tinggi, waktu pencetakan lama, serta distribusi fisik yang lambat.
+- **Ketidakpastian Jumlah Kehadiran:** Tuan rumah kesulitan memperkirakan jumlah kehadiran aktual tamu untuk memesan porsi katering dan mengatur kapasitas ruang resepsi.
+- **Buku Tamu Manual yang Rawan Hilang:** Buku tamu fisik di meja resepsi rawan rusak atau hilang, serta menyulitkan proses rekapitulasi data tamu yang hadir.
+- **Pesan Undangan Tidak Personal:** Tautan undangan daring sering kali disebar secara massal tanpa menyapa nama tamu secara personal.
 
-### Solusi yang Diberikan:
-- **Tautan Personal Dinamis (`?to=kode`):** Menampilkan nama tamu secara otomatis pada cover undangan saat tautan dibuka.
-- **Konfirmasi RSVP Tervalidasi:** Tamu mengonfirmasi kehadiran (Hadir, Ragu-ragu, Tidak Hadir) dengan validasi kuota maksimal orang.
-- **Buku Tamu Digital:** Ucapan doa restu ditampilkan langsung dengan animasi running text yang tersinkronisasi secara real-time.
-- **Tiket QR Code Masuk:** Setiap tamu memiliki tiket QR digital untuk verifikasi saat hadir di lokasi resepsi.
-- **Dashboard Multi-Role:** Mempelai dan administrator dapat memantau statistik kehadiran, mengelola data tamu, mengedit detail acara via CMS, serta mengunduh laporan dalam format Excel (CSV) maupun cetak PDF.
-- **Desain Neobrutalism dan Rule of Eights:** Antarmuka responsif dengan grid 8pt yang teruji rapi dan bebas overflow di layar ponsel (360px–390px).
+### Solusi yang Diterapkan:
+- **Tautan Personal Dinamis (`?to=kode`):** Menampilkan nama tamu terundang secara otomatis di cover pembuka dan bagian RSVP undangan.
+- **Sistem RSVP 2-State & Proteksi Pembatalan:** Menampilkan tiket konfirmasi resmi dan QR Code setelah tamu mengisi formulir, dengan mode edit terlindungi tombol "Batal Ubah" agar data tidak tertimpa tanpa sengaja.
+- **Laporan Resmi Cetak PDF Format A4:** Halaman admin menyediakan cetak dan ekspor PDF resmi dengan Kop Surat, Ringkasan Eksekutif Kehadiran, Tabel Lengkap Tamu, dan Kolom Tanda Tangan Meja Resepsi (memenuhi standar dokumen fisik).
+- **Generator Tautan WhatsApp Otomatis:** Memudahkan panitia mengirim pesan personal langsung ke WhatsApp penerima dengan pilihan domain dinamis.
+- **Multi-Role RBAC & Trigger Kaskade:** Pemisahan wewenang **Super Admin** dan **Admin Acara**, dilengkapi trigger otomatis di PostgreSQL untuk sinkronisasi penghapusan user auth.
+- **Desain Neobrutalism & Rule of Eights:** Antarmuka responsif berbasis grid 8pt dengan kontras tinggi, bebas overflow horizontal pada viewport ponsel (360px–390px).
 
 ---
 
 ## Tangkapan Layar
 
-### 1. Tampilan Publik Undangan Digital (Mobile View)
-Cover interaktif yang menampilkan nama tamu terundang, tombol buka undangan, dan elemen visual Neobrutalism.
+Berikut adalah dokumentasi antarmuka live dari sistem WeddingMu:
+
+### 1. Cover & Hero Undangan Publik (Desktop View)
+Halaman penyambut tamu dengan nama personal terisi otomatis dari token URL, countdown acara, dan tombol buka undangan.
 <div align="center">
-  <img src="docs/screenshots/hero_preview.png" alt="Cover dan Hero Undangan Digital" width="450" />
+  <img src="docs/screenshots/hero_preview.png" alt="Cover dan Hero Undangan Digital" width="820" />
 </div>
 
-### 2. Panel Admin Dashboard dan Rekapitulasi RSVP
-Statistik kehadiran real-time, ringkasan porsi katering, filter pencarian tamu, dan alat ekspor laporan.
+<br />
+
+### 2. Tampilan Responsif Smartphone (Mobile View - 390x844)
+Tata letak yang dioptimalkan untuk perangkat seluler mengikuti *Rule of Eights*, memastikan teks, tombol aksi, dan drawer navigasi nyaman digunakan dengan satu tangan.
 <div align="center">
-  <img src="docs/screenshots/admin_dashboard.png" alt="Dashboard Panel Admin" width="800" />
+  <img src="docs/screenshots/mobile_responsive.png" alt="Tampilan Responsif Mobile" width="380" />
 </div>
 
-### 3. Tampilan Responsif Smartphone
-Tata letak yang dirancang menggunakan grid 8pt memastikan seluruh tombol aksi dan navigasi tetap berada di dalam batas layar.
+<br />
+
+### 3. Bagian Konfirmasi RSVP & E-Ticket QR Code (State 2)
+Setelah tamu mengonfirmasi kehadiran, antarmuka otomatis beralih menampilkan Tiket Pass Masuk resmi, QR Code personal, tombol download tiket, serta tombol ubah konfirmasi kehadiran.
 <div align="center">
-  <img src="docs/screenshots/mobile_responsive.png" alt="Tampilan Responsif Mobile" width="450" />
+  <img src="docs/screenshots/rsvp_section.png" alt="Konfirmasi RSVP dan Tiket Masuk QR" width="820" />
+</div>
+
+<br />
+
+### 4. Halaman Login Administrator
+Gerbang keamanan login multi-role dengan integrasi Supabase Auth, validasi allowlist admin, serta penanganan error kredensial yang jelas.
+<div align="center">
+  <img src="docs/screenshots/admin_login.png" alt="Halaman Login Administrator" width="820" />
+</div>
+
+<br />
+
+### 5. Dashboard Utama Admin (Overview)
+Pusat statistik kehadiran real-time menampilkan metrik total tamu, konfirmasi hadir, ragu-ragu, absen, estimasi porsi katering, dan tombol akses cepat Cetak Laporan PDF.
+<div align="center">
+  <img src="docs/screenshots/admin_dashboard.png" alt="Dashboard Utama Admin" width="820" />
+</div>
+
+<br />
+
+### 6. Manajemen Tamu Undangan & Generator WhatsApp
+Tabel data tamu interaktif dengan fitur pencarian instan, filter status, pengubah kuota, penyalin tautan personal, dan generator pesan WhatsApp satu klik.
+<div align="center">
+  <img src="docs/screenshots/guest_management.png" alt="Manajemen Tamu Undangan" width="820" />
+</div>
+
+<br />
+
+### 7. Pratinjau Dokumen Laporan Resmi A4 (Cetak / PDF)
+Pratinjau dokumen laporan berstandar A4 yang dilengkapi Kop Surat resmi, Ringkasan Eksekutif, Tabel Daftar Tamu Lengkap, serta Kolom Tanda Tangan Meja Resepsi untuk arsip fisik kepanitiaan.
+<div align="center">
+  <img src="docs/screenshots/print_pdf_report.png" alt="Pratinjau Dokumen Laporan Resmi A4" width="820" />
 </div>
 
 ---
 
-## Fitur Utama
+## Fitur Utama dan Keunggulan
 
-### Sisi Tamu Undangan (Guest / Publik):
-- **Cover Interaktif:** Halaman pembuka personal dengan nama tamu yang dimuat dari parameter URL.
-- **Informasi Mempelai:** Profil kedua calon pengantin beserta kutipan dan informasi keluarga.
-- **Jadwal dan Countdown:** Penghitung waktu mundur menuju hari-H pelaksanaan akad dan resepsi.
-- **Integrasi Google Maps:** Tautan navigasi satu klik menuju titik lokasi acara.
-- **Galeri Foto:** Galeri dokumentasi pra-nikah dengan tampilan kartu Neobrutalist.
-- **Konfirmasi RSVP:** Formulir kehadiran dengan pilihan status dan validasi jumlah orang sesuai kuota.
-- **Buku Tamu:** Formulir kirim ucapan selamat dan daftar doa restu dengan tampilan marquee.
-- **Kado Digital:** Informasi nomor rekening bank (fitur salin rekening otomatis) dan alamat pengiriman kado fisik.
-- **Tiket QR Code Digital:** Pratinjau tiket masuk personal berbasis QR code.
+### A. Sisi Tamu Undangan (Guest / Publik):
+1. **Cover Personal Interaktif:** Menampilkan nama tamu terundang secara elegan dari parameter URL unik (`?to=kode`).
+2. **Kisah & Profil Mempelai:** Menampilkan profil lengkap kedua calon mempelai beserta kutipan doa suci.
+3. **Countdown & Detail Acara:** Penghitung waktu mundur real-time menuju akad nikah dan resepsi, terintegrasi dengan tombol navigasi Google Maps.
+4. **Alur RSVP 2-State (Konfirmasi & Tiket QR):**
+   - **State 1 (Formulir Awal):** Pilihan kehadiran (Hadir, Ragu-ragu, Tidak Hadir) dan jumlah orang sesuai batas kuota.
+   - **State 2 (Tiket Masuk & QR Code):** Kartu status resmi dengan QR code personal, status rombongan, tombol unduh tiket QR, dan tombol untuk mengubah data jika ada perubahan rencana.
+   - **State 3 (Mode Edit Terproteksi):** Tombol "Batal Ubah" mengembalikan form ke status database tersimpan tanpa menimpa data, sedangkan "Perbarui Konfirmasi" memperbarui data ke Supabase dengan animasi confetti perayaan.
+5. **Buku Tamu Digital:** Tamu dapat mengirim doa restu dan membaca ucapan dari kerabat lain dengan animasi teks berjalan (*marquee*).
+6. **Kado Digital (Cashless Gift):** Informasi rekening bank resmi dengan fitur salin nomor rekening otomatis serta alamat tujuan kirim kado fisik.
+7. **Audio Player Otomatis:** Pemutar musik latar romantis dengan kontrol pause/play melayang.
 
-### Sisi Administrator (Dashboard Pengelola):
-- **Autentikasi Multi-Role:** Hak akses terpisah untuk **Super Admin** dan **Admin Acara**.
-- **Ringkasan Statistik RSVP:** Metrik total tamu, jumlah hadir, ragu-ragu, absen, belum merespon, serta estimasi total porsi katering.
-- **CRUD Tamu Undangan:** Tambah tamu, ubah kuota, hapus tamu, generate link personal, salin link, dan tombol kirim WhatsApp otomatis.
-- **Pencarian dan Filter:** Pencarian berdasarkan nama tamu atau kode unik, disertai filter status kehadiran.
-- **Paginasi Data:** Penomoran halaman fleksibel (20, 50, atau 100 data per halaman) dengan navigasi angka dan ellipsis.
-- **Laporan Excel dan Cetak PDF:**
-  - Ekspor seluruh data kehadiran tamu ke berkas `.csv` (kompatibel Excel dengan UTF-8 BOM).
-  - Cetak laporan rekapitulasi kehadiran langsung ke printer atau simpan sebagai PDF.
-- **CMS Konten Undangan:** Pengaturan nama mempelai, jadwal acara, alamat gedung, tautan Google Maps, slug URL, dan template pesan WhatsApp tanpa modifikasi kode sumber.
-- **Manajemen Administrator (Super Admin):** Mendaftarkan akun admin baru, mengubah peran admin, serta mengelola akses pengguna.
+### B. Sisi Administrator (Dashboard Pengelola):
+1. **Autentikasi Multi-Role (RBAC):**
+   - **Super Admin:** Akses penuh mengelola akun administrator lain, CMS konten acara, data tamu, RSVP, ekspor laporan, dan moderasi buku tamu.
+   - **Admin Acara:** Akses operasional untuk mengelola detail acara, daftar tamu, RSVP, ekspor laporan, dan moderasi buku tamu.
+2. **Ringkasan Statistik & Estimasi Katering:** Visualisasi total tamu, jumlah yang telah merespon, persentase konfirmasi, serta kalkulasi total porsi katering yang harus disediakan.
+3. **CRUD Tamu Undangan & Kuota:** Tambah tamu individu, atur kuota kehadiran (1-10 orang), hapus tamu dengan konfirmasi aman.
+4. **Pencarian, Filter & Paginasi Fleksibel:**
+   - Filter cepat berdasarkan status kehadiran: *Semua Tamu, Konfirmasi Hadir, Masih Ragu, Tidak Hadir, Belum Respon*.
+   - Paginasi data dinamis (20, 50, atau 100 data per halaman).
+5. **Generator Pesan WhatsApp Cerdas:** Membuat pesan personal lengkap dengan nama tamu dan tautan undangan, mendukung pilihan domain online maupun localhost.
+6. **Ekspor Data & Laporan Resmi (UKK Rubrik No. 6):**
+   - **Ekspor Excel (CSV):** Mengunduh data tamu ke berkas `.csv` berformat UTF-8 BOM yang langsung rapi dibuka di Microsoft Excel.
+   - **Cetak Laporan PDF Berstandar A4:** Menggunakan stylesheet isolasi `@media print` (`.screen-only` dan `.print-only`) untuk menghasilkan dokumen cetak profesional dengan Kop Surat resmi, rekapitulasi angka, tabel tamu, dan lembar pengesahan tanda tangan meja resepsi.
+7. **CMS Acara:** Mengubah nama mempelai, tanggal acara, lokasi gedung, alamat, tautan peta, dan slug URL tanpa perlu menyentuh kode program.
+8. **Moderasi Doa & Ucapan:** Tinjau dan hapus ucapan buku tamu yang tidak pantas secara real-time.
 
 ---
 
@@ -110,61 +153,65 @@ Tata letak yang dirancang menggunakan grid 8pt memastikan seluruh tombol aksi da
 ```mermaid
 flowchart TD
     subgraph Admin_Workflow["1. Panel Admin (Penyelenggara)"]
-        A[Login Admin / Super Admin] --> B[CMS: Atur Info Acara dan Template WhatsApp]
-        B --> C[Kelola Tamu: Input Daftar Tamu dan Kuota]
-        C --> D[Sistem Membuat Kode Unik Tamu Otomatis]
+        A[Login Admin via Supabase Auth] --> B[CMS: Konfigurasi Detail Acara]
+        B --> C[Kelola Tamu: Input Nama & Batas Kuota]
+        C --> D[Sistem Generate Token Unik 8-Digit]
         D --> E[Kirim Undangan Personal via WhatsApp]
     end
 
-    subgraph Guest_Workflow["2. Pengalaman Tamu Undangan"]
-        E -. Tautan dikirim .-> F[Tamu Membuka Link: /slug?to=kode]
-        F --> G[Sistem Memvalidasi Kode Tamu via Supabase RPC]
-        G --> H[Cover Undangan Menampilkan Nama Tamu]
-        H --> I[Tamu Membaca Info Acara, Waktu, dan Lokasi]
-        I --> J[Tamu Mengisi Formulir RSVP dan Jumlah Hadir]
-        I --> K[Tamu Mengirim Doa di Buku Tamu]
-        I --> L[Tamu Membuka Tiket QR Code Masuk]
+    subgraph Guest_Workflow["2. Alur Pengalaman Tamu"]
+        E -. Tautan Personal .-> F[Buka Link: /slug?to=kode]
+        F --> G[Validasi Token via RPC Supabase]
+        G --> H[Cover Menampilkan Nama Tamu]
+        H --> I[Eksplorasi Undangan, Waktu & Lokasi]
+        I --> J{Konfirmasi RSVP}
+        J -- Belum Mengisi --> K[Formulir RSVP: Hadir / Ragu / Absen]
+        K --> L[Simpan ke Database Supabase]
+        L --> M[Tampil State 2: E-Ticket & QR Code Masuk]
+        M -- Perlu Revisi? --> N[Mode Edit dengan Tombol Batal & Simpan]
+        N --> L
+        I --> O[Kirim Pesan Doa di Buku Tamu]
     end
 
-    subgraph Sync_Report["3. Sinkronisasi dan Pelaporan"]
-        J & K --> M[(Database Supabase PostgreSQL)]
-        M --> N[Dashboard Admin Update Real-Time]
-        N --> O[Admin Mengunduh Rekap Excel / Cetak PDF]
+    subgraph Sync_Report["3. Sinkronisasi & Pelaporan"]
+        L & O --> P[(Supabase PostgreSQL Database)]
+        P --> Q[Statistik Dashboard Update Real-Time]
+        Q --> R[Ekspor Excel CSV & Cetak Dokumen A4 PDF]
     end
 ```
 
-### 2. Diagram Hak Akses Multi-Role
+### 2. Diagram Hak Akses Multi-Role (RBAC)
 
 ```mermaid
 flowchart LR
     User([Pengguna]) --> Login{Jenis Akses}
     
-    Login -- Masuk via Email/Password --> AuthCheck[Supabase Auth + Allowlist]
+    Login -- Email & Password --> AuthCheck[Supabase Auth + Allowlist RPC]
     AuthCheck -- Role: super_admin --> SuperAdminRole[Super Admin Dashboard]
     AuthCheck -- Role: admin --> AdminRole[Admin Acara Dashboard]
     
-    Login -- Buka Link Undangan (?to=kode) --> GuestAccess[Halaman Undangan Publik]
+    Login -- Token URL ?to=kode --> GuestAccess[Undangan Publik Personal]
     
     subgraph Hak_SuperAdmin["Wewenang Super Admin"]
-        SuperAdminRole --> SA1[Kelola Administrator Baru dan Edit Peran]
-        SuperAdminRole --> SA2[CMS Edit Konten Undangan]
-        SuperAdminRole --> SA3[CRUD Tamu dan RSVP]
-        SuperAdminRole --> SA4[Ekspor Laporan Excel dan Cetak PDF]
+        SuperAdminRole --> SA1[Kelola Akun Admin & Ubah Peran]
+        SuperAdminRole --> SA2[CMS Edit Konten Acara]
+        SuperAdminRole --> SA3[CRUD Tamu & Konfigurasi Kuota]
+        SuperAdminRole --> SA4[Ekspor Excel & Cetak Dokumen PDF A4]
         SuperAdminRole --> SA5[Moderasi Buku Tamu]
     end
 
     subgraph Hak_Admin["Wewenang Admin Acara"]
-        AdminRole --> A1[CMS Edit Konten Undangan]
-        AdminRole --> A2[CRUD Tamu dan RSVP]
-        AdminRole --> A3[Ekspor Laporan Excel dan Cetak PDF]
+        AdminRole --> A1[CMS Edit Konten Acara]
+        AdminRole --> A2[CRUD Tamu & Konfigurasi Kuota]
+        AdminRole --> A3[Ekspor Excel & Cetak Dokumen PDF A4]
         AdminRole --> A4[Moderasi Buku Tamu]
     end
 
-    subgraph Hak_Guest["Wewenang Tamu"]
-        GuestAccess --> G1[Lihat Informasi Pernikahan]
-        GuestAccess --> G2[Kirim / Ubah RSVP Milik Sendiri]
-        GuestAccess --> G3[Kirim Ucapan Buku Tamu]
-        GuestAccess --> G4[Lihat Tiket QR Code Milik Sendiri]
+    subgraph Hak_Guest["Wewenang Tamu Undangan"]
+        GuestAccess --> G1[Membaca Informasi Pernikahan]
+        GuestAccess --> G2[Isi & Ubah Status RSVP Sendiri]
+        GuestAccess --> G3[Unduh Tiket Masuk Berbasis QR Code]
+        GuestAccess --> G4[Kirim Doa Restu ke Buku Tamu]
     end
 ```
 
@@ -172,41 +219,41 @@ flowchart LR
 
 ## Entity Relationship Diagram (ERD)
 
-Arsitektur basis data relasional PostgreSQL pada Supabase menggunakan integritas referensial dan kaskade penghapusan data (`ON DELETE CASCADE`):
+Arsitektur database relasional PostgreSQL pada Supabase menggunakan integritas referensial dan kaskade penghapusan data (`ON DELETE CASCADE`):
 
 ```mermaid
 erDiagram
     undangan ||--o{ tamu : "memiliki daftar"
-    undangan ||--o{ ucapan : "menerima ucapan"
+    undangan ||--o{ ucapan : "menerima doa"
     tamu ||--o| rsvp : "mengonfirmasi (1-to-1)"
     admin_users ||--o{ undangan : "mengelola"
 
     undangan {
         uuid id_undangan PK
-        varchar slug UK "URL unik acara"
-        varchar nama_pria "Nama pengantin pria"
-        varchar nama_wanita "Nama pengantin wanita"
-        timestamptz tgl_acara "Waktu pelaksanaan acara"
-        varchar tempat "Nama gedung / tempat"
-        varchar alamat "Alamat lengkap acara"
-        varchar link_maps "Tautan Google Maps"
+        varchar slug UK "URL ramah akses acara"
+        varchar nama_pria "Nama lengkap pengantin pria"
+        varchar nama_wanita "Nama lengkap pengantin wanita"
+        timestamptz tgl_acara "Waktu pelaksanaan akad & resepsi"
+        varchar tempat "Nama gedung / aula acara"
+        varchar alamat "Alamat lengkap lokasi acara"
+        varchar link_maps "Tautan titik Google Maps"
         timestamptz created_at
     }
 
     tamu {
         uuid id_tamu PK
         uuid id_undangan FK "Referensi ke tabel undangan"
-        varchar nama_tamu "Nama lengkap undangan"
-        varchar kode UK "Kode token acak unik (8 digit)"
-        int kuota "Batas maksimal orang yang hadir"
+        varchar nama_tamu "Nama lengkap tamu undangan"
+        varchar kode UK "Token acak unik 8 digit"
+        int kuota "Batas maksimal tamu (>= 1)"
         timestamptz created_at
     }
 
     rsvp {
         uuid id_rsvp PK
-        uuid id_tamu FK, UK "1 tamu memiliki 1 baris RSVP"
+        uuid id_tamu FK, UK "1 tamu hanya memiliki 1 catatan RSVP"
         varchar status "hadir | ragu | tidak_hadir"
-        int jumlah_hadir "Jumlah orang hadir (<= kuota)"
+        int jumlah_hadir "Jumlah orang yang hadir (<= kuota)"
         timestamptz tgl_konfirmasi "Waktu konfirmasi"
     }
 
@@ -220,8 +267,8 @@ erDiagram
 
     admin_users {
         uuid id PK
-        varchar email UK "Email unik terdaftar"
-        varchar nama "Nama lengkap administrator"
+        varchar email UK "Email unik terdaftar di Supabase Auth"
+        varchar nama "Nama administrator"
         varchar role "super_admin | admin"
         timestamptz created_at
     }
@@ -232,86 +279,136 @@ erDiagram
 ## Struktur dan Kamus Data
 
 ### 1. Tabel `public.undangan`
-Menyimpan konfigurasi informasi utama acara pernikahan.
+Menyimpan konfigurasi acara pernikahan yang dikelola melalui fitur CMS Admin.
 | Nama Kolom | Tipe Data | Batasan (Constraint) | Deskripsi |
 |---|---|---|---|
-| `id_undangan` | `uuid` | Primary Key, `gen_random_uuid()` | Pengidentifikasi unik acara |
-| `slug` | `varchar(60)` | Unique, Not Null | URL ramah pencari (contoh: `arya-dan-sekar`) |
+| `id_undangan` | `uuid` | Primary Key, `gen_random_uuid()` | Pengidentifikasi unik data acara |
+| `slug` | `varchar(60)` | Unique, Not Null | Pengenal URL (contoh: `arya-dan-sekar`) |
 | `nama_pria` | `varchar(60)` | Not Null | Nama lengkap mempelai pria |
 | `nama_wanita` | `varchar(60)` | Not Null | Nama lengkap mempelai wanita |
-| `tgl_acara` | `timestamptz` | Nullable | Tanggal dan jam pelaksanaan acara |
-| `tempat` | `varchar(100)` | Nullable | Nama gedung / aula / lokasi |
+| `tgl_acara` | `timestamptz` | Nullable | Waktu pelaksanaan akad nikah dan resepsi |
+| `tempat` | `varchar(100)` | Nullable | Nama gedung / tempat perayaan |
 | `alamat` | `text` | Nullable | Alamat lengkap lokasi acara |
-| `link_maps` | `text` | Nullable | Tautan URL titik Google Maps |
-| `created_at` | `timestamptz` | Default `now()` | Waktu pencatatan data |
+| `link_maps` | `text` | Nullable | Tautan URL Google Maps untuk navigasi tamu |
+| `created_at` | `timestamptz` | Default `now()` | Waktu pembuatan data acara |
 
 ### 2. Tabel `public.tamu`
-Menyimpan data tamu yang diundang oleh panitia.
+Menyimpan data seluruh tamu yang diundang secara personal.
 | Nama Kolom | Tipe Data | Batasan (Constraint) | Deskripsi |
 |---|---|---|---|
 | `id_tamu` | `uuid` | Primary Key, `gen_random_uuid()` | Pengidentifikasi unik tamu |
-| `id_undangan` | `uuid` | Foreign Key `undangan(id_undangan)` | ID acara terkait (Cascade Delete) |
-| `nama_tamu` | `varchar(100)` | Not Null | Nama tamu yang dicantumkan pada undangan |
+| `id_undangan` | `uuid` | Foreign Key `undangan(id_undangan)` | Acara terkait (Cascade Delete) |
+| `nama_tamu` | `varchar(100)` | Not Null | Nama lengkap tamu pada undangan |
 | `kode` | `varchar(20)` | Unique, Not Null | Token kode unik 8-digit untuk link personal |
-| `kuota` | `integer` | Default `1`, Check `kuota >= 1` | Batas maksimal orang yang boleh hadir |
-| `created_at` | `timestamptz` | Default `now()` | Waktu penambahan tamu |
+| `kuota` | `integer` | Default `1`, Check `kuota >= 1` | Batas maksimal rombongan yang diizinkan hadir |
+| `created_at` | `timestamptz` | Default `now()` | Waktu penambahan data tamu |
 
 ### 3. Tabel `public.rsvp`
 Menyimpan konfirmasi kehadiran dari tamu undangan.
 | Nama Kolom | Tipe Data | Batasan (Constraint) | Deskripsi |
 |---|---|---|---|
-| `id_rsvp` | `uuid` | Primary Key, `gen_random_uuid()` | Pengidentifikasi unik data RSVP |
-| `id_tamu` | `uuid` | Foreign Key `tamu(id_tamu)`, Unique | ID tamu yang mengisi (1-to-1) |
+| `id_rsvp` | `uuid` | Primary Key, `gen_random_uuid()` | Pengidentifikasi unik konfirmasi RSVP |
+| `id_tamu` | `uuid` | Foreign Key `tamu(id_tamu)`, Unique | ID tamu yang mengisi (Hubungan 1-to-1) |
 | `status` | `varchar(15)` | Check `status IN ('hadir', 'ragu', 'tidak_hadir')` | Pilihan konfirmasi kehadiran |
-| `jumlah_hadir` | `integer` | Check `jumlah_hadir >= 0` | Jumlah tamu yang hadir secara fisik |
-| `tgl_konfirmasi` | `timestamptz` | Default `now()` | Waktu saat tamu menyimpan konfirmasi |
+| `jumlah_hadir` | `integer` | Check `jumlah_hadir >= 0` | Jumlah orang yang dipastikan hadir |
+| `tgl_konfirmasi` | `timestamptz` | Default `now()` | Waktu pencatatan konfirmasi |
 
 ### 4. Tabel `public.ucapan`
-Menyimpan doa dan ucapan selamat dari para tamu untuk buku tamu digital.
+Menyimpan ucapan doa restu untuk buku tamu digital publik.
 | Nama Kolom | Tipe Data | Batasan (Constraint) | Deskripsi |
 |---|---|---|---|
 | `id_ucapan` | `uuid` | Primary Key, `gen_random_uuid()` | Pengidentifikasi unik ucapan |
-| `id_undangan` | `uuid` | Foreign Key `undangan(id_undangan)` | ID acara yang menerima ucapan |
+| `id_undangan` | `uuid` | Foreign Key `undangan(id_undangan)` | ID acara penerima ucapan |
 | `nama` | `varchar(100)` | Not Null | Nama pengirim ucapan |
-| `isi_ucapan` | `text` | Not Null, Max 500 karakter | Isi pesan doa restu |
-| `tgl_kirim` | `timestamptz` | Default `now()` | Waktu pengiriman ucapan |
+| `isi_ucapan` | `text` | Not Null, Max 500 Karakter | Isi pesan doa restu |
+| `tgl_kirim` | `timestamptz` | Default `now()` | Waktu pengiriman pesan |
 
 ### 5. Tabel `public.admin_users`
-Menyimpan daftar administrator terdaftar beserta hak peran (*role-based access control*).
+Menyimpan daftar administrator terdaftar beserta tingkatan peran (*role-based access control*).
 | Nama Kolom | Tipe Data | Batasan (Constraint) | Deskripsi |
 |---|---|---|---|
-| `id` | `uuid` | Primary Key, `gen_random_uuid()` | ID pengguna admin |
-| `email` | `text` | Unique, Not Null, Lowercase | Alamat email administrator |
+| `id` | `uuid` | Primary Key, `gen_random_uuid()` | ID pengguna administrator |
+| `email` | `text` | Unique, Not Null, Lowercase | Alamat email administrator terdaftar |
 | `nama` | `text` | Not Null | Nama lengkap administrator |
-| `role` | `text` | Check `role IN ('super_admin', 'admin')` | Tingkat hak akses administrator |
-| `created_at` | `timestamptz` | Default `now()` | Waktu pendaftaran akun |
+| `role` | `text` | Check `role IN ('super_admin', 'admin')` | Peran hak akses (Super Admin / Admin Acara) |
+| `created_at` | `timestamptz` | Default `now()` | Waktu registrasi administrator |
 
 ---
 
-## Akun Demo dan Hak Akses
+## Peran Pengguna dan Hak Akses
 
-Disediakan akun demo untuk pengujian sistem oleh tim penguji UKK atau evaluator:
+Sistem WeddingMu menerapkan prinsip *Role-Based Access Control* (RBAC) untuk memisahkan wewenang antara pengelola teknis, panitia pelaksana acara, dan tamu undangan:
 
-| Peran (Role) | Email Login | Password / Akses | Hak Akses Utama |
-|---|---|---|---|
-| **Super Admin** | `developer@admin.id` | Masuk via Panel Admin (atau aktivasi password baru) | Akses Penuh: Kelola Admin, CMS Acara, Tamu, RSVP, Ekspor Excel/PDF, Buku Tamu |
-| **Admin Acara** | `mempelai@admin.id` | Masuk via Panel Admin | Akses Acara: CMS Acara, Kelola Tamu, RSVP, Ekspor Excel/PDF, Buku Tamu |
-| **Tamu Undangan (Demo 1)** | Tanpa Login | [Buka Undangan Tamu 1](http://localhost:3000/?to=88231920) (Kode: `88231920`) | Atas nama **Bapak Ahmad Subagyo** (Kuota: 2 orang) |
-| **Tamu Undangan (Demo 2)** | Tanpa Login | [Buka Undangan Tamu 2](http://localhost:3000/?to=77419204) (Kode: `77419204`) | Atas nama **Ibu Siti Rahmawati** (Kuota: 1 orang) |
+### 1. Super Admin (Administrator Utama)
+Memiliki kendali penuh (*full privileges*) terhadap seluruh modul aplikasi, pengaturan teknis, dan tata kelola akun administrator.
 
-*Catatan Login:*
-- Jika akun belum memiliki password di Supabase Auth, buat password melalui form **"Aktivasi Akun Admin"** pada halaman `/admin`.
-- Sistem mencocokkan email dengan daftar allowlist pada tabel `admin_users`.
+**Tugas dan Pekerjaan:**
+- **Manajemen Administrator:** Menambahkan administrator baru, menetapkan peran (*super_admin* atau *admin*), serta mencabut/menghapus hak akses admin dengan penghapusan kaskade otomatis pada sistem autentikasi (`auth.users`).
+- **Konfigurasi Acara (CMS):** Mengatur dan memperbarui informasi inti pernikahan (nama mempelai pria & wanita, tanggal pelaksanaan, lokasi gedung, alamat lengkap, dan tautan Google Maps).
+- **Manajemen Tamu Undangan:** Menginput data tamu baru, menentukan batas kuota kehadiran per tamu (1–10 orang), mengedit data, dan menghapus tamu.
+- **Generator Pesan WhatsApp:** Menyesuaikan template pesan undangan serta menghasilkan tautan personal dengan opsi domain online/lokal untuk disebarkan via WhatsApp.
+- **Monitoring Statistik Real-Time:** Memantau metrik ringkasan kehadiran (total tamu, jumlah hadir, ragu-ragu, absen, dan estimasi kebutuhan porsi katering).
+- **Pelaporan Data Resmi:** Mengekspor seluruh rekapitulasi data tamu ke berkas Excel (`.csv` UTF-8 BOM) serta mencetak dokumen resmi berstandar A4 (PDF) lengkap dengan Kop Surat resmi dan lembar pengesahan tanda tangan meja resepsi.
+- **Moderasi Buku Tamu:** Memeriksa dan menghapus doa atau ucapan yang tidak pantas dari tamu.
+
+---
+
+### 2. Admin Acara (Panitia Pelaksana / Calon Pengantin)
+Berfokus pada pengelolaan operasional acara dan koordinasi logistik kehadiran tamu tanpa akses ke manajemen pengguna sistem.
+
+**Tugas dan Pekerjaan:**
+- **Kustomisasi Detail Acara (CMS):** Menyesuaikan informasi tempat, waktu, dan tautan lokasi perayaan jika terjadi pembaruan jadwal.
+- **Pengelolaan Daftar Tamu:** Menginput daftar nama tamu dan kuota rombongan keluarga yang diundang.
+- **Distribusi Undangan Personal:** Menyalin tautan undangan unik atau mengirim pesan otomatis ke nomor WhatsApp tamu melalui fitur *Quick Share*.
+- **Pemantauan Katering & Respon:** Memantau kepastian jumlah kehadiran aktual secara langsung untuk koordinasi dengan tim katering dan panitia penerima tamu.
+- **Ekspor dan Pencetakan Laporan:** Mengunduh rekapitulasi kehadiran tamu ke format Excel serta mencetak dokumen laporan A4 untuk kebutuhan arsip fisik kepanitiaan.
+- **Moderasi Ucapan Doa:** Meninjau pesan ucapan dan doa restu yang masuk di buku tamu digital.
+
+---
+
+### 3. Tamu Undangan (Guest / Publik)
+Pengguna umum yang menerima undangan personal dan berinteraksi langsung dengan halaman undangan digital.
+
+**Tugas dan Pekerjaan:**
+- **Akses Undangan Personal:** Membuka undangan digital melalui tautan personal (`?to=kode`) dengan nama yang otomatis tertera pada cover pembuka dan formulir RSVP.
+- **Membaca Informasi Pernikahan:** Menyimak profil mempelai, jadwal countdown akad nikah dan resepsi, serta membuka petunjuk arah via Google Maps.
+- **Konfirmasi Kehadiran (RSVP):** Mengonfirmasi kepastian kehadiran (*Hadir*, *Masih Ragu*, atau *Berhalangan Hadir*) dan memasukkan jumlah rombongan yang akan hadir (maksimal sesuai kuota yang diberikan tuan rumah).
+- **Pembaruan Konfirmasi:** Mengubah status kehadiran sewaktu-waktu jika ada perubahan rencana, terlindungi tombol pembatalan agar data tersimpan tidak tertimpa tanpa sengaja.
+- **Akses E-Ticket & QR Code Masuk:** Memperoleh tiket masuk digital resmi dan mengunduh QR Code personal untuk kemudahan verifikasi (*check-in*) di meja penerima tamu.
+- **Mengisi Buku Tamu Digital:** Mengirimkan doa restu dan ucapan selamat yang langsung tayang pada teks berjalan (*marquee*) dan daftar ucapan.
+- **Kado Digital (Cashless):** Mengakses nomor rekening bank resmi kedua mempelai dengan fitur salin rekening instan atau melihat alamat pengiriman kado fisik.
+
+---
+
+### Matriks Perbandingan Hak Akses (RBAC Matrix)
+
+| Modul / Fitur Sistem | Super Admin | Admin Acara | Tamu Undangan |
+|---|:---:|:---:|:---:|
+| **Kelola Administrator (Tambah, Ubah Peran, Hapus)** | Ya | Tidak | Tidak |
+| **CMS Pengaturan Konten Acara** | Ya | Ya | Tidak |
+| **CRUD Data Tamu & Pengaturan Kuota** | Ya | Ya | Tidak |
+| **Generator Tautan & Pesan WhatsApp** | Ya | Ya | Tidak |
+| **Ekspor Data Excel (CSV) & Cetak PDF A4** | Ya | Ya | Tidak |
+| **Moderasi & Hapus Ucapan Buku Tamu** | Ya | Ya | Tidak |
+| **Lihat Statistik RSVP & Estimasi Katering** | Ya | Ya | Tidak |
+| **Akses Undangan Personal via Tautan Unik** | Ya | Ya | Ya |
+| **Kirim / Perbarui Konfirmasi RSVP Sendiri** | Ya | Ya | Ya |
+| **Unduh Tiket Masuk Berbasis QR Code** | Tidak | Tidak | Ya |
+| **Kirim Ucapan dan Doa Restu** | Ya | Ya | Ya |
+
+*Mekanisme Akses Sistem:*
+- **Administrator (Super Admin & Admin Acara):** Mengakses dashboard melalui `/admin` menggunakan kredensial email dan kata sandi yang telah didaftarkan dalam sistem serta diverifikasi terhadap allowlist tabel `admin_users`.
+- **Tamu Undangan:** Tidak memerlukan akun atau kata sandi; akses dilakukan secara aman melalui parameter token unik (`?to=kode`) yang diverifikasi langsung oleh fungsi tersimpan PostgreSQL.
 
 ---
 
 ## Panduan Instalasi dan Penggunaan
 
 ### 1. Prasyarat Sistem
-- **Node.js:** Versi `18.18.0` atau yang lebih baru (disarankan Node.js 20 LTS).
+- **Node.js:** Versi `18.18.0` atau lebih tinggi (Direkomendasikan Node.js 20 LTS).
 - **Package Manager:** `npm`, `pnpm`, atau `yarn`.
-- **Git:** Terpasang di sistem operasi Anda.
-- **Akun Supabase:** Proyek Supabase gratis untuk database PostgreSQL.
+- **Git:** Terpasang di komputer lokal.
+- **Akun Supabase:** Proyek Supabase PostgreSQL aktif.
 
 ### 2. Kloning Repository
 Buka terminal dan unduh kode sumber proyek:
@@ -321,7 +418,7 @@ cd digital_invitation
 ```
 
 ### 3. Instalasi Dependensi
-Jalankan perintah instalasi paket:
+Jalankan instalasi dependensi proyek:
 ```bash
 npm install
 ```
@@ -331,7 +428,7 @@ Salin berkas template `.env.example` menjadi `.env.local`:
 ```bash
 cp .env.example .env.local
 ```
-Buka file `.env.local` dan isi kredensial Supabase Anda:
+Buka berkas `.env.local` dan isi kredensial proyek Supabase Anda:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-public-key
@@ -339,30 +436,29 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-public-key
 
 ### 5. Setup Database di Supabase
 1. Masuk ke [Supabase Dashboard](https://supabase.com/dashboard).
-2. Buka menu **SQL Editor**.
-3. Eksekusi skrip pertama: buka file [`supabase_admin_roles.sql`](supabase_admin_roles.sql), salin ke SQL Editor, lalu jalankan (**Run**).
-4. Eksekusi skrip kedua: buka file [`supabase_fix_rls.sql`](supabase_fix_rls.sql), salin ke SQL Editor, lalu jalankan (**Run**).
-5. Database dan fungsi keamanan (RLS dan Stored Procedures) telah aktif.
+2. Masuk ke menu **SQL Editor**.
+3. Eksekusi skrip pertama: buka berkas [`supabase_admin_roles.sql`](supabase_admin_roles.sql), salin ke SQL Editor, lalu jalankan (**Run**). Skrip ini membuat tabel `admin_users`, trigger sinkronisasi `trg_admin_user_deleted`, dan fungsi allowlist `check_admin_allowlist`.
+4. Eksekusi skrip kedua: buka berkas [`supabase_fix_rls.sql`](supabase_fix_rls.sql), salin ke SQL Editor, lalu jalankan (**Run**). Skrip ini mengaktifkan kebijakan RLS dan fungsi tersimpan untuk data tamu publik.
 
 ### 6. Menjalankan Server Pengembangan
-Jalankan aplikasi secara lokal:
+Jalankan server aplikasi di lingkungan lokal:
 ```bash
 npm run dev
 ```
-Akses aplikasi melalui browser:
-- Halaman Undangan Publik: [http://localhost:3000](http://localhost:3000)
-- Halaman Panel Admin: [http://localhost:3000/admin](http://localhost:3000/admin)
+Buka browser dan akses alamat berikut:
+- **Halaman Undangan Publik:** [http://localhost:3000](http://localhost:3000) (buka dengan parameter `?to=[kode_tamu]`, contoh: `http://localhost:3000/?to=88231920`)
+- **Halaman Panel Admin:** [http://localhost:3000/admin](http://localhost:3000/admin)
 
-### 7. Uji Kualitas Kode dan Build Produksi
-Sebelum deploy, pastikan tidak ada kesalahan linter atau error build:
+### 7. Pengujian Kualitas Kode (Lint & Build)
+Sebelum melakukan proses publikasi atau penilaian, pastikan kode lulus verifikasi:
 ```bash
-# Pemeriksaan Linter ESLint (0 errors, 0 warnings)
+# 1. Pemeriksaan Linter ESLint (0 errors, 0 warnings)
 npm run lint
 
-# Kompilasi Build Next.js Produksi
+# 2. Kompilasi Build Next.js Produksi
 npm run build
 
-# Menjalankan Server Hasil Build
+# 3. Menjalankan Server Hasil Build
 npm run start
 ```
 
@@ -370,15 +466,15 @@ npm run start
 
 ## Keamanan Sistem
 
-1. **Prepared Statements dan Parameterized Queries:** Interaksi basis data melalui Supabase Client SDK (PostgREST) menggunakan parameterized queries sehingga terlindungi dari celah SQL Injection.
-2. **Row Level Security (RLS) PostgreSQL:**
-   - Tabel `tamu` dan `rsvp` dilindungi RLS sehingga pengguna publik (`anon`) tidak dapat membaca keseluruhan data tamu maupun mengubah data milik tamu lain.
-   - Akses data tamu publik dilakukan melalui fungsi tersimpan `public.get_guest_by_code(p_kode)` dan `public.submit_guest_rsvp(...)`.
-3. **Penyimpanan Password Terenkripsi:** Password administrator dikelola oleh Supabase Auth yang menggunakan hashing **bcrypt** tersertifikasi.
-4. **Validasi Input dan Sanitasi:**
-   - Validasi batas kuota di sisi klien dan database (kuota minimal 1 orang, jumlah hadir tidak boleh melebihi kuota).
-   - React JSX secara otomatis melakukan sanitasi karakter berbahaya untuk menangkal serangan Cross-Site Scripting (XSS).
-5. **Fungsi Security Definer Terisolasi:** Prosedur RPC verifikasi hak akses admin menggunakan `SECURITY DEFINER` dengan skema terisolasi untuk menghindari celah rekursi RLS.
+1. **Prepared Statements & Anti-SQL Injection:** Seluruh interaksi database melalui Supabase Client SDK (PostgREST) menggunakan parameterized query sehingga kebal dari serangan injeksi SQL.
+2. **PostgreSQL Row Level Security (RLS):**
+   - Tabel `tamu` dan `rsvp` dilindungi RLS sehingga pengguna publik (`anon`) tidak dapat melakukan dump seluruh database tamu maupun mengintip data tamu lain.
+   - Pengecekan token tamu dilakukan melalui RPC `public.get_guest_by_code(p_kode)`.
+3. **Trigger Kaskade Penghapusan Admin (`trg_admin_user_deleted`):**
+   - Saat Super Admin menghapus admin di tabel `admin_users`, trigger PostgreSQL secara otomatis menghapus record user terkait di skema `auth.users`, mencegah adanya akun zombie atau kebocoran akses.
+4. **Enkripsi Password dengan Bcrypt:** Password administrator diamankan langsung oleh engine otentikasi Supabase Auth menggunakan algoritma hashing bcrypt berstandar industri.
+5. **Sanitasi Masukan & Proteksi XSS:** React Virtual DOM secara default mensterilkan teks masukan sebelum dirender ke layar, mencegah eksekusi skrip jahat (Cross-Site Scripting).
+6. **Scroll-Locking Berbasis Reference Counting:** Penguncian scroll saat modal terbuka dikelola secara modular (`lib/scrollLock.ts`) sehingga tidak terjadi masalah halaman membeku (*stuck scroll*) saat berpindah antar dialog atau navigasi tab.
 
 ---
 
@@ -386,31 +482,32 @@ npm run start
 
 | No | Ketentuan Rubrik UKK | Status | Implementasi pada Proyek WeddingMu |
 |:---:|---|:---:|---|
-| 1 | **Autentikasi dan Multi-Role** (Minimal 2 Peran) | Lengkap | Dua peran aktif: **Super Admin** (kelola tim admin dan sistem) dan **Admin Acara** (kelola tamu dan acara). Tamu mengakses undangan dengan token kode unik. |
-| 2 | **Operasi CRUD Lengkap** | Lengkap | - **Create:** Tambah tamu baru, kirim ucapan, registrasi admin baru.<br>- **Read:** Tabel tamu berpaginasi, statistik RSVP, guestbook marquee.<br>- **Update:** Edit acara via CMS, ubah peran admin, perbarui konfirmasi RSVP.<br>- **Delete:** Hapus data tamu (cascade ke RSVP), hapus admin, hapus ucapan. |
-| 3 | **Pencarian Data (Search)** | Lengkap | Pencarian instan pada tabel tamu berdasarkan nama tamu atau kode unik 8 digit. |
-| 4 | **Filter Status** | Lengkap | Dropdown filter status kehadiran: *Semua Tamu*, *Konfirmasi Hadir*, *Masih Ragu*, *Tidak Hadir*, dan *Belum Konfirmasi*. |
-| 5 | **Pagination (Penomoran Halaman)** | Lengkap | Paginasi interaktif dengan pilihan 20, 50, atau 100 data per halaman, tombol Sebelumnya/Selanjutnya, dan nomor halaman ber-ellipsis. |
-| 6 | **Laporan yang Dapat Dicetak / Diekspor** | Lengkap | - **Export Excel (CSV):** Mengunduh data lengkap rekap kehadiran tamu dalam format CSV (UTF-8 BOM).<br>- **Cetak Laporan / PDF:** Tombol Cetak/PDF langsung membuka dialog print browser dengan format dokumen rapi. |
-| 7 | **Keamanan Dasar** | Lengkap | Password ter-hash aman (bcrypt), prepared statements anti-SQLi, validasi batas kuota kehadiran, proteksi RLS PostgreSQL, dan sanitasi XSS. |
-| 8 | **Tampilan Responsif (Mobile-Friendly)** | Lengkap | Dirancang dengan aturan **Rule of Eights (Grid 8pt)**, bebas overflow horizontal pada layar smartphone (360px–390px), serta drawer navigasi yang ergonomis. |
-| 9 | **Dokumentasi Lengkap (README dan ERD)** | Lengkap | Dokumentasi mencakup deskripsi proyek, tangkapan layar, alur sistem, ERD Mermaid, kamus data, akun demo, dan panduan instalasi. |
+| 1 | **Autentikasi dan Multi-Role** (Minimal 2 Peran) | Lengkap | Dua peran terproteksi: **Super Admin** (kelola tim admin dan hak peran) dan **Admin Acara** (kelola acara dan tamu). Tamu publik mengakses undangan secara personal dengan token kode unik. |
+| 2 | **Operasi CRUD Lengkap** | Lengkap | - **Create:** Tambah data tamu, kirim doa buku tamu, buat admin baru.<br>- **Read:** Tabel tamu interaktif, kartu statistik RSVP, daftar doa buku tamu.<br>- **Update:** Edit info acara via CMS, ubah peran admin, perbarui status konfirmasi RSVP.<br>- **Delete:** Hapus data tamu (cascade ke RSVP), hapus admin (cascade ke Auth), hapus ucapan buku tamu. |
+| 3 | **Pencarian Data (Search)** | Lengkap | Pencarian instan di dashboard admin berdasarkan nama tamu atau kode unik 8-digit. |
+| 4 | **Filter Status** | Lengkap | Filter status kehadiran fleksibel: *Semua Tamu, Konfirmasi Hadir, Masih Ragu, Tidak Hadir, Belum Konfirmasi*. |
+| 5 | **Pagination (Penomoran Halaman)** | Lengkap | Paginasi interaktif dengan pilihan 20, 50, atau 100 data per halaman, tombol navigasi cepat, dan nomor halaman adaptif. |
+| 6 | **Laporan yang Dapat Dicetak / Diekspor** | Lengkap | - **Ekspor Excel (CSV):** Mengunduh seluruh data rekapitulasi kehadiran tamu ke format CSV UTF-8 BOM.<br>- **Laporan Resmi Format A4 (PDF / Cetak):** Menghasilkan dokumen cetak resmi dengan Kop Surat, Ringkasan Eksekutif, Tabel Tamu, dan Kolom Tanda Tangan Meja Resepsi. |
+| 7 | **Keamanan Data** | Lengkap | Password terenkripsi bcrypt, proteksi RLS PostgreSQL, parameterized queries, sanitasi input XSS, dan trigger kaskade auth. |
+| 8 | **Tampilan Responsif (Mobile-Friendly)** | Lengkap | Mengimplementasikan prinsip **Rule of Eights (Grid 8pt)**, bebas overflow horizontal pada layar smartphone (360px–390px), dan modal yang dapat di-scroll secara independen. |
+| 9 | **Dokumentasi Lengkap (README & ERD)** | Lengkap | Dokumentasi lengkap memuat deskripsi, galeri tangkapan layar live, diagram alur sistem Mermaid, ERD relasional, kamus data detail, dan panduan instalasi. |
 
 ---
 
 ## Tech Stack
 
-- **Core Framework:** [Next.js](https://nextjs.org/) 16 (App Router) dengan Turbopack
-- **Bahasa Pemrograman:** [TypeScript](https://www.typescriptlang.org/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/) (Gaya Semi-Neobrutalism dan Rule of Eights)
-- **Database dan Auth:** [Supabase](https://supabase.com/) (PostgreSQL dengan Row Level Security)
-- **Animasi dan Interaksi:**
+- **Framework Inti:** [Next.js](https://nextjs.org/) 16 (App Router) dengan Turbopack
+- **Bahasa:** [TypeScript](https://www.typescriptlang.org/) 5.0
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) (Gaya Semi-Neobrutalism & Rule of Eights)
+- **Database & Otentikasi:** [Supabase](https://supabase.com/) (PostgreSQL dengan Row Level Security)
+- **Animasi & Interaktivitas:**
   - [Lenis](https://lenis.darkroom.engineering/) — Smooth momentum scrolling
-  - [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) — Animasi konfirmasi RSVP
+  - [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) — Animasi perayaan konfirmasi RSVP
+- **QR Code Engine:** [qrcode](https://www.npmjs.com/package/qrcode) — Pembangkitan tiket QR Code dinamis
 - **Tipografi:** Google Fonts (Plus Jakarta Sans, Clash Display)
 
 ---
 
 ## Lisensi
 
-Proyek ini dilisensikan di bawah **MIT License**. Bebas digunakan, dimodifikasi, dan dikembangkan untuk keperluan akademik, edukasi, maupun implementasi profesional.
+Proyek ini dilisensikan di bawah **MIT License**. Bebas digunakan, dipelajari, dan dikembangkan untuk keperluan akademik, portofolio keahlian (UKK RPL), maupun penerapan produksi profesional.
