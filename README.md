@@ -338,7 +338,7 @@ erDiagram
 ## Struktur dan Kamus Data
 
 > [!TIP]
-> Berkas rancangan basis data resmi dalam format spreadsheet Microsoft Excel siap kumpul/cetak telah disediakan: [`Rancangan_Database_WeddingMu.xlsx`](Rancangan_Database_WeddingMu.xlsx). Berkas ini memuat 8 lembar kerja (*sheets*) yang mencakup Ringkasan Proyek, Kamus Data Lengkap seluruh atribut, Spesifikasi per Tabel, serta Matriks Relasi ERD & Aturan Kaskade.
+> Berkas rancangan basis data resmi dalam format spreadsheet Microsoft Excel siap kumpul/cetak telah disediakan: [`Rancangan_Database_WeddingMu.xlsx`](docs/Rancangan_Database_WeddingMu.xlsx). Berkas ini memuat 8 lembar kerja (*sheets*) yang mencakup Ringkasan Proyek, Kamus Data Lengkap seluruh atribut, Spesifikasi per Tabel, serta Matriks Relasi ERD & Aturan Kaskade.
 
 ### 1. Tabel `public.undangan`
 Menyimpan konfigurasi acara pernikahan yang dikelola melalui fitur CMS Admin.
