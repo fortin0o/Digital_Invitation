@@ -275,19 +275,19 @@ export default function GuestbookSection({
                         className="p-4 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] text-left"
                       >
                         <div className="flex items-center justify-between gap-2 mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className={`w-8 h-8 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black`}>
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <span className={`w-8 h-8 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black shrink-0`}>
                               {initial}
                             </span>
-                            <h4 className="font-display text-sm text-[#18181B] font-bold leading-tight">
+                            <h4 className="font-display text-sm text-[#18181B] font-bold leading-tight truncate">
                               {item.nama}
                             </h4>
                           </div>
-                          <span className="font-sans text-[10px] text-[#71717A] font-semibold bg-[#FFFDF5] px-2 py-0.5 rounded-full border border-[#18181B]">
+                          <span className="font-sans text-[10px] text-[#71717A] font-semibold bg-[#FFFDF5] px-2 py-0.5 rounded-full border border-[#18181B] shrink-0">
                             {formatDate(item.tgl_kirim)}
                           </span>
                         </div>
-                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-10">
+                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-10 break-words break-all">
                           {item.isi_ucapan}
                         </p>
                       </div>
@@ -306,19 +306,19 @@ export default function GuestbookSection({
                         className="p-4 rounded-2xl bg-white border-2 border-[#18181B] shadow-[3px_3px_0px_#18181B] text-left"
                       >
                         <div className="flex items-center justify-between gap-2 mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className={`w-8 h-8 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black`}>
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <span className={`w-8 h-8 rounded-full ${color} border-2 border-[#18181B] flex items-center justify-center font-display text-xs text-[#18181B] font-black shrink-0`}>
                               {initial}
                             </span>
-                            <h4 className="font-display text-sm text-[#18181B] font-bold leading-tight">
+                            <h4 className="font-display text-sm text-[#18181B] font-bold leading-tight truncate">
                               {item.nama}
                             </h4>
                           </div>
-                          <span className="font-sans text-[10px] text-[#71717A] font-semibold bg-[#FFFDF5] px-2 py-0.5 rounded-full border border-[#18181B]">
+                          <span className="font-sans text-[10px] text-[#71717A] font-semibold bg-[#FFFDF5] px-2 py-0.5 rounded-full border border-[#18181B] shrink-0">
                             {formatDate(item.tgl_kirim)}
                           </span>
                         </div>
-                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-10">
+                        <p className="font-sans text-xs text-[#27272A] leading-relaxed font-medium pl-10 break-words break-all">
                           {item.isi_ucapan}
                         </p>
                       </div>

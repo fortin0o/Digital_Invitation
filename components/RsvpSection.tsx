@@ -350,9 +350,9 @@ export default function RsvpSection({
                   {tamu ? "Nama Tamu Undangan" : "Verifikasi Kode Undangan"}
                 </label>
                 {tamu ? (
-                  <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-between">
-                    <div>
-                      <span className="font-display font-extrabold text-base text-[#18181B] block">
+                  <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] flex items-center justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <span className="font-display font-extrabold text-base text-[#18181B] block break-words">
                         {tamu.nama_tamu}
                       </span>
                       <span className="text-[11px] text-[#2EE59D] font-bold flex items-center gap-1 mt-1">
@@ -360,7 +360,7 @@ export default function RsvpSection({
                         Terdaftar di buku tamu resmi
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#FFE600] text-[#18181B] font-bold border border-[#18181B]">
                         Maks {tamu.kuota || 1} org
                       </span>
@@ -449,7 +449,7 @@ export default function RsvpSection({
                       {jumlahHadir} Orang (Maks {maxQuota})
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     {Array.from({ length: maxQuota }, (_, i) => i + 1).map((num) => (
                       <button
                         key={num}

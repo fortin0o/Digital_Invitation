@@ -105,8 +105,8 @@ export default function CoverSection({
 
         <NeoDivider className="!my-2 sm:!my-4" />
 
-        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-[10px] sm:text-xs font-bold mb-4 max-w-full">
-          <span className="truncate">{formattedDate}</span>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#38BDF8] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] text-[10px] sm:text-xs font-bold mb-4 max-w-full text-center">
+          <span className="break-words leading-tight">{formattedDate}</span>
         </div>
 
         {/* Guest Greeting Box */}

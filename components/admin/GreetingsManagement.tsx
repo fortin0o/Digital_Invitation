@@ -131,16 +131,16 @@ export default function GreetingsManagement({
               key={item.id_ucapan}
               className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2.5px_2.5px_0px_#18181B] flex flex-col sm:flex-row sm:items-start justify-between gap-4 hover:bg-white transition-colors"
             >
-              <div className="space-y-1">
-                <div className="flex items-baseline gap-2">
-                  <h3 className="font-display text-sm font-extrabold text-[#18181B]">
+              <div className="space-y-1 min-w-0 flex-1">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <h3 className="font-display text-sm font-extrabold text-[#18181B] truncate">
                     {item.nama}
                   </h3>
-                  <span className="text-[10px] text-[#71717A] font-bold">
+                  <span className="text-[10px] text-[#71717A] font-bold shrink-0">
                     • {formatDate(item.tgl_kirim)}
                   </span>
                 </div>
-                <p className="text-xs text-[#27272A] leading-relaxed font-medium">
+                <p className="text-xs text-[#27272A] leading-relaxed font-medium break-words break-all">
                   {item.isi_ucapan}
                 </p>
               </div>
