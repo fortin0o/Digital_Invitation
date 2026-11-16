@@ -412,7 +412,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
                 Domain Tautan untuk Share Undangan
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold text-[#18181B]">
-                <label className="flex items-start gap-2 p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] cursor-pointer">
+                <label className="flex items-start gap-2.5 p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] cursor-pointer">
                   <input
                     type="radio"
                     name="domainMode"
@@ -421,14 +421,16 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
                     onChange={() =>
                       setWaConfig((prev) => ({ ...prev, domainMode: "production" }))
                     }
-                    className="accent-[#18181B] mt-0.5"
+                    className="accent-[#18181B] mt-0.5 shrink-0"
                   />
-                  <div>
-                    <span className="font-black text-[#18181B]">{DEFAULT_PRODUCTION_DOMAIN}</span>
-                    <span className="ml-2 text-[9px] bg-[#FFE600] text-[#18181B] px-1.5 py-0.5 rounded font-black border border-[#18181B]">
-                      Rekomendasi
-                    </span>
-                    <p className="text-[10px] text-[#71717A] font-medium mt-1">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-black text-[#18181B] break-all">{DEFAULT_PRODUCTION_DOMAIN}</span>
+                      <span className="inline-flex items-center text-[9px] bg-[#FFE600] text-[#18181B] px-1.5 py-0.5 rounded font-black border border-[#18181B] shrink-0 whitespace-nowrap">
+                        Rekomendasi
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-[#71717A] font-medium mt-1 leading-snug">
                       Link bisa dibuka di HP penguji &amp; tamu meskipun admin sedang membuka via laptop.
                     </p>
                   </div>

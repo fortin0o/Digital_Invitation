@@ -92,14 +92,29 @@ export default function GuestManagement({
     const isModalOpen = Boolean(showAddModal || qrModalGuest || showWaConfigModal);
     if (!isModalOpen) return;
 
-    const originalOverflow = document.body.style.overflow;
-    const originalOverscroll = document.body.style.overscrollBehavior;
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyOverscroll = document.body.style.overscrollBehavior;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
     document.body.style.overscrollBehavior = "none";
 
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    if (lenis) {
+      lenis.stop();
+    }
+
     return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.overscrollBehavior = originalOverscroll;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.overscrollBehavior = originalBodyOverscroll;
+      if (lenis) {
+        lenis.start();
+      }
     };
   }, [showAddModal, qrModalGuest, showWaConfigModal]);
 
@@ -713,10 +728,17 @@ export default function GuestManagement({
       {showAddModal && (
         <div
           onClick={() => setShowAddModal(false)}
-          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain"
+          onWheel={(e) => {
+            if (e.target === e.currentTarget) e.preventDefault();
+          }}
+          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-hidden"
         >
           <div
             onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
             className="w-full max-w-sm rounded-2xl sm:rounded-3xl bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[85vh] overflow-y-auto overscroll-contain"
           >
             <h3 className="font-display text-xl font-extrabold text-[#18181B] mb-1">
@@ -781,10 +803,17 @@ export default function GuestManagement({
       {qrModalGuest && (
         <div
           onClick={() => setQrModalGuest(null)}
-          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain"
+          onWheel={(e) => {
+            if (e.target === e.currentTarget) e.preventDefault();
+          }}
+          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-hidden"
         >
           <div
             onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
             className="w-full max-w-xs rounded-2xl sm:rounded-3xl bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#38BDF8] relative text-center max-h-[85vh] overflow-y-auto overscroll-contain"
           >
             <button
@@ -851,11 +880,18 @@ export default function GuestManagement({
       {showWaConfigModal && (
         <div
           onClick={() => setShowWaConfigModal(false)}
-          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-y-auto overscroll-contain"
+          onWheel={(e) => {
+            if (e.target === e.currentTarget) e.preventDefault();
+          }}
+          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-hidden"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg rounded-2xl sm:rounded-3xl bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#2EE59D] relative max-h-[85vh] overflow-y-auto overscroll-contain space-y-4"
+            onWheel={(e) => e.stopPropagation()}
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
+            className="w-full max-w-lg rounded-2xl sm:rounded-3xl bg-white border-[3px] border-[#18181B] p-4 sm:p-6 shadow-[8px_8px_0px_#2EE59D] relative max-h-[85vh] overflow-y-auto overscroll-contain space-y-4"
           >
             <button
               onClick={() => setShowWaConfigModal(false)}
@@ -884,7 +920,7 @@ export default function GuestManagement({
               </label>
 
               <div className="space-y-1.5 text-xs font-bold text-[#18181B]">
-                <label className="flex items-center gap-2 cursor-pointer p-2 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20">
+                <label className="flex items-start gap-2.5 cursor-pointer p-2.5 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20 transition-colors">
                   <input
                     type="radio"
                     name="domainMode"
@@ -893,20 +929,22 @@ export default function GuestManagement({
                     onChange={() =>
                       setTempWaConfig((prev) => ({ ...prev, domainMode: "production" }))
                     }
-                    className="accent-[#18181B]"
+                    className="accent-[#18181B] mt-0.5 shrink-0"
                   />
-                  <div>
-                    <span className="font-black text-[#18181B]">{DEFAULT_PRODUCTION_DOMAIN}</span>
-                    <span className="ml-2 text-[10px] bg-[#FFE600] text-[#18181B] px-1.5 py-0.5 rounded font-black border border-[#18181B]">
-                      Rekomendasi (Online HP)
-                    </span>
-                    <p className="text-[10px] text-[#71717A] font-medium mt-0.5">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-black text-[#18181B] break-all">{DEFAULT_PRODUCTION_DOMAIN}</span>
+                      <span className="inline-flex items-center text-[9px] sm:text-[10px] bg-[#FFE600] text-[#18181B] px-1.5 py-0.5 rounded font-black border border-[#18181B] shrink-0 whitespace-nowrap">
+                        Rekomendasi (Online HP)
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-[#71717A] font-medium mt-0.5 leading-snug">
                       Bisa dibuka oleh penguji &amp; tamu langsung di smartphone mereka.
                     </p>
                   </div>
                 </label>
 
-                <label className="flex items-center gap-2 cursor-pointer p-2 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20">
+                <label className="flex items-start gap-2.5 cursor-pointer p-2.5 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20 transition-colors">
                   <input
                     type="radio"
                     name="domainMode"
@@ -915,17 +953,17 @@ export default function GuestManagement({
                     onChange={() =>
                       setTempWaConfig((prev) => ({ ...prev, domainMode: "auto" }))
                     }
-                    className="accent-[#18181B]"
+                    className="accent-[#18181B] mt-0.5 shrink-0"
                   />
-                  <div>
-                    <span>Otomatis (Sesuai Browser Saat Ini)</span>
-                    <p className="text-[10px] text-[#71717A] font-medium mt-0.5">
+                  <div className="min-w-0 flex-1">
+                    <span className="font-black text-[#18181B]">Otomatis (Sesuai Browser Saat Ini)</span>
+                    <p className="text-[10px] text-[#71717A] font-medium mt-0.5 leading-snug">
                       Mengikuti domain yang sedang dibuka (misal: localhost jika sedang dibuka di laptop).
                     </p>
                   </div>
                 </label>
 
-                <label className="flex items-start gap-2 cursor-pointer p-2 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20">
+                <label className="flex items-start gap-2.5 cursor-pointer p-2.5 rounded-xl hover:bg-white border border-transparent hover:border-[#18181B]/20 transition-colors">
                   <input
                     type="radio"
                     name="domainMode"
@@ -934,10 +972,10 @@ export default function GuestManagement({
                     onChange={() =>
                       setTempWaConfig((prev) => ({ ...prev, domainMode: "custom" }))
                     }
-                    className="accent-[#18181B] mt-0.5"
+                    className="accent-[#18181B] mt-0.5 shrink-0"
                   />
-                  <div className="flex-1">
-                    <span>Domain Kustom Sendiri</span>
+                  <div className="min-w-0 flex-1">
+                    <span className="font-black text-[#18181B]">Domain Kustom Sendiri</span>
                     {tempWaConfig.domainMode === "custom" && (
                       <input
                         type="url"

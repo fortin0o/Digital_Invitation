@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
 export default function SmoothScrollProvider({
@@ -8,10 +9,21 @@ export default function SmoothScrollProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    // Initialize Lenis
+    // Disable Lenis completely on admin dashboard routes to allow native modal and table scrolling
+    if (pathname?.startsWith("/admin")) {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+        delete (window as unknown as { __lenis?: Lenis }).__lenis;
+      }
+      return;
+    }
+
+    // Initialize Lenis for public invitation pages
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -20,6 +32,12 @@ export default function SmoothScrollProvider({
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 1.5,
+      prevent: (node) => {
+        return (
+          node.hasAttribute("data-lenis-prevent") ||
+          Boolean(node.closest?.("[data-lenis-prevent]"))
+        );
+      },
     });
 
     lenisRef.current = lenis;
@@ -35,9 +53,10 @@ export default function SmoothScrollProvider({
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      lenisRef.current = null;
       delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
-  }, []);
+  }, [pathname]);
 
   return <>{children}</>;
 }

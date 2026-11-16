@@ -36,14 +36,29 @@ export default function AdminHeader({
   useEffect(() => {
     if (!mobileMenuOpen) return;
 
-    const originalOverflow = document.body.style.overflow;
-    const originalOverscroll = document.body.style.overscrollBehavior;
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyOverscroll = document.body.style.overscrollBehavior;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
     document.body.style.overflow = "hidden";
     document.body.style.overscrollBehavior = "none";
 
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    if (lenis) {
+      lenis.stop();
+    }
+
     return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.overscrollBehavior = originalOverscroll;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.overflow = originalBodyOverscroll;
+      if (lenis) {
+        lenis.start();
+      }
     };
   }, [mobileMenuOpen]);
 
@@ -157,7 +172,11 @@ export default function AdminHeader({
             />
 
             {/* Dropdown Menu Content */}
-            <div className="sm:hidden relative z-40 bg-white border-t-2 border-[#18181B] -mx-4 -mb-3 px-4 py-4 space-y-3 shadow-[0_4px_0px_#18181B] animate-in slide-in-from-top-2 duration-150 max-h-[calc(100vh-64px)] overflow-y-auto overscroll-contain">
+            <div
+              onWheel={(e) => e.stopPropagation()}
+              data-lenis-prevent="true"
+              className="sm:hidden relative z-40 bg-white border-t-2 border-[#18181B] -mx-4 -mb-3 px-4 py-4 space-y-3 shadow-[0_4px_0px_#18181B] animate-in slide-in-from-top-2 duration-150 max-h-[calc(100vh-64px)] overflow-y-auto overscroll-contain"
+            >
               <div className="p-3 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-[10px] uppercase font-bold text-[#71717A]">Masuk Sebagai</p>
