@@ -54,7 +54,7 @@ export default function GuestManagement({
   const [pageSize, setPageSize] = useState(20);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newNama, setNewNama] = useState("");
-  const [newKuota, setNewKuota] = useState(1);
+  const [newKuota, setNewKuota] = useState<number | "">(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -117,7 +117,7 @@ export default function GuestManagement({
           id_undangan: idUndangan,
           nama_tamu: newNama.trim(),
           kode: code,
-          kuota: Number(newKuota) || 1,
+          kuota: Math.max(1, Number(newKuota) || 1),
         })
         .select("id_tamu");
 
@@ -352,7 +352,11 @@ export default function GuestManagement({
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           {/* Add Guest Button - Prominent full-width on mobile */}
           <button
-            onClick={() => setShowAddModal(true)}
+            onClick={() => {
+              setNewNama("");
+              setNewKuota(1);
+              setShowAddModal(true);
+            }}
             disabled={!idUndangan}
             type="button"
             title={!idUndangan ? "Tambahkan data undangan di database terlebih dahulu" : undefined}
@@ -686,7 +690,11 @@ export default function GuestManagement({
       {/* Add Guest Modal */}
       {showAddModal && (
         <div
-          onClick={() => setShowAddModal(false)}
+          onClick={() => {
+            setShowAddModal(false);
+            setNewNama("");
+            setNewKuota(1);
+          }}
           onWheel={(e) => {
             if (e.target === e.currentTarget) e.preventDefault();
           }}
@@ -729,10 +737,28 @@ export default function GuestManagement({
                 <input
                   type="number"
                   min={1}
-                  max={10}
+                  max={50}
                   required
                   value={newKuota}
-                  onChange={(e) => setNewKuota(Number(e.target.value))}
+                  placeholder="1"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") {
+                      setNewKuota("");
+                      return;
+                    }
+                    const parsed = parseInt(val, 10);
+                    if (isNaN(parsed) || parsed <= 0) {
+                      setNewKuota("");
+                    } else {
+                      setNewKuota(parsed);
+                    }
+                  }}
+                  onBlur={() => {
+                    if (newKuota === "" || Number(newKuota) < 1) {
+                      setNewKuota(1);
+                    }
+                  }}
                   className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
                 />
               </div>
@@ -740,7 +766,11 @@ export default function GuestManagement({
               <div className="flex items-center gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setNewNama("");
+                    setNewKuota(1);
+                  }}
                   className="flex-1 py-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] text-[#18181B] text-xs font-bold cursor-pointer"
                 >
                   Batal
