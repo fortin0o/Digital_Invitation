@@ -3,8 +3,9 @@
 <div align="center">
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.3-black?style=flat-square&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-gray?style=flat-square)
 
@@ -12,7 +13,7 @@ Platform Undangan Pernikahan Digital Interaktif dengan Sistem Konfirmasi Kehadir
 
 *Dokumentasi Proyek Uji Kompetensi Keahlian (UKK) Rekayasa Perangkat Lunak.*
 
-[Peran Pengguna](#peran-pengguna-dan-hak-akses) • [Tangkapan Layar](#tangkapan-layar) • [Fitur Utama](#fitur-utama-dan-keunggulan) • [Alur Sistem](#alur-sistem-dan-arsitektur) • [Struktur ERD](#entity-relationship-diagram-erd) • [Panduan Instalasi](#panduan-instalasi-dan-penggunaan)
+[Peran Pengguna](#peran-pengguna-dan-hak-akses) • [Tangkapan Layar](#tangkapan-layar) • [Struktur Kode](#struktur-direktori-dan-arsitektur-kode) • [Fitur Utama](#fitur-utama-dan-keunggulan) • [Alur Sistem](#alur-sistem-dan-arsitektur) • [Struktur ERD](#entity-relationship-diagram-erd) • [Panduan Instalasi](#panduan-instalasi-dan-penggunaan)
 
 </div>
 
@@ -23,14 +24,15 @@ Platform Undangan Pernikahan Digital Interaktif dengan Sistem Konfirmasi Kehadir
 2. [Tangkapan Layar Sistem](#tangkapan-layar)
 3. [Fitur Utama dan Keunggulan](#fitur-utama-dan-keunggulan)
 4. [Alur Kerja dan Arsitektur Sistem](#alur-sistem-dan-arsitektur)
-5. [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
-6. [Struktur dan Kamus Data](#struktur-dan-kamus-data)
-7. [Peran Pengguna dan Hak Akses](#peran-pengguna-dan-hak-akses)
-8. [Panduan Instalasi dan Penggunaan](#panduan-instalasi-dan-penggunaan)
-9. [Keamanan Sistem](#keamanan-sistem)
-10. [Pemenuhan Ketentuan Rubrik UKK](#pemenuhan-ketentuan-rubrik-ukk)
-11. [Tech Stack](#tech-stack)
-12. [Lisensi](#lisensi)
+5. [Struktur Direktori dan Arsitektur Kode](#struktur-direktori-dan-arsitektur-kode)
+6. [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
+7. [Struktur dan Kamus Data](#struktur-dan-kamus-data)
+8. [Peran Pengguna dan Hak Akses](#peran-pengguna-dan-hak-akses)
+9. [Panduan Instalasi dan Penggunaan](#panduan-instalasi-dan-penggunaan)
+10. [Keamanan Sistem](#keamanan-sistem)
+11. [Pemenuhan Ketentuan Rubrik UKK](#pemenuhan-ketentuan-rubrik-ukk)
+12. [Tech Stack](#tech-stack)
+13. [Lisensi](#lisensi)
 
 ---
 
@@ -215,64 +217,89 @@ flowchart LR
     end
 ```
 
-### 3. Struktur Direktori Berbasis Peran (*Role & Domain-Driven Structure*)
+---
 
-Untuk mempermudah pemeliharaan (*maintainability*) dan pemisahan tanggung jawab (*separation of concerns*), struktur kode dikelompokkan secara terisolasi berdasarkan peran pengguna dan fungsionalitasnya:
+## Struktur Direktori dan Arsitektur Kode
+
+Sistem WeddingMu mengimplementasikan pendekatan **Role & Domain-Driven Component Architecture** dengan pemisahan tegas antara Server Components dan Client Components untuk efisiensi render serta keamanan data:
 
 ```
 digital_invitation/
-├── app/                           # App Router (Next.js 16)
-│   ├── layout.tsx                 # Root layout & font provider
-│   ├── page.tsx                   # Halaman undangan publik root (?to=kode)
-│   ├── [slug]/                    # Rute dinamis undangan berdasarkan slug
-│   │   └── [kode]/                # Rute undangan slug + kode tamu
-│   └── admin/                     # Rute dashboard admin
-│       ├── layout.tsx             # Layout khusus admin panel
-│       ├── page.tsx               # Dashboard utama admin (Overview, Tamu, CMS, Doa, Admin)
-│       └── login/                 # Pengarah rute login
+├── app/                                 # App Router (Next.js 16)
+│   ├── layout.tsx                       # Root layout, Google Fonts (Plus Jakarta Sans & Clash Display)
+│   ├── page.tsx                         # Root Server Component (?to=kode) & SEO Metadata
+│   ├── globals.css                      # Styling global, Tailwind v4, & @media print stylesheet
+│   ├── favicon.ico                      # Ikon browser
+│   ├── [slug]/                          # Rute dinamis undangan berdasarkan slug acara
+│   │   ├── page.tsx                     # Server Component resolusi slug
+│   │   └── [kode]/                      # Rute alternatif slug + path kode tamu
+│   │       └── page.tsx                 # Resolusi langsung slug dan kode tamu
+│   └── admin/                           # Panel Administrator
+│       ├── layout.tsx                   # Layout khusus panel pengelola
+│       ├── page.tsx                     # Dashboard utama admin (Overview, Tamu, CMS, Doa, Admin)
+│       └── login/                       # Rute redirect login
+│           └── page.tsx                 # Gerbang autentikasi admin
 │
-├── components/                    # Komponen Antarmuka Terstruktur
-│   ├── admin/                     # Khusus Administrator (Super Admin & Admin Acara)
-│   │   ├── AdminHeader.tsx        # Navigasi & profil admin
-│   │   ├── AdminLoginForm.tsx     # Form login & aktivasi password Supabase
-│   │   ├── AdminManagement.tsx    # Manajemen akun & hak peran admin
-│   │   ├── GreetingsManagement.tsx# Moderasi buku tamu & ucapan
-│   │   ├── GuestManagement.tsx    # CRUD tamu, kuota, & generator WhatsApp
-│   │   ├── InvitationCms.tsx      # CMS data acara & link Google Maps
-│   │   ├── PrintableGuestReport.tsx# Dokumen cetak laporan resmi A4
-│   │   └── RsvpSummaryCards.tsx   # Kartu statistik RSVP & katering
+├── components/                          # Arsitektur Komponen Terisolasi Berbasis Peran
+│   ├── admin/                           # Domain Administrator (Super Admin & Admin Acara)
+│   │   ├── AdminHeader.tsx              # Bar navigasi atas, status peran, tombol logout
+│   │   ├── AdminLoginForm.tsx           # Form login Supabase Auth, pesan error interaktif
+│   │   ├── AdminManagement.tsx          # Modul Super Admin: Tambah admin, ubah role, cabut akses
+│   │   ├── GreetingsManagement.tsx      # Moderasi buku tamu & hapus ucapan spam
+│   │   ├── GuestManagement.tsx          # CRUD data tamu, kuota, live search, filter, WhatsApp share
+│   │   ├── InvitationCms.tsx            # CMS konfigurasi acara, tempat, tanggal, dan koordinat maps
+│   │   ├── PrintableGuestReport.tsx     # Dokumen cetak laporan resmi A4 (@media print isolation)
+│   │   └── RsvpSummaryCards.tsx         # Kartu metrik: Total tamu, hadir, ragu, katering
 │   │
-│   ├── invitation/                # Khusus Tamu Undangan (Guest / Publik)
-│   │   ├── MainInvitationView.tsx # Kontainer orkestrasi seluruh section undangan
-│   │   ├── CoverSection.tsx       # Cover pembuka dengan nama personal tamu
-│   │   ├── HeroSection.tsx        # Hero banner & countdown akad/resepsi
-│   │   ├── CoupleSection.tsx      # Profil kedua mempelai
-│   │   ├── EventSection.tsx       # Jadwal acara & tombol navigasi Google Maps
-│   │   ├── RsvpSection.tsx        # Konfirmasi kehadiran 2-state & tiket QR
-│   │   ├── GuestbookSection.tsx   # Formulir ucapan & running text doa restu
-│   │   ├── GallerySection.tsx     # Galeri dokumentasi pra-nikah
-│   │   ├── DigitalGiftSection.tsx # Rekening bank (salin otomatis) & kado fisik
-│   │   ├── QuoteSection.tsx       # Kutipan doa & ayat suci
-│   │   └── FooterSection.tsx      # Penutup & ucapan terima kasih
+│   ├── invitation/                      # Domain Tamu Undangan (Guest / Publik)
+│   │   ├── MainInvitationView.tsx       # Orkestrator utama seluruh seksi undangan publik
+│   │   ├── CoverSection.tsx             # Sampul personal: nama tamu dari URL + tombol buka undangan
+│   │   ├── HeroSection.tsx              # Banner utama, judul acara, countdown akad & resepsi
+│   │   ├── CoupleSection.tsx            # Profil detail kedua calon mempelai
+│   │   ├── EventSection.tsx             # Timeline jadwal acara, alamat, navigasi Google Maps
+│   │   ├── RsvpSection.tsx              # State Machine RSVP 2-state, tiket QR, proteksi batal ubah
+│   │   ├── GuestbookSection.tsx         # Form ucapan & display ucapan teks berjalan (marquee)
+│   │   ├── GallerySection.tsx           # Galeri dokumentasi pra-nikah
+│   │   ├── DigitalGiftSection.tsx       # Rekening bank (salin otomatis) & alamat kado fisik
+│   │   ├── QuoteSection.tsx             # Kutipan ayat suci & doa pernikahan
+│   │   └── FooterSection.tsx            # Seksi penutup, kredit, dan ucapan terima kasih
 │   │
-│   ├── ui/                        # Primitif Desain Neobrutalism Bersama
-│   │   ├── NeoSticker.tsx         # Stiker visual kontras tinggi & sudut rotasi
-│   │   └── NeoDivider.tsx         # Garis pembatas neobrutal 3px dengan dot aksen
+│   ├── ui/                              # Primitif Desain Neobrutalism Bersama
+│   │   ├── NeoSticker.tsx               # Stiker aksen visual kontras tinggi dengan rotasi dinamis
+│   │   └── NeoDivider.tsx               # Garis pembatas neobrutal 3px dengan aksen dot
 │   │
-│   └── providers/                 #  Wrapper Global & Efek Scroll
-│       ├── SmoothScrollProvider.tsx# Inisialisasi Lenis smooth scrolling
-│       └── ScrollFadeProvider.tsx # Observer animasi kemunculan elemen
+│   └── providers/                       # Wrapper Global & Efek Scroll
+│       ├── SmoothScrollProvider.tsx     # Inisialisasi momentum smooth scrolling (Lenis)
+│       └── ScrollFadeProvider.tsx       # Intersection Observer untuk animasi kemunculan elemen
 │
-├── lib/                           # Modul Logika & Utilitas Terpusat
-│   ├── adminAuth.ts               # Autentikasi admin, RPC allowlist & verifikasi peran
-│   ├── guestInvitation.ts         # Resolusi token tamu, query database & metadata SEO
-│   ├── invitationShareConfig.ts   # Pemformat pesan WhatsApp & pilihan domain
-│   ├── qrTicketImage.ts           # Pembangkit QR code & pengunduh kartu tiket PNG
-│   ├── scrollLock.ts              # Pengunci scroll modular anti-stuck
-│   └── supabase.ts                # Klien database PostgreSQL Supabase
+├── lib/                                 # Lapisan Logika Bisnis & Utilitas Terpusat
+│   ├── adminAuth.ts                     # Otorisasi RBAC, verifikasi allowlist via database RPC
+│   ├── guestInvitation.ts               # Resolusi data tamu, proteksi RLS via SECURITY DEFINER
+│   ├── invitationShareConfig.ts         # Generator pesan personal WhatsApp & pengalih domain
+│   ├── qrTicketImage.ts                 # Canvas renderer untuk ekspor gambar tiket QR PNG resolusi tinggi
+│   ├── scrollLock.ts                    # Pengunci scroll modular berbasis Reference Counting (anti-freeze)
+│   └── supabase.ts                      # Inisialisasi klien koneksi PostgreSQL Supabase
 │
-└── public/                        # Aset Statis (Foto mempelai, ikon, font)
+├── docs/                                # Dokumentasi Visual Sistem
+│   └── screenshots/                     # 7 Berkas tangkapan layar antarmuka sistem resolusi tinggi
+│
+├── supabase_admin_roles.sql             # Skrip SQL: Tabel admin_users, trigger cascade auth, allowlist RPC
+├── supabase_fix_rls.sql                 # Skrip SQL: Kebijakan RLS publik & RPC get_guest_by_code
+└── public/                              # Aset Statis (Foto mempelai, ornamen, ikon)
 ```
+
+### Pola Desain Perangkat Lunak yang Diterapkan:
+1. **Server vs. Client Component Separation:**
+   - Halaman root `app/page.tsx` dieksekusi di server untuk memproses parameter `?to=kode`, memanggil RPC basis data, dan menghasilkan OpenGraph metadata sebelum dikirim ke peramban.
+   - Seluruh komponen interaktif di `components/invitation/` dan `components/admin/` menggunakan direktif `"use client"` untuk mengelola *local state*, audio, kanvas, dan efek animasi.
+2. **2-State / 3-Step RSVP State Machine:**
+   - **State 1:** Formulir awal (belum konfirmasi).
+   - **State 2:** E-Ticket & QR Pass resmi yang diterbitkan setelah konfirmasi.
+   - **State 3:** Mode revisi dengan proteksi pembatalan (`savedRsvpStatus` dan `savedGuestCount`) sehingga data di layar tidak rusak jika pengguna membatalkan perubahan.
+3. **Reference-Counted Scroll Lock:**
+   - Menghindari bug umum aplikasi web modern di mana penutupan modal menyebabkan halaman membeku (*frozen scroll*). Modul `lib/scrollLock.ts` mengelola hitungan pembukaan dialog secara global.
+4. **Isolasi Cetak `@media print`:**
+   - Halaman dashboard admin dipisahkan dari dokumen fisik melalui stylesheet khusus. Saat tombol cetak ditekan, antarmuka layar (`.screen-only`) disembunyikan dan dokumen standar A4 (`.print-only`) dirender secara sempurna untuk PDF/printer.
 
 ---
 
@@ -338,7 +365,7 @@ erDiagram
 ## Struktur dan Kamus Data
 
 > [!TIP]
-> Berkas rancangan basis data resmi dalam format spreadsheet Microsoft Excel siap kumpul/cetak telah disediakan: [`Rancangan_Database_WeddingMu.xlsx`](Rancangan_Database_WeddingMu.xlsx) (tersedia juga di [`docs/Rancangan_Database_WeddingMu.xlsx`](docs/Rancangan_Database_WeddingMu.xlsx)). Berkas ini memuat 8 lembar kerja (*sheets*) yang mencakup Ringkasan Proyek, Kamus Data Lengkap seluruh atribut, Spesifikasi per Tabel, serta Matriks Relasi ERD & Aturan Kaskade.
+> Skema basis data relasional dikelola melalui migrasi SQL resmi: [`supabase_admin_roles.sql`](supabase_admin_roles.sql) dan [`supabase_fix_rls.sql`](supabase_fix_rls.sql), dengan struktur relasi dan aturan integritas yang telah diuraikan pada diagram ERD di atas.
 
 ### 1. Tabel `public.undangan`
 Menyimpan konfigurasi acara pernikahan yang dikelola melalui fitur CMS Admin.
@@ -467,7 +494,7 @@ Pengguna umum yang menerima undangan personal dan berinteraksi langsung dengan h
 ## Panduan Instalasi dan Penggunaan
 
 ### 1. Prasyarat Sistem
-- **Node.js:** Versi `18.18.0` atau lebih tinggi (Direkomendasikan Node.js 20 LTS).
+- **Node.js:** Versi `18.18.0` atau lebih tinggi (Direkomendasikan Node.js 20 LTS / 22 LTS).
 - **Package Manager:** `npm`, `pnpm`, atau `yarn`.
 - **Git:** Terpasang di komputer lokal.
 - **Akun Supabase:** Proyek Supabase PostgreSQL aktif.
@@ -559,9 +586,10 @@ npm run start
 ## Tech Stack
 
 - **Framework Inti:** [Next.js](https://nextjs.org/) 16 (App Router) dengan Turbopack
-- **Bahasa:** [TypeScript](https://www.typescriptlang.org/) 5.0
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/) (Gaya Semi-Neobrutalism & Rule of Eights)
-- **Database & Otentikasi:** [Supabase](https://supabase.com/) (PostgreSQL dengan Row Level Security)
+- **Library UI:** [React](https://react.dev/) 19
+- **Bahasa Pemrograman:** [TypeScript](https://www.typescriptlang.org/) 5.0
+- **Styling & Desain:** [Tailwind CSS](https://tailwindcss.com/) v4.0 (Gaya Neobrutalism & Rule of Eights)
+- **Database & Otentikasi:** [Supabase](https://supabase.com/) (PostgreSQL dengan Row Level Security & Triggers)
 - **Animasi & Interaktivitas:**
   - [Lenis](https://lenis.darkroom.engineering/) — Smooth momentum scrolling
   - [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) — Animasi perayaan konfirmasi RSVP
