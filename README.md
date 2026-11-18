@@ -321,8 +321,8 @@ erDiagram
         varchar nama_wanita "Nama lengkap pengantin wanita"
         timestamptz tgl_acara "Waktu pelaksanaan akad & resepsi"
         varchar tempat "Nama gedung / aula acara"
-        varchar alamat "Alamat lengkap lokasi acara"
-        varchar link_maps "Tautan titik Google Maps"
+        text alamat "Alamat lengkap lokasi acara"
+        text link_maps "Tautan titik Google Maps (URL panjang)"
         timestamptz created_at
     }
 

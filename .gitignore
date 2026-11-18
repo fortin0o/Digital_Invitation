@@ -51,8 +51,9 @@ CLAUDE.md
 .claude/
 .cursor/
 
-# database scripts / local sql
+# database scripts / local sql (kecualikan skrip migrasi Supabase yang wajib untuk setup project)
 *.sql
+!supabase_*.sql
 
 # vercel
 .vercel

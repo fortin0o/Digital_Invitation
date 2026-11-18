@@ -118,6 +118,19 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
         }
       }
 
+      let cleanLinkMaps: string | null = linkMaps.trim() || null;
+      if (cleanLinkMaps) {
+        // Ekstrak URL jika admin mem-paste embed code iframe
+        const iframeMatch = cleanLinkMaps.match(/src=["']([^"']+)["']/i);
+        if (iframeMatch) {
+          cleanLinkMaps = iframeMatch[1];
+        }
+        // Tambahkan protokol jika belum ada
+        if (!/^https?:\/\//i.test(cleanLinkMaps)) {
+          cleanLinkMaps = `https://${cleanLinkMaps}`;
+        }
+      }
+
       const updatePayload = {
         slug: slug.trim().toLowerCase().replace(/\s+/g, "-"),
         nama_pria: namaPria.trim(),
@@ -125,7 +138,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
         tgl_acara: isoDate,
         tempat: tempat.trim(),
         alamat: alamat.trim(),
-        link_maps: linkMaps.trim() || null,
+        link_maps: cleanLinkMaps,
       };
 
       const { data, error } = await supabase
@@ -141,6 +154,9 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           "Pembaruan tidak tersimpan: pastikan akun Anda memiliki izin admin atau data acara masih ada di database."
         );
       } else {
+        if (cleanLinkMaps) {
+          setLinkMaps(cleanLinkMaps);
+        }
         saveStoredWaConfig(waConfig);
         showToast("Perubahan isi undangan berhasil disimpan & langsung aktif!");
         onSaved();
@@ -363,13 +379,20 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs uppercase tracking-wider text-[#18181B] font-extrabold">
-                Tautan Google Maps
-              </label>
-              {linkMaps && (
+            <div className="flex items-center justify-between mb-1 gap-2 flex-wrap">
+              <div className="flex items-center gap-2">
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] font-extrabold">
+                  Tautan Google Maps
+                </label>
+                {linkMaps.trim() && (
+                  <span className="text-[10px] text-[#71717A] font-bold bg-[#18181B]/5 px-2 py-0.5 rounded-md border border-[#18181B]/10 font-mono">
+                    {linkMaps.trim().length} char
+                  </span>
+                )}
+              </div>
+              {linkMaps.trim() && (
                 <a
-                  href={linkMaps}
+                  href={linkMaps.trim().startsWith("http") ? linkMaps.trim() : `https://${linkMaps.trim()}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[10px] font-black text-[#38BDF8] hover:underline"
@@ -379,14 +402,14 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
               )}
             </div>
             <input
-              type="url"
+              type="text"
               value={linkMaps}
               onChange={(e) => setLinkMaps(e.target.value)}
-              placeholder="https://maps.google.com/?q=..."
+              placeholder="https://maps.google.com/?q=... atau tautan bagikan / koordinat"
               className="w-full py-2.5 px-3 sm:px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-mono font-bold text-[#18181B] outline-none"
             />
             <p className="text-[10px] text-[#71717A] mt-1 font-medium">
-              Link ini dibuka saat tamu menekan tombol <strong>&ldquo;Buka Google Maps&rdquo;</strong> di undangan.
+              Mendukung URL panjang (&gt; 200 karakter) maupun tautan pendek (maps.app.goo.gl). Dibuka saat tamu menekan tombol <strong>&ldquo;Buka Google Maps&rdquo;</strong> di undangan.
             </p>
           </div>
         </div>
