@@ -1,8 +1,17 @@
 import React from "react";
 import NeoSticker from "@/components/ui/NeoSticker";
 import NeoDivider from "@/components/ui/NeoDivider";
+import { UndanganData } from "@/lib/guestInvitation";
 
-export default function FooterSection() {
+interface FooterSectionProps {
+  undangan?: UndanganData | null;
+}
+
+export default function FooterSection({ undangan }: FooterSectionProps) {
+  const coupleShortPria = undangan?.nama_pria ? undangan.nama_pria.trim().split(" ")[0] : "Arya";
+  const coupleShortWanita = undangan?.nama_wanita ? undangan.nama_wanita.trim().split(" ")[0] : "Sekar";
+  const coupleName = `${coupleShortPria} & ${coupleShortWanita}`;
+
   return (
     <footer className="relative w-full pt-6 pb-8 sm:pt-8 sm:pb-10 px-4 text-center overflow-hidden">
       <div className="max-w-md mx-auto relative z-10">
@@ -17,7 +26,7 @@ export default function FooterSection() {
           </div>
 
           <h3 className="font-display font-extrabold text-3xl sm:text-4xl text-[#18181B] tracking-tight my-2">
-            Arya <span className="text-[#FF5D8F]">&amp;</span> Sekar
+            {coupleShortPria} <span className="text-[#FF5D8F]">&amp;</span> {coupleShortWanita}
           </h3>
 
           <p className="font-sans text-xs text-[#52525B] leading-relaxed font-medium mb-4">
@@ -32,7 +41,7 @@ export default function FooterSection() {
         </div>
 
         <p className="font-sans text-[11px] font-bold text-[#71717A]">
-          &copy; 2026 The Wedding of Arya &amp; Sekar. All rights reserved.
+          &copy; 2026 The Wedding of {coupleName}. All rights reserved.
         </p>
       </div>
     </footer>

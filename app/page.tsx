@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import MainInvitationView from "@/components/invitation/MainInvitationView";
 import { resolveInvitationAndGuest, buildInvitationMetadata } from "@/lib/guestInvitation";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface PageProps {
   searchParams: Promise<{ to?: string }>;
 }

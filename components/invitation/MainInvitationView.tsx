@@ -103,7 +103,7 @@ export default function MainInvitationView({
           <HeroSection undangan={undangan} />
           <QuoteSection />
           <div id="mempelai">
-            <CoupleSection />
+            <CoupleSection undangan={undangan} />
           </div>
           <div id="acara">
             <EventSection undangan={undangan} />
@@ -125,7 +125,7 @@ export default function MainInvitationView({
             />
           </div>
           <div id="kado">
-            <DigitalGiftSection />
+            <DigitalGiftSection undangan={undangan} />
           </div>
           <div id="buku-tamu">
             <GuestbookSection
@@ -140,7 +140,7 @@ export default function MainInvitationView({
               }
             />
           </div>
-          <FooterSection />
+          <FooterSection undangan={undangan} />
         </main>
       </div>
     </ScrollFadeProvider>

@@ -3,17 +3,35 @@
 import React, { useState } from "react";
 import NeoSticker from "@/components/ui/NeoSticker";
 import NeoDivider from "@/components/ui/NeoDivider";
+import { UndanganData } from "@/lib/guestInvitation";
 
-export default function DigitalGiftSection() {
+interface DigitalGiftSectionProps {
+  undangan?: UndanganData | null;
+}
+
+export default function DigitalGiftSection({ undangan }: DigitalGiftSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copiedBank, setCopiedBank] = useState<string | null>(null);
+
+  const groomName = undangan?.nama_pria || "Arya Suryo Wicaksono";
+  const brideName = undangan?.nama_wanita || "Sekar Arum Kinanti";
+  const recipientNames =
+    undangan?.nama_pria && undangan?.nama_wanita
+      ? `${undangan.nama_pria.trim().split(" ")[0]} / ${undangan.nama_wanita.trim().split(" ")[0]}`
+      : "Arya / Sekar";
+
+  const physicalAddress =
+    undangan?.alamat ||
+    (undangan?.tempat
+      ? `${undangan.tempat}, Surakarta`
+      : "Sasana Pendopo Ageng, Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta 57144");
 
   const bankAccounts = [
     {
       id: "bca",
       bankName: "Bank BCA",
       accountNumber: "8120938471",
-      accountHolder: "Arya Suryo Wicaksono",
+      accountHolder: groomName,
       color: "bg-[#FFE600]",
       tag: "BCA",
     },
@@ -21,7 +39,7 @@ export default function DigitalGiftSection() {
       id: "mandiri",
       bankName: "Bank Mandiri",
       accountNumber: "1380029384712",
-      accountHolder: "Sekar Arum Kinanti",
+      accountHolder: brideName,
       color: "bg-[#38BDF8]",
       tag: "MANDIRI",
     },
@@ -122,12 +140,12 @@ export default function DigitalGiftSection() {
                 </h4>
               </div>
               <p className="font-sans text-xs text-[#52525B] leading-relaxed mb-4 font-medium">
-                Sasana Pendopo Ageng, Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta 57144 (Penerima: Arya / Sekar).
+                {physicalAddress} (Penerima: {recipientNames}).
               </p>
               <button
                 type="button"
                 onClick={() => {
-                  navigator.clipboard.writeText("Sasana Pendopo Ageng, Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta 57144");
+                  navigator.clipboard.writeText(`${physicalAddress} (Penerima: ${recipientNames})`);
                   setCopiedBank("alamat");
                   setTimeout(() => setCopiedBank(null), 2500);
                 }}

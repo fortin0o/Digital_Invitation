@@ -3,6 +3,9 @@ import MainInvitationView from "@/components/invitation/MainInvitationView";
 import { resolveInvitationAndGuest, buildInvitationMetadata } from "@/lib/guestInvitation";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface SlugPageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ to?: string }>;
