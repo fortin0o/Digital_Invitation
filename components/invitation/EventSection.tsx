@@ -22,7 +22,7 @@ export default function EventSection({ undangan }: EventSectionProps) {
   const venueAddress =
     undangan?.alamat ||
     "Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta, Jawa Tengah";
-  const rawMapsUrl = undangan?.link_maps?.trim() || "https://maps.google.com/?q=Surakarta";
+    const rawMapsUrl = undangan?.link_maps?.trim() || "https://maps.google.com/?q=Surakarta";
   const mapsUrl = /^https?:\/\//i.test(rawMapsUrl) ? rawMapsUrl : `https://${rawMapsUrl}`;
 
   const coupleTitle =

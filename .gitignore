@@ -61,3 +61,17 @@ CLAUDE.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# personal reports, academic documents & generator scripts
+*.docx
+*.doc
+*.pdf
+!public/**/*.pdf
+Laporan*
+build_report.py
+ttd_*
+logo_smk*
+smk.png
+smk.svg
+smk.ico
+
