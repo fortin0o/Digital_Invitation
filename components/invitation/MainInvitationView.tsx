@@ -132,14 +132,13 @@ export default function MainInvitationView({
           <div id="buku-tamu">
             <GuestbookSection
               idUndangan={undangan?.id_undangan}
-              initialGuestName={activeGuest?.nama_tamu || ""}
-              guestSyncKey={`${activeGuest?.kode || ""}:${activeGuest?.rsvp_tgl_konfirmasi || ""}`}
-              isRsvpConfirmed={Boolean(activeGuest?.rsvp_status)}
+              tamu={activeGuest}
               coupleName={
                 undangan?.nama_pria && undangan?.nama_wanita
                   ? `${undangan.nama_pria} & ${undangan.nama_wanita}`
                   : "kedua mempelai"
               }
+              extraContent={extraContent}
             />
           </div>
           <FooterSection undangan={undangan} />

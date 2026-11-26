@@ -749,6 +749,69 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
             </div>
           </div>
 
+          {/* Section D: Privasi Buku Tamu & Doa */}
+          <div className="space-y-3 pt-2">
+            <span className="px-2 py-0.5 rounded-md bg-[#FFE600]/30 text-[#18181B] border border-[#18181B] text-[10px] font-black uppercase inline-block">
+              Privasi Buku Tamu &amp; Kumpulan Doa
+            </span>
+
+            <div className="p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B] space-y-3">
+              <label className="block text-[11px] uppercase tracking-wider text-[#71717A] font-bold">
+                Ketentuan Pengiriman &amp; Penampilan Ucapan
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold text-[#18181B]">
+                <label className="flex items-start gap-2.5 p-3 rounded-xl bg-white border-2 border-[#18181B] cursor-pointer">
+                  <input
+                    type="radio"
+                    name="guestbookVisibility"
+                    value="verified_guests_only"
+                    checked={extraContent.guestbookVisibility !== "private_to_couple"}
+                    onChange={() =>
+                      setExtraContent((prev) => ({
+                        ...prev,
+                        guestbookVisibility: "verified_guests_only",
+                      }))
+                    }
+                    className="mt-0.5"
+                  />
+                  <div>
+                    <span className="block font-extrabold text-[#18181B]">
+                      Khusus Tamu Terdaftar
+                    </span>
+                    <span className="text-[10px] text-[#71717A] font-normal leading-relaxed block mt-0.5">
+                      Pengunjung umum tidak bisa melihat. Hanya tamu berundangan resmi yang dapat melihat kumpulan ucapan &amp; mengirimkan doa.
+                    </span>
+                  </div>
+                </label>
+
+                <label className="flex items-start gap-2.5 p-3 rounded-xl bg-white border-2 border-[#18181B] cursor-pointer">
+                  <input
+                    type="radio"
+                    name="guestbookVisibility"
+                    value="private_to_couple"
+                    checked={extraContent.guestbookVisibility === "private_to_couple"}
+                    onChange={() =>
+                      setExtraContent((prev) => ({
+                        ...prev,
+                        guestbookVisibility: "private_to_couple",
+                      }))
+                    }
+                    className="mt-0.5"
+                  />
+                  <div>
+                    <span className="block font-extrabold text-[#18181B]">
+                      Privat ke Mempelai Saja
+                    </span>
+                    <span className="text-[10px] text-[#71717A] font-normal leading-relaxed block mt-0.5">
+                      Daftar ucapan disembunyikan total dari publik undangan. Ucapan langsung masuk privat dan hanya dapat dibaca oleh Anda di menu Admin.
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div className="flex justify-end pt-1">
             <button
               type="button"

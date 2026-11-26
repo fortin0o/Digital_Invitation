@@ -26,6 +26,9 @@ export interface ExtraInvitationContent {
   bank2Name: string;
   bank2Number: string;
   bank2Holder: string;
+
+  // Visibilitas Buku Tamu & Ucapan
+  guestbookVisibility: "verified_guests_only" | "private_to_couple";
 }
 
 export const DEFAULT_EXTRA_CONTENT: ExtraInvitationContent = {
@@ -51,6 +54,8 @@ export const DEFAULT_EXTRA_CONTENT: ExtraInvitationContent = {
   bank2Name: "Bank Mandiri",
   bank2Number: "1380029384712",
   bank2Holder: "Sekar Arum Kinanti",
+
+  guestbookVisibility: "verified_guests_only",
 };
 
 const EXTRA_CONTENT_STORAGE_KEY = "wedding_extra_invitation_content";
@@ -94,6 +99,11 @@ export function getStoredExtraContent(): ExtraInvitationContent {
       bank2Name: parsed.bank2Name || DEFAULT_EXTRA_CONTENT.bank2Name,
       bank2Number: parsed.bank2Number || DEFAULT_EXTRA_CONTENT.bank2Number,
       bank2Holder: parsed.bank2Holder || DEFAULT_EXTRA_CONTENT.bank2Holder,
+
+      guestbookVisibility:
+        parsed.guestbookVisibility === "private_to_couple"
+          ? "private_to_couple"
+          : "verified_guests_only",
     };
     return cachedSnapshot;
   } catch {
