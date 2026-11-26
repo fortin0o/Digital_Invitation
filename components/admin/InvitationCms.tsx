@@ -483,7 +483,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           <div className="space-y-3 pt-1">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded-md bg-[#FF5D8F]/20 text-[#18181B] border border-[#18181B] text-[10px] font-black uppercase">
-                👨‍👩‍👧‍👦 Data Orang Tua &amp; Keluarga
+                Data Orang Tua &amp; Keluarga
               </span>
             </div>
 
@@ -591,7 +591,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           {/* Section B: Kutipan Romantis & Ayat Suci */}
           <div className="space-y-3 pt-2">
             <span className="px-2 py-0.5 rounded-md bg-[#38BDF8]/20 text-[#18181B] border border-[#18181B] text-[10px] font-black uppercase inline-block">
-              📜 Kutipan &amp; Ayat Suci Undangan
+              Kutipan &amp; Ayat Suci Undangan
             </span>
 
             <div className="space-y-3 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B]">
@@ -645,7 +645,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           {/* Section C: Rekening Amplop Digital */}
           <div className="space-y-3 pt-2">
             <span className="px-2 py-0.5 rounded-md bg-[#2EE59D]/20 text-[#18181B] border border-[#18181B] text-[10px] font-black uppercase inline-block">
-              🎁 Rekening Amplop Digital / Hadiah Pernikahan
+              Rekening Amplop Digital / Hadiah Pernikahan
             </span>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B]">
