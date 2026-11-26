@@ -10,6 +10,7 @@ import {
   buildWaMessage,
   DEFAULT_WA_TEMPLATE,
   DEFAULT_PRODUCTION_DOMAIN,
+  WA_TEMPLATE_PRESETS,
 } from "@/lib/invitationShareConfig";
 import {
   ExtraInvitationContent,
@@ -891,22 +892,41 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
 
             {/* Template Message */}
             <div>
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-1.5">
                 <label className="block text-xs uppercase tracking-wider text-[#18181B] font-extrabold">
                   Template Teks Pesan WhatsApp
                 </label>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setWaConfig((prev) => ({
-                      ...prev,
-                      template: DEFAULT_WA_TEMPLATE,
-                    }))
-                  }
-                  className="text-[10px] font-black text-rose-700 hover:underline cursor-pointer"
-                >
-                  Reset ke Teks Standar
-                </button>
+                <div className="flex flex-wrap items-center gap-1">
+                  <span className="text-[10px] text-[#71717A] font-bold mr-0.5">Ganti Template:</span>
+                  {WA_TEMPLATE_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      onClick={() =>
+                        setWaConfig((prev) => ({
+                          ...prev,
+                          template: preset.template,
+                        }))
+                      }
+                      className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F4F4F5] hover:bg-[#FFE600] border border-[#18181B] shadow-[1px_1px_0px_#18181B] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
+                      title={`Ganti template ke format ${preset.name}`}
+                    >
+                      {preset.name}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setWaConfig((prev) => ({
+                        ...prev,
+                        template: DEFAULT_WA_TEMPLATE,
+                      }))
+                    }
+                    className="text-[10px] font-black text-rose-700 hover:underline cursor-pointer ml-1"
+                  >
+                    Reset
+                  </button>
+                </div>
               </div>
 
               <textarea

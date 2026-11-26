@@ -16,6 +16,68 @@ Berikut tautan undangan spesial Anda:
 Merupakan suatu kebahagiaan bagi kami apabila Anda berkenan hadir. Terima kasih banyak.
 - {mempelai}`;
 
+export interface WaTemplatePreset {
+  id: string;
+  name: string;
+  template: string;
+}
+
+export const WA_TEMPLATE_PRESETS: WaTemplatePreset[] = [
+  {
+    id: "formal",
+    name: "Formal",
+    template: `Kepada Yth. {nama},
+
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Anda untuk hadir di acara pernikahan kami: The Wedding of {mempelai}.
+
+Buka tautan undangan resmi Anda di sini:
+{link}
+
+Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Anda berkenan hadir dan memberikan doa restu. Terima kasih banyak.
+- {mempelai}`,
+  },
+  {
+    id: "santai",
+    name: "Santai / Sahabat",
+    template: `Halo {nama}!
+
+Kabar bahagia untuk kita semua! Kami mengundang kamu untuk hadir dan merayakan hari pernikahan kami: The Wedding of {mempelai}.
+
+Buka tautan undangan spesialmu di sini ya:
+{link}
+
+Kehadiran dan doa restumu sangat berharga bagi kami. Sampai jumpa di hari bahagia kami!
+- {mempelai}`,
+  },
+  {
+    id: "islami",
+    name: "Islami",
+    template: `Assalamu'alaikum Warahmatullahi Wabarakatuh,
+Yth. {nama},
+
+Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Anda untuk hadir pada acara pernikahan kami: The Wedding of {mempelai}.
+
+Tautan undangan resmi:
+{link}
+
+Jazakumullah khairan katsiran atas doa restu dan kehadiran Anda.
+Wassalamu'alaikum Wr. Wb.
+- {mempelai}`,
+  },
+  {
+    id: "singkat",
+    name: "Singkat",
+    template: `Undangan Pernikahan {mempelai}
+Spesial untuk: {nama}
+
+Buka undangan personal di tautan berikut:
+{link}
+
+Mohon doa restu dan konfirmasi kehadirannya ya. Terima kasih!
+- {mempelai}`,
+  },
+];
+
 const STORAGE_KEY = "wedding_wa_share_config";
 
 export function getStoredWaConfig(): WaShareConfig {
