@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from "react";
+
 export interface ExtraInvitationContent {
   // Orang Tua Mempelai Wanita
   brideParents: string;
@@ -53,6 +55,9 @@ export const DEFAULT_EXTRA_CONTENT: ExtraInvitationContent = {
 
 const EXTRA_CONTENT_STORAGE_KEY = "wedding_extra_invitation_content";
 
+let cachedSnapshot: ExtraInvitationContent = DEFAULT_EXTRA_CONTENT;
+let lastRaw: string | null = null;
+
 export function getStoredExtraContent(): ExtraInvitationContent {
   if (typeof window === "undefined") {
     return DEFAULT_EXTRA_CONTENT;
@@ -60,9 +65,16 @@ export function getStoredExtraContent(): ExtraInvitationContent {
 
   try {
     const raw = localStorage.getItem(EXTRA_CONTENT_STORAGE_KEY);
-    if (!raw) return DEFAULT_EXTRA_CONTENT;
+    if (raw === lastRaw) {
+      return cachedSnapshot;
+    }
+    lastRaw = raw;
+    if (!raw) {
+      cachedSnapshot = DEFAULT_EXTRA_CONTENT;
+      return cachedSnapshot;
+    }
     const parsed = JSON.parse(raw);
-    return {
+    cachedSnapshot = {
       brideParents: parsed.brideParents || DEFAULT_EXTRA_CONTENT.brideParents,
       brideParentsPrefix: parsed.brideParentsPrefix || DEFAULT_EXTRA_CONTENT.brideParentsPrefix,
       groomParents: parsed.groomParents || DEFAULT_EXTRA_CONTENT.groomParents,
@@ -83,16 +95,50 @@ export function getStoredExtraContent(): ExtraInvitationContent {
       bank2Number: parsed.bank2Number || DEFAULT_EXTRA_CONTENT.bank2Number,
       bank2Holder: parsed.bank2Holder || DEFAULT_EXTRA_CONTENT.bank2Holder,
     };
+    return cachedSnapshot;
   } catch {
-    return DEFAULT_EXTRA_CONTENT;
+    cachedSnapshot = DEFAULT_EXTRA_CONTENT;
+    return cachedSnapshot;
   }
+}
+
+function getServerSnapshot(): ExtraInvitationContent {
+  return DEFAULT_EXTRA_CONTENT;
+}
+
+const listeners = new Set<() => void>();
+
+function subscribe(callback: () => void): () => void {
+  listeners.add(callback);
+  const handleStorage = (e: StorageEvent) => {
+    if (e.key === EXTRA_CONTENT_STORAGE_KEY || e.key === null) {
+      callback();
+    }
+  };
+  window.addEventListener("storage", handleStorage);
+  return () => {
+    listeners.delete(callback);
+    window.removeEventListener("storage", handleStorage);
+  };
 }
 
 export function saveStoredExtraContent(content: ExtraInvitationContent): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(EXTRA_CONTENT_STORAGE_KEY, JSON.stringify(content));
+    const raw = JSON.stringify(content);
+    localStorage.setItem(EXTRA_CONTENT_STORAGE_KEY, raw);
+    cachedSnapshot = content;
+    lastRaw = raw;
+    listeners.forEach((l) => l());
   } catch (e) {
     console.error("Gagal menyimpan konfigurasi konten tambahan ke localStorage:", e);
   }
+}
+
+/**
+ * React hook to safely subscribe to extra content without SSR hydration mismatch.
+ * Uses getServerSnapshot during SSR/hydration, and automatically updates with getSnapshot.
+ */
+export function useExtraInvitationContent(): ExtraInvitationContent {
+  return useSyncExternalStore(subscribe, getStoredExtraContent, getServerSnapshot);
 }

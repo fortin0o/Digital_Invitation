@@ -31,11 +31,11 @@ export default function QuoteSection({ extraContent }: QuoteSectionProps) {
           />
         </div>
 
-        <p className="font-display font-bold text-sm sm:text-base text-[#FF5D8F] mb-2 leading-snug">
+        <p suppressHydrationWarning className="font-display font-bold text-sm sm:text-base text-[#FF5D8F] mb-2 leading-snug">
           &ldquo;{romanticQuote}&rdquo;
         </p>
 
-        <p className="font-sans text-xs sm:text-sm text-[#52525B] leading-relaxed mb-4 font-normal">
+        <p suppressHydrationWarning className="font-sans text-xs sm:text-sm text-[#52525B] leading-relaxed mb-4 font-normal">
           &ldquo;{verseQuote}&rdquo;
         </p>
 

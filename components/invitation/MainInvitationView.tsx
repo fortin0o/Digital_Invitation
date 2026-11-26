@@ -14,10 +14,7 @@ import FooterSection from "./FooterSection";
 import ScrollFadeProvider from "@/components/providers/ScrollFadeProvider";
 import NeoSticker from "@/components/ui/NeoSticker";
 import { TamuWithRsvp, UndanganData } from "@/lib/guestInvitation";
-import {
-  ExtraInvitationContent,
-  getStoredExtraContent,
-} from "@/lib/invitationContentConfig";
+import { useExtraInvitationContent } from "@/lib/invitationContentConfig";
 
 interface MainInvitationViewProps {
   tamu: TamuWithRsvp | null;
@@ -32,7 +29,7 @@ export default function MainInvitationView({
 }: MainInvitationViewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeGuest, setActiveGuest] = useState<TamuWithRsvp | null>(tamu);
-  const [extraContent] = useState<ExtraInvitationContent>(getStoredExtraContent);
+  const extraContent = useExtraInvitationContent();
 
   const guestName = activeGuest ? activeGuest.nama_tamu : "Sahabat & Keluarga Tercinta";
 

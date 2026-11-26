@@ -104,10 +104,10 @@ export default function DigitalGiftSection({ undangan, extraContent }: DigitalGi
                 className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-[2.5px] border-[#18181B] shadow-[5px_5px_0px_#18181B] text-left relative overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <span className="font-display text-lg font-extrabold text-[#18181B]">
+                  <span suppressHydrationWarning className="font-display text-lg font-extrabold text-[#18181B]">
                     {account.bankName}
                   </span>
-                  <span className={`text-[10px] font-display font-black px-2 py-0.5 rounded-full ${account.color} text-[#18181B] border-2 border-[#18181B]`}>
+                  <span suppressHydrationWarning className={`text-[10px] font-display font-black px-2 py-0.5 rounded-full ${account.color} text-[#18181B] border-2 border-[#18181B]`}>
                     {account.tag}
                   </span>
                 </div>
@@ -116,10 +116,10 @@ export default function DigitalGiftSection({ undangan, extraContent }: DigitalGi
                   <p className="text-[11px] uppercase tracking-wider text-[#71717A] font-bold">
                     Nomor Rekening:
                   </p>
-                  <p className="font-mono text-xl font-black text-[#18181B] tracking-wider">
+                  <p suppressHydrationWarning className="font-mono text-xl font-black text-[#18181B] tracking-wider">
                     {account.accountNumber}
                   </p>
-                  <p className="text-xs text-[#52525B] font-semibold">
+                  <p suppressHydrationWarning className="text-xs text-[#52525B] font-semibold">
                     a.n. {account.accountHolder}
                   </p>
                 </div>
