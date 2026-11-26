@@ -81,9 +81,22 @@ export default function EventSection({ undangan }: EventSectionProps) {
     }
   }, [eventDateStr]);
 
+  const googleCalendarDates = React.useMemo(() => {
+    try {
+      const start = new Date(eventDateStr);
+      if (isNaN(start.getTime())) return "";
+      const end = new Date(start.getTime() + 4 * 60 * 60 * 1000);
+      const formatIsoUtc = (date: Date) =>
+        date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+      return `&dates=${formatIsoUtc(start)}/${formatIsoUtc(end)}`;
+    } catch {
+      return "";
+    }
+  }, [eventDateStr]);
+
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=The+Wedding+of+${encodeURIComponent(
     coupleTitle
-  )}&details=The+Wedding+Celebration+of+${encodeURIComponent(
+  )}${googleCalendarDates}&details=The+Wedding+Celebration+of+${encodeURIComponent(
     coupleTitle
   )}+di+${encodeURIComponent(venueName)}.&location=${encodeURIComponent(
     venueAddress

@@ -59,6 +59,10 @@ export default function GuestManagement({
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [qrModalGuest, setQrModalGuest] = useState<GuestItem | null>(null);
+  const [editingGuest, setEditingGuest] = useState<GuestItem | null>(null);
+  const [editNama, setEditNama] = useState("");
+  const [editKuota, setEditKuota] = useState<number | "">(1);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [waConfig, setWaConfig] = useState<WaShareConfig>(getStoredWaConfig);
   const [showWaConfigModal, setShowWaConfigModal] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
@@ -92,12 +96,52 @@ export default function GuestManagement({
 
   // Prevent background scroll when any modal is open on mobile/desktop
   const isModalOpen = Boolean(
-    showAddModal || qrModalGuest || showWaConfigModal || showPrintModal
+    showAddModal || qrModalGuest || showWaConfigModal || showPrintModal || editingGuest
   );
   useScrollLock(isModalOpen);
 
   const generateUniqueCode = () => {
     return Math.floor(10000000 + Math.random() * 90000000).toString();
+  };
+
+  const handleOpenEditModal = (tamu: GuestItem) => {
+    setEditingGuest(tamu);
+    setEditNama(tamu.nama_tamu);
+    setEditKuota(tamu.kuota || 1);
+  };
+
+  const handleUpdateGuest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingGuest || !editNama.trim()) return;
+
+    setIsUpdating(true);
+    try {
+      const cleanNama = editNama.trim();
+      const cleanKuota = Math.max(1, Number(editKuota) || 1);
+      const { data, error } = await supabase
+        .from("tamu")
+        .update({
+          nama_tamu: cleanNama,
+          kuota: cleanKuota,
+        })
+        .eq("id_tamu", editingGuest.id_tamu)
+        .select();
+
+      if (error) {
+        alert(formatWriteErrorMessage("mengubah data tamu", error));
+      } else if (!data || data.length === 0) {
+        alert("Gagal memperbarui data tamu: baris data tidak ditemukan atau Anda tidak memiliki izin.");
+      } else {
+        showToast(`Data tamu "${cleanNama}" berhasil diperbarui!`);
+        setEditingGuest(null);
+        onRefresh();
+      }
+    } catch (err: unknown) {
+      const error = err as Error;
+      alert("Error: " + error.message);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const handleAddGuest = async (e: React.FormEvent) => {
@@ -475,6 +519,14 @@ export default function GuestManagement({
                         <td className="py-3 px-4 text-right">
                           <div className="inline-flex items-center gap-2">
                             <button
+                              onClick={() => handleOpenEditModal(tamu)}
+                              type="button"
+                              className="px-2.5 py-1.5 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-[11px] font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
+                              title="Edit Nama / Kuota Tamu"
+                            >
+                              Edit
+                            </button>
+                            <button
                               onClick={() => setQrModalGuest(tamu)}
                               type="button"
                               className="px-2.5 py-1.5 rounded-lg border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#38BDF8] text-[#18181B] text-[11px] font-bold shadow-[2px_2px_0px_#18181B] cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
@@ -558,8 +610,15 @@ export default function GuestManagement({
                       </div>
                     </div>
 
-                    {/* Touch-optimized action buttons (2x2 symmetrical grid) */}
+                    {/* Touch-optimized action buttons */}
                     <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[#18181B]/10">
+                      <button
+                        onClick={() => handleOpenEditModal(tamu)}
+                        type="button"
+                        className="py-2.5 px-3 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] hover:bg-[#FFE600] text-[#18181B] text-xs font-bold shadow-[2px_2px_0px_#18181B] text-center flex items-center justify-center cursor-pointer active:translate-x-0.5 active:translate-y-0.5 col-span-2"
+                      >
+                        <span>Edit Nama / Kuota Tamu</span>
+                      </button>
                       <button
                         onClick={() => openInvitationLink(tamu.kode)}
                         type="button"
@@ -781,6 +840,107 @@ export default function GuestManagement({
                   className="flex-1 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? "Menyimpan..." : "Simpan Tamu"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Guest Modal */}
+      {editingGuest && (
+        <div
+          onClick={() => {
+            setEditingGuest(null);
+            setEditNama("");
+            setEditKuota(1);
+          }}
+          onWheel={(e) => {
+            if (e.target === e.currentTarget) e.preventDefault();
+          }}
+          className="fixed inset-0 z-50 bg-[#18181B]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in overflow-hidden"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
+            className="w-full max-w-sm rounded-2xl sm:rounded-3xl bg-white border-[3px] border-[#18181B] p-6 shadow-[8px_8px_0px_#FFE600] relative max-h-[85vh] overflow-y-auto overscroll-contain"
+          >
+            <h3 className="font-display text-xl font-extrabold text-[#18181B] mb-1">
+              Edit Data Tamu
+            </h3>
+            <p className="text-xs text-[#71717A] mb-4 font-semibold">
+              Perbarui nama tamu atau kuota undangan. Kode unik dan status RSVP tetap terjaga.
+            </p>
+
+            <form onSubmit={handleUpdateGuest} className="space-y-4">
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-bold">
+                  Nama Tamu
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editNama}
+                  onChange={(e) => setEditNama(e.target.value)}
+                  placeholder="Contoh: Muhammad Rizki"
+                  className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-[#18181B] mb-1 font-bold">
+                  Maksimal Kuota (Orang)
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  max={50}
+                  required
+                  value={editKuota}
+                  placeholder="1"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") {
+                      setEditKuota("");
+                      return;
+                    }
+                    const parsed = parseInt(val, 10);
+                    if (isNaN(parsed) || parsed <= 0) {
+                      setEditKuota("");
+                    } else {
+                      setEditKuota(parsed);
+                    }
+                  }}
+                  onBlur={() => {
+                    if (editKuota === "" || Number(editKuota) < 1) {
+                      setEditKuota(1);
+                    }
+                  }}
+                  className="w-full py-2 px-4 rounded-xl bg-[#FFFDF5] border-2 border-[#18181B] focus:bg-white text-xs font-bold text-[#18181B] outline-none"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingGuest(null);
+                    setEditNama("");
+                    setEditKuota(1);
+                  }}
+                  className="flex-1 py-2 rounded-xl border-2 border-[#18181B] bg-[#FFFDF5] text-[#18181B] text-xs font-bold cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdating}
+                  className="flex-1 py-2 rounded-xl bg-[#FFE600] hover:bg-[#FFD700] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer disabled:opacity-50"
+                >
+                  {isUpdating ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
               </div>
             </form>

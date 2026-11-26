@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import NeoSticker from "@/components/ui/NeoSticker";
 import NeoDivider from "@/components/ui/NeoDivider";
 import { UndanganData } from "@/lib/guestInvitation";
+import { ExtraInvitationContent } from "@/lib/invitationContentConfig";
 
 interface DigitalGiftSectionProps {
   undangan?: UndanganData | null;
+  extraContent?: ExtraInvitationContent | null;
 }
 
-export default function DigitalGiftSection({ undangan }: DigitalGiftSectionProps) {
+export default function DigitalGiftSection({ undangan, extraContent }: DigitalGiftSectionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copiedBank, setCopiedBank] = useState<string | null>(null);
 
@@ -26,22 +28,30 @@ export default function DigitalGiftSection({ undangan }: DigitalGiftSectionProps
       ? `${undangan.tempat}, Surakarta`
       : "Sasana Pendopo Ageng, Jl. Keraton Surakarta No. 12, Baluwarti, Pasar Kliwon, Surakarta 57144");
 
+  const bank1Name = extraContent?.bank1Name || "Bank BCA";
+  const bank1Number = extraContent?.bank1Number || "8120938471";
+  const bank1Holder = extraContent?.bank1Holder || groomName;
+
+  const bank2Name = extraContent?.bank2Name || "Bank Mandiri";
+  const bank2Number = extraContent?.bank2Number || "1380029384712";
+  const bank2Holder = extraContent?.bank2Holder || brideName;
+
   const bankAccounts = [
     {
-      id: "bca",
-      bankName: "Bank BCA",
-      accountNumber: "8120938471",
-      accountHolder: groomName,
+      id: "bank1",
+      bankName: bank1Name,
+      accountNumber: bank1Number,
+      accountHolder: bank1Holder,
       color: "bg-[#FFE600]",
-      tag: "BCA",
+      tag: bank1Name.toUpperCase().replace(/^BANK\s+/i, ""),
     },
     {
-      id: "mandiri",
-      bankName: "Bank Mandiri",
-      accountNumber: "1380029384712",
-      accountHolder: brideName,
+      id: "bank2",
+      bankName: bank2Name,
+      accountNumber: bank2Number,
+      accountHolder: bank2Holder,
       color: "bg-[#38BDF8]",
-      tag: "MANDIRI",
+      tag: bank2Name.toUpperCase().replace(/^BANK\s+/i, ""),
     },
   ];
 

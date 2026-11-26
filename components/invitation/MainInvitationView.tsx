@@ -14,6 +14,10 @@ import FooterSection from "./FooterSection";
 import ScrollFadeProvider from "@/components/providers/ScrollFadeProvider";
 import NeoSticker from "@/components/ui/NeoSticker";
 import { TamuWithRsvp, UndanganData } from "@/lib/guestInvitation";
+import {
+  ExtraInvitationContent,
+  getStoredExtraContent,
+} from "@/lib/invitationContentConfig";
 
 interface MainInvitationViewProps {
   tamu: TamuWithRsvp | null;
@@ -28,6 +32,7 @@ export default function MainInvitationView({
 }: MainInvitationViewProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeGuest, setActiveGuest] = useState<TamuWithRsvp | null>(tamu);
+  const [extraContent] = useState<ExtraInvitationContent>(getStoredExtraContent);
 
   const guestName = activeGuest ? activeGuest.nama_tamu : "Sahabat & Keluarga Tercinta";
 
@@ -101,9 +106,9 @@ export default function MainInvitationView({
         {/* Central Mobile/Card Invitation Container */}
         <main className="w-full max-w-md md:max-w-xl lg:max-w-lg bg-[#FFFDF5] min-h-screen md:my-8 md:rounded-3xl md:border-[3px] md:border-[#18181B] md:shadow-[10px_10px_0px_#18181B] relative overflow-hidden flex flex-col">
           <HeroSection undangan={undangan} />
-          <QuoteSection />
+          <QuoteSection extraContent={extraContent} />
           <div id="mempelai">
-            <CoupleSection undangan={undangan} />
+            <CoupleSection undangan={undangan} extraContent={extraContent} />
           </div>
           <div id="acara">
             <EventSection undangan={undangan} />
@@ -125,7 +130,7 @@ export default function MainInvitationView({
             />
           </div>
           <div id="kado">
-            <DigitalGiftSection undangan={undangan} />
+            <DigitalGiftSection undangan={undangan} extraContent={extraContent} />
           </div>
           <div id="buku-tamu">
             <GuestbookSection

@@ -11,6 +11,12 @@ import {
   DEFAULT_WA_TEMPLATE,
   DEFAULT_PRODUCTION_DOMAIN,
 } from "@/lib/invitationShareConfig";
+import {
+  ExtraInvitationContent,
+  DEFAULT_EXTRA_CONTENT,
+  getStoredExtraContent,
+  saveStoredExtraContent,
+} from "@/lib/invitationContentConfig";
 
 export interface UndanganCmsData {
   id_undangan: string;
@@ -55,13 +61,46 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
   const [alamat, setAlamat] = useState(undangan?.alamat || "");
   const [linkMaps, setLinkMaps] = useState(undangan?.link_maps || "");
   const [waConfig, setWaConfig] = useState<WaShareConfig>(getStoredWaConfig);
+  const [extraContent, setExtraContent] = useState<ExtraInvitationContent>(getStoredExtraContent);
 
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Synchronize state when undangan prop updates (e.g. after silent refresh or async fetch)
+  const [prevUndangan, setPrevUndangan] = useState(undangan);
+  if (undangan !== prevUndangan) {
+    setPrevUndangan(undangan);
+    if (undangan) {
+      setNamaPria(undangan.nama_pria || "");
+      setNamaWanita(undangan.nama_wanita || "");
+      setSlug(undangan.slug || "");
+      setTglAcara(toInputDateTime(undangan.tgl_acara));
+      setTempat(undangan.tempat || "");
+      setAlamat(undangan.alamat || "");
+      setLinkMaps(undangan.link_maps || "");
+    }
+  }
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleSaveExtraContentOnly = () => {
+    saveStoredExtraContent(extraContent);
+    showToast("Konten personalisasi undangan berhasil disimpan!");
+  };
+
+  const handleResetExtraContent = () => {
+    if (
+      confirm(
+        "Reset seluruh data personalisasi (orang tua, instagram, kutipan, rekening) ke format standar?"
+      )
+    ) {
+      setExtraContent(DEFAULT_EXTRA_CONTENT);
+      saveStoredExtraContent(DEFAULT_EXTRA_CONTENT);
+      showToast("Data personalisasi dikembalikan ke format standar!");
+    }
   };
 
   // Generate clean slug from groom & bride names
@@ -158,6 +197,7 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           setLinkMaps(cleanLinkMaps);
         }
         saveStoredWaConfig(waConfig);
+        saveStoredExtraContent(extraContent);
         showToast("Perubahan isi undangan berhasil disimpan & langsung aktif!");
         onSaved();
       }
@@ -414,12 +454,318 @@ export default function InvitationCms({ undangan, onSaved }: InvitationCmsProps)
           </div>
         </div>
 
-        {/* Card 4: WhatsApp Message & Base Domain Share Settings */}
+        {/* Card 4: Personalisasi Konten Undangan (Non-Permanen / Fleksibel) */}
+        <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-[#18181B]/10 gap-2">
+            <div className="flex items-center gap-2">
+              <span className="w-7 h-7 rounded-lg bg-[#FFE600] text-[#18181B] font-black text-xs flex items-center justify-center border-2 border-[#18181B]">
+                4
+              </span>
+              <div>
+                <h3 className="font-display text-base font-extrabold text-[#18181B]">
+                  Personalisasi Konten Undangan
+                </h3>
+                <p className="text-[11px] text-[#71717A] font-semibold">
+                  Teks dinamis (nama orang tua, akun Instagram, kutipan ayat, nomor kado/rekening) yang fleksibel tanpa mengubah skema tabel database.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleResetExtraContent}
+              className="text-[11px] font-black text-rose-700 hover:underline cursor-pointer self-start sm:self-auto shrink-0"
+            >
+              Reset ke Standar
+            </button>
+          </div>
+
+          {/* Section A: Nama Orang Tua & Keluarga */}
+          <div className="space-y-3 pt-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-md bg-[#FF5D8F]/20 text-[#18181B] border border-[#18181B] text-[10px] font-black uppercase">
+                👨‍👩‍👧‍👦 Data Orang Tua &amp; Keluarga
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B]">
+              {/* Mempelai Wanita */}
+              <div className="space-y-2">
+                <span className="block text-xs font-black text-[#18181B] pb-1 border-b border-[#18181B]/15">
+                  Keluarga Mempelai Wanita
+                </span>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Keterangan Silsilah
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.brideParentsPrefix}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, brideParentsPrefix: e.target.value }))
+                    }
+                    placeholder="Contoh: Putri tercinta dari keluarga"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Nama Ayah &amp; Ibu
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.brideParents}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, brideParents: e.target.value }))
+                    }
+                    placeholder="Contoh: Bpk. Joko Purnomo & Ibu Endang Sulastri"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Akun Instagram Mempelai Wanita
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.brideInstagram}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, brideInstagram: e.target.value }))
+                    }
+                    placeholder="@sekar.kinanti"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-mono font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Mempelai Pria */}
+              <div className="space-y-2">
+                <span className="block text-xs font-black text-[#18181B] pb-1 border-b border-[#18181B]/15">
+                  Keluarga Mempelai Pria
+                </span>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Keterangan Silsilah
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.groomParentsPrefix}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, groomParentsPrefix: e.target.value }))
+                    }
+                    placeholder="Contoh: Putra tercinta dari keluarga"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Nama Ayah &amp; Ibu
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.groomParents}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, groomParents: e.target.value }))
+                    }
+                    placeholder="Contoh: Bpk. Bambang Wicaksono & Ibu Sri Wahyuni"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Akun Instagram Mempelai Pria
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.groomInstagram}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, groomInstagram: e.target.value }))
+                    }
+                    placeholder="@arya.suryo"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-mono font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section B: Kutipan Romantis & Ayat Suci */}
+          <div className="space-y-3 pt-2">
+            <span className="px-2 py-0.5 rounded-md bg-[#38BDF8]/20 text-[#18181B] border border-[#18181B] text-[10px] font-black uppercase inline-block">
+              📜 Kutipan &amp; Ayat Suci Undangan
+            </span>
+
+            <div className="space-y-3 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B]">
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                  Kata Mutiara Romantis (Love Quote)
+                </label>
+                <input
+                  type="text"
+                  value={extraContent.quoteRomantic}
+                  onChange={(e) =>
+                    setExtraContent((prev) => ({ ...prev, quoteRomantic: e.target.value }))
+                  }
+                  placeholder="Contoh: Dua hati, satu janji suci..."
+                  className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                  Teks Terjemahan Ayat / Doa Suci
+                </label>
+                <textarea
+                  rows={3}
+                  value={extraContent.quoteVerse}
+                  onChange={(e) =>
+                    setExtraContent((prev) => ({ ...prev, quoteVerse: e.target.value }))
+                  }
+                  placeholder="Contoh: Dan di antara tanda-tanda kebesaran-Nya..."
+                  className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-medium text-[#18181B] outline-none resize-none leading-relaxed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                  Sumber / Label Ayat
+                </label>
+                <input
+                  type="text"
+                  value={extraContent.quoteSource}
+                  onChange={(e) =>
+                    setExtraContent((prev) => ({ ...prev, quoteSource: e.target.value }))
+                  }
+                  placeholder="Contoh: QS. Ar-Rum : 21"
+                  className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none max-w-xs"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section C: Rekening Amplop Digital */}
+          <div className="space-y-3 pt-2">
+            <span className="px-2 py-0.5 rounded-md bg-[#2EE59D]/20 text-[#18181B] border border-[#18181B] text-[10px] font-black uppercase inline-block">
+              🎁 Rekening Amplop Digital / Hadiah Pernikahan
+            </span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-[#FFFDF5] border-2 border-[#18181B]">
+              {/* Bank 1 */}
+              <div className="space-y-2">
+                <span className="block text-xs font-black text-[#18181B] pb-1 border-b border-[#18181B]/15">
+                  Rekening 1 (Mempelai Pria / Utama)
+                </span>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Nama Bank
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.bank1Name}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, bank1Name: e.target.value }))
+                    }
+                    placeholder="Contoh: Bank BCA"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Nomor Rekening
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.bank1Number}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, bank1Number: e.target.value }))
+                    }
+                    placeholder="Contoh: 8120938471"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-mono font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Atas Nama Rekening
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.bank1Holder}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, bank1Holder: e.target.value }))
+                    }
+                    placeholder="Contoh: Arya Suryo Wicaksono"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Bank 2 */}
+              <div className="space-y-2">
+                <span className="block text-xs font-black text-[#18181B] pb-1 border-b border-[#18181B]/15">
+                  Rekening 2 (Mempelai Wanita / Alternatif)
+                </span>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Nama Bank
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.bank2Name}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, bank2Name: e.target.value }))
+                    }
+                    placeholder="Contoh: Bank Mandiri"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Nomor Rekening
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.bank2Number}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, bank2Number: e.target.value }))
+                    }
+                    placeholder="Contoh: 1380029384712"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-mono font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] uppercase tracking-wider text-[#71717A] mb-1 font-bold">
+                    Atas Nama Rekening
+                  </label>
+                  <input
+                    type="text"
+                    value={extraContent.bank2Holder}
+                    onChange={(e) =>
+                      setExtraContent((prev) => ({ ...prev, bank2Holder: e.target.value }))
+                    }
+                    placeholder="Contoh: Sekar Arum Kinanti"
+                    className="w-full py-2 px-3 rounded-xl bg-white border-2 border-[#18181B] text-xs font-bold text-[#18181B] outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-1">
+            <button
+              type="button"
+              onClick={handleSaveExtraContentOnly}
+              className="px-4 py-2 rounded-xl bg-[#2EE59D] hover:bg-[#28D08D] border-2 border-[#18181B] text-[#18181B] text-xs font-black shadow-[2px_2px_0px_#18181B] cursor-pointer"
+            >
+              Simpan Personalisasi Konten
+            </button>
+          </div>
+        </div>
+
+        {/* Card 5: WhatsApp Message & Base Domain Share Settings */}
         <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-white border-2 border-[#18181B] shadow-[4px_4px_0px_#18181B] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b-2 border-[#18181B]/10">
             <div className="flex items-center gap-2">
               <span className="w-7 h-7 rounded-lg bg-[#2EE59D] text-[#18181B] font-black text-xs flex items-center justify-center border-2 border-[#18181B]">
-                4
+                5
               </span>
               <h3 className="font-display text-base font-extrabold text-[#18181B]">
                 Format Pesan WhatsApp &amp; Domain Tautan

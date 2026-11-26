@@ -46,6 +46,23 @@ export default function CoverSection({
     }
   })();
 
+  const stickerDate = (() => {
+    if (!undangan?.tgl_acara) return "14 NOV 2026";
+    try {
+      const d = new Date(undangan.tgl_acara);
+      if (isNaN(d.getTime())) return "14 NOV 2026";
+      return new Intl.DateTimeFormat("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+        .format(d)
+        .toUpperCase();
+    } catch {
+      return "14 NOV 2026";
+    }
+  })();
+
   const handleOpen = () => {
     setIsOpening(true);
     setTimeout(() => {
@@ -69,7 +86,7 @@ export default function CoverSection({
         <NeoSticker label="CELEBRATE WITH US" color="yellow" rotate="-rotate-6" />
       </div>
       <div className="hidden sm:block absolute top-14 right-12 animate-neo-float" style={{ animationDelay: "1s" }}>
-        <NeoSticker label="14 NOV 2026" color="cyan" rotate="rotate-6" />
+        <NeoSticker label={stickerDate} color="cyan" rotate="rotate-6" />
       </div>
       <div className="hidden sm:block absolute bottom-12 left-16 animate-neo-float" style={{ animationDelay: "0.5s" }}>
         <NeoSticker label="WEDDING CEREMONY" color="pink" rotate="rotate-3" />

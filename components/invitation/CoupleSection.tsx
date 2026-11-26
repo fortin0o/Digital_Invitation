@@ -3,9 +3,11 @@ import Image from "next/image";
 import NeoSticker from "@/components/ui/NeoSticker";
 import NeoDivider from "@/components/ui/NeoDivider";
 import { UndanganData } from "@/lib/guestInvitation";
+import { ExtraInvitationContent } from "@/lib/invitationContentConfig";
 
 interface CoupleSectionProps {
   undangan?: UndanganData | null;
+  extraContent?: ExtraInvitationContent | null;
 }
 
 function getInstagramHandle(fullName?: string | null, fallback: string = ""): string {
@@ -21,12 +23,18 @@ function getInstagramHandle(fullName?: string | null, fallback: string = ""): st
   return parts.length > 0 ? `@${parts.join(".")}` : fallback;
 }
 
-export default function CoupleSection({ undangan }: CoupleSectionProps) {
+export default function CoupleSection({ undangan, extraContent }: CoupleSectionProps) {
   const brideName = undangan?.nama_wanita?.trim() || "Sekar Arum Kinanti, S.Pd.";
   const groomName = undangan?.nama_pria?.trim() || "Arya Suryo Wicaksono, S.T.";
 
-  const brideIg = getInstagramHandle(undangan?.nama_wanita, "@sekar.kinanti");
-  const groomIg = getInstagramHandle(undangan?.nama_pria, "@arya.suryo");
+  const brideIg = extraContent?.brideInstagram?.trim() || getInstagramHandle(undangan?.nama_wanita, "@sekar.kinanti");
+  const groomIg = extraContent?.groomInstagram?.trim() || getInstagramHandle(undangan?.nama_pria, "@arya.suryo");
+
+  const brideParentsPrefix = extraContent?.brideParentsPrefix?.trim() || "Putri tercinta dari keluarga";
+  const brideParents = extraContent?.brideParents?.trim() || "Bpk. Joko Purnomo & Ibu Endang Sulastri";
+
+  const groomParentsPrefix = extraContent?.groomParentsPrefix?.trim() || "Putra tercinta dari keluarga";
+  const groomParents = extraContent?.groomParents?.trim() || "Bpk. Bambang Wicaksono & Ibu Sri Wahyuni";
 
   return (
     <section className="relative w-full py-6 sm:py-8 px-4 text-center overflow-hidden">
@@ -74,12 +82,12 @@ export default function CoupleSection({ undangan }: CoupleSectionProps) {
             {brideName}
           </h3>
           <p className="font-sans text-xs text-[#71717A] mt-1 font-medium max-w-xs leading-relaxed">
-            Putri tercinta dari keluarga <br />
-            <strong className="text-[#18181B]">Bpk. Joko Purnomo</strong> &amp; <strong className="text-[#18181B]">Ibu Endang Sulastri</strong>
+            {brideParentsPrefix} <br />
+            <strong className="text-[#18181B]">{brideParents}</strong>
           </p>
 
           <a
-            href="https://instagram.com"
+            href={`https://instagram.com/${brideIg.replace(/^@/, "")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] hover:bg-[#FFE600] active:translate-x-0.5 active:translate-y-0.5 transition-all text-xs font-bold"
@@ -126,12 +134,12 @@ export default function CoupleSection({ undangan }: CoupleSectionProps) {
             {groomName}
           </h3>
           <p className="font-sans text-xs text-[#71717A] mt-1 font-medium max-w-xs leading-relaxed">
-            Putra tercinta dari keluarga <br />
-            <strong className="text-[#18181B]">Bpk. Bambang Wicaksono</strong> &amp; <strong className="text-[#18181B]">Ibu Sri Wahyuni</strong>
+            {groomParentsPrefix} <br />
+            <strong className="text-[#18181B]">{groomParents}</strong>
           </p>
 
           <a
-            href="https://instagram.com"
+            href={`https://instagram.com/${groomIg.replace(/^@/, "")}`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFDF5] border-2 border-[#18181B] shadow-[2px_2px_0px_#18181B] hover:bg-[#38BDF8] active:translate-x-0.5 active:translate-y-0.5 transition-all text-xs font-bold"
